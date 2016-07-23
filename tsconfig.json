@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "sourceMap":  true
+  },
+  "files": [
+    "main.ts",
+    "typings/index.d.ts"
+  ]
+}
