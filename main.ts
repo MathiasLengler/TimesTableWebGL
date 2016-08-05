@@ -1,3 +1,6 @@
+import BufferGeometry = THREE.BufferGeometry;
+import Geometry = THREE.Geometry;
+import LineBasicMaterial = THREE.LineBasicMaterial;
 class Point2D {
     x: number;
     y: number;
@@ -16,14 +19,15 @@ class Point2D {
 }
 
 // --- GLOBALS ---
-
+// fps
 var stats = new Stats();
+// gui vars
 var input = null;
-// threejs globals
+// threejs
 var renderer: THREE.WebGLRenderer;
 var scene: THREE.Scene;
 var camera: THREE.Camera;
-var geometries: THREE.Geometry[];
+// threejs object management
 var lines: THREE.Line[];
 
 var material = new THREE.LineBasicMaterial({
@@ -34,22 +38,30 @@ var material = new THREE.LineBasicMaterial({
 });
 
 var TimesTableGL = function () {
-    this.totalPoints = 5000;
-    this.multiplier = 2100;
-    this.animate = true;
-    this.speed = 0.001;
-    this.drawOutline = false;
+    this.totalPoints = 800;
+    this.multiplier = 2;
+    this.animate = false;
+    this.speed = 0.005;
+    this.colorLength = true;
+    this.opacity = 0.1;
 };
 
 
 function init() {
     input = new TimesTableGL();
     var gui = new dat.GUI();
-    gui.add(input, "totalPoints").min(0);
-    gui.add(input, "multiplier");
-    gui.add(input, "animate");
-    gui.add(input, "speed", -0.1, 0.1).step(0.01);
-    gui.add(input, "drawOutline");
+    var f1 = gui.addFolder("Maths");
+    f1.add(input, "totalPoints").min(0).step(1);
+    f1.add(input, "multiplier").step(1);
+    f1.open();
+    var f2 = gui.addFolder("Animation");
+    f2.add(input, "animate");
+    f2.add(input, "speed", -1, 1).step(0.005);
+    f2.open();
+    var f3 = gui.addFolder("Color");
+    f3.add(input, "colorLength");
+    f3.add(input, "opacity", 0, 1).step(0.01);
+    f3.open();
 
     initRenderer();
     render();
@@ -73,6 +85,7 @@ function initRenderer() {
 }
 
 var prevTotal: number = 0;
+var prevOpacity: number = 0;
 
 function render() {
 
@@ -88,6 +101,7 @@ function render() {
     renderer.render(scene, camera);
 
     prevTotal = input.totalPoints;
+    prevOpacity = input.opacity;
     if (input.animate) {
         input.multiplier += input.speed;
     }
@@ -102,14 +116,17 @@ function getCircleCord(number: number, total: number): Point2D {
 }
 
 function createGeometryAndLines(total: number) {
-    geometries = Array(total);
     lines = Array(total);
 
     for (var i = 0; i < total; i++) {
         var geometry = new THREE.Geometry();
-        geometries[i] = geometry;
         geometry.vertices.push(new THREE.Vector3());
         geometry.vertices.push(new THREE.Vector3());
+
+        var material = new THREE.LineBasicMaterial({
+            blending: THREE.AdditiveBlending,
+            transparent: true
+        });
 
         var line = new THREE.Line(geometry, material);
         lines[i] = line;
@@ -123,24 +140,37 @@ function drawCircle(total: number, multiplier: number): void {
     for (var i = 0; i < total; i++) {
         var cord = getCircleCord(i, total);
         var cordMulti = getCircleCord(i * multiplier, total);
+        var distance = Point2D.distance(cord, cordMulti);
 
-        //var distance = cord.distance(cordMulti);
+        var line = lines[i];
+        var geometry = line.geometry;
+        if (geometry instanceof Geometry) {
+            geometry.vertices[0].set(cord.x, cord.y, 0);
+            geometry.vertices[1].set(cordMulti.x, cordMulti.y, 0);
+            geometry.verticesNeedUpdate = true;
+        }
 
-        var geometry: THREE.Geometry = geometries[i];
-        geometry.vertices[0].set(cord.x, cord.y,0);
-        geometry.vertices[1].set(cordMulti.x, cordMulti.y,0);
-        geometry.verticesNeedUpdate = true;
+        var material = line.material;
+        if (material instanceof LineBasicMaterial) {
+            material.opacity = input.opacity;
+            if (input.colorLength) {
+                material.color.setHSL(distance / 2, 1, 0.5);
+            }
+            material.needsUpdate = true;
+        }
     }
 }
 
 
-function cleanUp(total:number): void {
+function cleanUp(total: number): void {
     for (var i = 0; i < total; i++) {
-        scene.remove(lines[i]);
-        geometries[i].dispose();
+        var line = lines[i];
+        scene.remove(line);
+        line.geometry.dispose();
+        line.material.dispose();
+
     }
     lines = null;
-    geometries = null;
 }
 
 window.onload = init;
