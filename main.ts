@@ -17,6 +17,7 @@ class Point2D {
 
 // --- GLOBALS ---
 
+var stats = new Stats();
 var input = null;
 // threejs globals
 var renderer: THREE.WebGLRenderer;
@@ -28,14 +29,14 @@ var lines: THREE.Line[];
 var material = new THREE.LineBasicMaterial({
     color: 0xffffff,
     blending: THREE.AdditiveBlending,
-    opacity: 0.5,
+    opacity: 0.1,
     transparent: true
 });
 
 var TimesTableGL = function () {
-    this.totalPoints = 0;
-    this.multiplier = 2;
-    this.animate = false;
+    this.totalPoints = 5000;
+    this.multiplier = 2100;
+    this.animate = true;
     this.speed = 0.001;
     this.drawOutline = false;
 };
@@ -56,6 +57,9 @@ function init() {
 
 
 function initRenderer() {
+    stats.showPanel(1);
+    document.body.appendChild(stats.dom);
+
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -71,6 +75,9 @@ function initRenderer() {
 var prevTotal: number = 0;
 
 function render() {
+
+    stats.begin();
+
     if (prevTotal !== input.totalPoints) {
         cleanUp(prevTotal);
         createGeometryAndLines(input.totalPoints);
@@ -84,6 +91,8 @@ function render() {
     if (input.animate) {
         input.multiplier += input.speed;
     }
+
+    stats.end();
     requestAnimationFrame(render);
 }
 
