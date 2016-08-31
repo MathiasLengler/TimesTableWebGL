@@ -39,6 +39,11 @@ var TimesTableGL = function () {
     this.opacity = 0.1;
 };
 function init() {
+    initGUI();
+    initRenderer();
+    render();
+}
+function initGUI() {
     input = new TimesTableGL();
     var gui = new dat.GUI();
     var f1 = gui.addFolder("Maths");
@@ -53,8 +58,6 @@ function init() {
     f3.add(input, "colorLength");
     f3.add(input, "opacity", 0, 1).step(0.01);
     f3.open();
-    initRenderer();
-    render();
 }
 function initRenderer() {
     stats.showPanel(1);
@@ -67,6 +70,12 @@ function initRenderer() {
     camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
     camera.position.set(0, 0, 1);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
+    window.addEventListener('resize', onWindowResize);
+}
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 var prevTotal = 0;
 var prevOpacity = 0;
@@ -105,7 +114,6 @@ function createGeometryAndLines(total) {
         scene.add(line);
     }
 }
-// TODO: reuse geometry and line instances
 function drawCircle(total, multiplier) {
     for (var i = 0; i < total; i++) {
         var cord = getCircleCord(i, total);
