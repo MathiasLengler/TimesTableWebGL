@@ -3,3 +3,9 @@ Interactive diagram of times tables as seen in [this video](https://www.youtube.
 Written in Typescript, rendering with Three.js.  
 [Live Demo](http://htmlpreview.github.io/?https://github.com/MathiasLengler/TimesTableJS/blob/master/release/main.html)
 (requires browser that supports WebGL)
+
+## Ideas for further development
+
+- 3D interpretation of the problem
+- Josephus Problem
+- Arbitrary shapes (Square, Triangle, ...)
