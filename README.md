@@ -4,6 +4,13 @@ Written in Typescript, rendering with Three.js.
 [Live Demo](http://htmlpreview.github.io/?https://github.com/MathiasLengler/TimesTableJS/blob/master/release/main.html)
 (requires browser that supports WebGL)
 
+## Build Chain
+
+### Building
+- npm (Dev)
+- Webpack
+
+
 ## Ideas for further development
 
 - 3D interpretation of the problem
