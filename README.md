@@ -3,7 +3,9 @@ Interactive diagram of times tables as seen in [this video](https://www.youtube.
 
 Written in Typescript, rendering with Three.js.
 
-**[Live Demo](): requires browser that supports WebGL**
+## [Live Demo](https://mathiaslengler.github.io/demos/TimesTableWebGL/index.html)
+
+- requires browser that supports WebGL
 
 ## Building
 - `npm install`
