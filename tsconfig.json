@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
-    "sourceMap":  true
+    "noEmit": true,
+    "outDir": "./build/",
+    "sourceMap": true,
+    "target": "es5",
+    "allowJs": true
   },
-  "files": [
-    "main.ts",
-    "typings/index.d.ts"
+  "include": [
+    "src/**/*.ts"
   ]
 }
