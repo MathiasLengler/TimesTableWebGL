@@ -1,5 +1,5 @@
 canvas {
-    display: block; /* fix necessary to remove space at bottom of canvas */
+    display: block;
 }
 body {
     margin: 0;

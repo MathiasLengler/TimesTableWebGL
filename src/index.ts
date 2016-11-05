@@ -1,5 +1,5 @@
 // Webpack requires
-declare function require(any):any;
+declare function require(any): any;
 require("script!../node_modules/dat.gui/build/dat.gui.js");
 require("./../assets/index.css");
 
@@ -8,6 +8,8 @@ import Stats = require("stats.js");
 import BufferGeometry = THREE.BufferGeometry;
 import Geometry = THREE.Geometry;
 import LineBasicMaterial = THREE.LineBasicMaterial;
+
+import * as Gui from "./gui";
 
 class Point2D {
     x: number;
@@ -26,63 +28,72 @@ class Point2D {
     }
 }
 
+export class RenderController {
+    private waitOnUpdate = false;
+    private readonly doRender: (rc: RenderController) => void;
+    private readonly stats: Stats;
+
+    constructor(doRender: (rc: RenderController) => void, stats: Stats) {
+        this.doRender = doRender;
+        this.stats = stats;
+    }
+
+    public requestRender() {
+        if (!this.waitOnUpdate) {
+            this.waitOnUpdate = true;
+            requestAnimationFrame(() => this.render());
+        }
+    }
+
+    private render() {
+        this.waitOnUpdate = false;
+
+        this.stats.begin();
+        this.doRender(this);
+        this.stats.end();
+    }
+}
+
 // --- GLOBALS ---
-// fps
-var stats = new Stats();
-// gui vars
-var input = null;
 // threejs
-var renderer: THREE.WebGLRenderer;
-var scene: THREE.Scene;
-var camera: THREE.PerspectiveCamera;
+let renderer: THREE.WebGLRenderer;
+let scene: THREE.Scene;
+let camera: THREE.PerspectiveCamera;
 // threejs object management
-var lines: THREE.Line[];
+let lines: THREE.Line[];
 
-var material = new THREE.LineBasicMaterial({
-    color: 0xffffff,
-    blending: THREE.AdditiveBlending,
-    opacity: 0.1,
-    transparent: true
-});
-
-var TimesTableGL = function () {
-    this.totalPoints = 250;
-    this.multiplier = 2;
-    this.animate = false;
-    this.speed = 0.005;
-    this.colorLength = true;
-    this.opacity = 0.3;
+// gui
+let input: Gui.Input = {
+    totalPoints: 250,
+    multiplier: 2,
+    animate: false,
+    multiplierIncrement: 0.005,
+    colorLength: true,
+    opacity: 0.3,
+    camPosX: 0,
+    camPosY: 0,
+    camPosZ: 1,
 };
 
 
 function init() {
-    initGUI();
-    initRenderer();
-    render();
-}
+    let stats = new Stats();
+    stats.showPanel(1);
+    document.body.appendChild(stats.dom);
 
-function initGUI() {
-    input = new TimesTableGL();
-    var gui = new dat.GUI();
-    var f1 = gui.addFolder("Maths");
-    f1.add(input, "totalPoints").min(0).step(1);
-    f1.add(input, "multiplier").step(1);
-    f1.open();
-    var f2 = gui.addFolder("Animation");
-    f2.add(input, "animate");
-    f2.add(input, "speed", -1, 1).step(0.005);
-    f2.open();
-    var f3 = gui.addFolder("Color");
-    f3.add(input, "colorLength");
-    f3.add(input, "opacity", 0, 1).step(0.01);
-    f3.open();
+    let renderController: RenderController = new RenderController(render, stats);
+
+    window.addEventListener('resize', () => onWindowResize(renderController));
+
+    Gui.initGUI(input, renderController);
+
+    initRenderer();
+
+    renderController.requestRender();
 }
 
 
 function initRenderer() {
-    stats.showPanel(1);
-    document.body.appendChild(stats.dom);
-
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -91,26 +102,23 @@ function initRenderer() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
-    camera.position.set(0, 0, 1);
-    camera.lookAt(new THREE.Vector3(0, 0, 1));
+    camera.position.set(input.camPosX, input.camPosY, input.camPosZ);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-    window.addEventListener( 'resize', onWindowResize);
 }
 
-function onWindowResize(){
+function onWindowResize(renderController: RenderController) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    renderController.requestRender();
 }
 
-var prevTotal: number = 0;
-var prevOpacity: number = 0;
+let prevTotal: number = 0;
 
-function render() {
-
-    stats.begin();
-
+function render(renderController: RenderController) {
     if (prevTotal !== input.totalPoints) {
         cleanUp(prevTotal);
         createGeometryAndLines(input.totalPoints);
@@ -118,37 +126,36 @@ function render() {
 
     drawCircle(input.totalPoints, input.multiplier);
 
+    camera.position.set(input.camPosX, input.camPosY, input.camPosZ);
+
     renderer.render(scene, camera);
 
     prevTotal = input.totalPoints;
-    prevOpacity = input.opacity;
     if (input.animate) {
-        input.multiplier += input.speed;
+        input.multiplier += input.multiplierIncrement;
+        renderController.requestRender();
     }
-
-    stats.end();
-    requestAnimationFrame(render);
 }
 
 function getCircleCord(number: number, total: number): Point2D {
-    var normalized = (number / total) * 2 * Math.PI;
+    let normalized = (number / total) * 2 * Math.PI;
     return new Point2D(Math.cos(normalized), Math.sin(normalized));
 }
 
 function createGeometryAndLines(total: number) {
     lines = Array(total);
 
-    for (var i = 0; i < total; i++) {
-        var geometry = new THREE.Geometry();
+    for (let i = 0; i < total; i++) {
+        let geometry = new THREE.Geometry();
         geometry.vertices.push(new THREE.Vector3());
         geometry.vertices.push(new THREE.Vector3());
 
-        var material = new THREE.LineBasicMaterial({
+        let material = new THREE.LineBasicMaterial({
             blending: THREE.AdditiveBlending,
             transparent: true
         });
 
-        var line = new THREE.Line(geometry, material);
+        let line = new THREE.Line(geometry, material);
         lines[i] = line;
         scene.add(line);
     }
@@ -156,20 +163,20 @@ function createGeometryAndLines(total: number) {
 
 
 function drawCircle(total: number, multiplier: number): void {
-    for (var i = 0; i < total; i++) {
-        var cord = getCircleCord(i, total);
-        var cordMulti = getCircleCord(i * multiplier, total);
-        var distance = Point2D.distance(cord, cordMulti);
+    for (let i = 0; i < total; i++) {
+        let cord = getCircleCord(i, total);
+        let cordMulti = getCircleCord(i * multiplier, total);
+        let distance = Point2D.distance(cord, cordMulti);
 
-        var line = lines[i];
-        var geometry = line.geometry;
+        let line = lines[i];
+        let geometry = line.geometry;
         if (geometry instanceof Geometry) {
             geometry.vertices[0].set(cord.x, cord.y, 0);
             geometry.vertices[1].set(cordMulti.x, cordMulti.y, 0);
             geometry.verticesNeedUpdate = true;
         }
 
-        var material = line.material;
+        let material = line.material;
         if (material instanceof LineBasicMaterial) {
             material.opacity = input.opacity;
             if (input.colorLength) {
@@ -182,8 +189,8 @@ function drawCircle(total: number, multiplier: number): void {
 
 
 function cleanUp(total: number): void {
-    for (var i = 0; i < total; i++) {
-        var line = lines[i];
+    for (let i = 0; i < total; i++) {
+        let line = lines[i];
         scene.remove(line);
         line.geometry.dispose();
         line.material.dispose();
