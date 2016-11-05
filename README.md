@@ -13,6 +13,10 @@ Written in Typescript, rendering with Three.js.
 
 ## Ideas for further development
 
+- add single frame render mode
+- use https://threejs.org/docs/#Reference/Objects/LineSegments 
+for single color mode
+    - http://stackoverflow.com/questions/32915473/three-js-r72-no-longer-supports-three-linepieces-how-to-merge-multiple-disconne
 - 3D interpretation of the problem
 - Josephus Problem
 - Arbitrary shapes (Square, Triangle, ...)
