@@ -13,6 +13,14 @@ Written in Typescript, rendering with Three.js.
 
 ## Ideas for further development
 
+### Performance
+
+- test BufferGeometry
+- use https://threejs.org/docs/#Reference/Objects/LineSegments 
+for single color mode
+
+### Functionality
+
 - 3D interpretation of the problem
 - Josephus Problem
 - Arbitrary shapes (Square, Triangle, ...)
