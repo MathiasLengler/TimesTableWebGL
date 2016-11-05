@@ -1,6 +1,12 @@
+declare function require(any):any;
+require("script!../node_modules/dat.gui/build/dat.gui.js");
+
+import * as THREE from "three";
+import Stats = require("stats.js");
 import BufferGeometry = THREE.BufferGeometry;
 import Geometry = THREE.Geometry;
 import LineBasicMaterial = THREE.LineBasicMaterial;
+
 class Point2D {
     x: number;
     y: number;
