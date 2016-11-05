@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
+    "noEmit": true,
     "outDir": "./build/",
     "sourceMap": true,
     "target": "es5",
     "allowJs": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*.ts"
   ]
 }

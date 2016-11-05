@@ -1,5 +1,7 @@
+// Webpack requires
 declare function require(any):any;
 require("script!../node_modules/dat.gui/build/dat.gui.js");
+require("./../assets/index.css");
 
 import * as THREE from "three";
 import Stats = require("stats.js");
@@ -44,12 +46,12 @@ var material = new THREE.LineBasicMaterial({
 });
 
 var TimesTableGL = function () {
-    this.totalPoints = 800;
+    this.totalPoints = 250;
     this.multiplier = 2;
     this.animate = false;
     this.speed = 0.005;
     this.colorLength = true;
-    this.opacity = 0.1;
+    this.opacity = 0.3;
 };
 
 
@@ -90,7 +92,7 @@ function initRenderer() {
 
     camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
     camera.position.set(0, 0, 1);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    camera.lookAt(new THREE.Vector3(0, 0, 1));
 
     window.addEventListener( 'resize', onWindowResize);
 }

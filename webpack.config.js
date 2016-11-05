@@ -1,24 +1,26 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './build/index.js',
+    entry: './src/index.ts',
     output: {
         filename: 'bundle.js',
         path: './dist'
     },
     devtool: "source-map",
     resolve: {
-        extensions: ['', '.js']
+        extensions: ['', '.js', '.ts']
     },
     module: {
-        loaders: [{
-            test: /\.js$/,
-            exclude: /node_modules/,
-            loader: 'babel-loader',
-            query: {
-                presets: ['es2015']
+        loaders: [
+            {
+                test: /\.ts$/,
+                loader: 'awesome-typescript-loader'
+            },
+            {
+                test: /\.css$/,
+                loader: "style-loader!css-loader"
             }
-        }],
+        ],
         preLoaders: [
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             {test: /\.js$/, loader: "source-map-loader"}
