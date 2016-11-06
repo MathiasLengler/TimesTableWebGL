@@ -89,7 +89,7 @@ export class RenderController {
 
 // gui
 let input: Gui.Input = {
-    totalLines: 250,
+    totalLines: 10000,
     multiplier: 2,
     animate: false,
     multiplierIncrement: 0.005,
@@ -132,7 +132,12 @@ function initRenderer(): ThreeEnv {
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     let geometry = new THREE.BufferGeometry();
-    let material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
+    let material = new THREE.LineBasicMaterial({
+        vertexColors: THREE.VertexColors,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        opacity: 0.1
+    });
 
     // new THREE.LineBasicMaterial({
     //     blending: THREE.AdditiveBlending,
