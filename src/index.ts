@@ -1,15 +1,14 @@
-// Webpack requires
-declare function require(any): any;
-require("script!../node_modules/dat.gui/build/dat.gui.js");
-require("./../assets/index.css");
-
-import * as THREE from "three";
+// webpack
+import "../assets/index.css";
+// npm
+import THREE = require("three");
 import Stats = require("stats.js");
-import BufferGeometry = THREE.BufferGeometry;
-import Geometry = THREE.Geometry;
-import LineBasicMaterial = THREE.LineBasicMaterial;
-
+// own
 import * as Gui from "./gui";
+import * as Render from "./render";
+import {ThreeEnv} from "./render";
+import {Input} from "./gui";
+
 
 class Point2D {
     x: number;
@@ -28,17 +27,31 @@ class Point2D {
     }
 }
 
+interface RenderFunction {
+    (threeEnv: ThreeEnv, input: Input): void;
+}
+
 export class RenderController {
     private waitOnUpdate = false;
-    private readonly doRender: (rc: RenderController) => void;
-    private readonly stats: Stats;
+    private hasChanged: {
+        [source: string]: boolean
+    } = {};
 
-    constructor(doRender: (rc: RenderController) => void, stats: Stats) {
-        this.doRender = doRender;
+    private readonly renderMethod: RenderFunction;
+    private readonly stats: Stats;
+    private readonly threeEnv: ThreeEnv;
+    private readonly input: Input;
+
+    constructor(renderMethod: RenderFunction, stats: Stats, threeEnv: ThreeEnv, input: Input) {
+        this.renderMethod = renderMethod;
         this.stats = stats;
+        this.threeEnv = threeEnv;
+        this.input = input;
     }
 
-    public requestRender() {
+    public requestRender(source: string) {
+        this.hasChanged[source] = true;
+
         if (!this.waitOnUpdate) {
             this.waitOnUpdate = true;
             requestAnimationFrame(() => this.render());
@@ -46,25 +59,37 @@ export class RenderController {
     }
 
     private render() {
+        this.stats.begin();
+
+        console.log(this.hasChanged);
+
         this.waitOnUpdate = false;
 
-        this.stats.begin();
-        this.doRender(this);
+        if (this.hasChanged["totalLines"]) {
+            Render.dispose(this.threeEnv);
+            const {positionsAttribute, colorsAttribute} =
+                Render.buildGeometry(this.threeEnv.geometry, this.input.totalLines);
+            this.threeEnv.positionsAttribute = positionsAttribute;
+            this.threeEnv.colorsAttribute = colorsAttribute;
+        }
+
+        // Execute main render
+        this.renderMethod(this.threeEnv, this.input);
+
+        this.hasChanged = {};
+
+        if (this.input.animate) {
+            this.input.multiplier += this.input.multiplierIncrement;
+            this.requestRender("multiplier");
+        }
+
         this.stats.end();
     }
 }
 
-// --- GLOBALS ---
-// threejs
-let renderer: THREE.WebGLRenderer;
-let scene: THREE.Scene;
-let camera: THREE.PerspectiveCamera;
-// threejs object management
-let lines: THREE.Line[];
-
 // gui
 let input: Gui.Input = {
-    totalPoints: 250,
+    totalLines: 250,
     multiplier: 2,
     animate: false,
     multiplierIncrement: 0.005,
@@ -72,7 +97,7 @@ let input: Gui.Input = {
     opacity: 0.3,
     camPosX: 0,
     camPosY: 0,
-    camPosZ: 1,
+    camPosZ: 1
 };
 
 
@@ -81,121 +106,55 @@ function init() {
     stats.showPanel(1);
     document.body.appendChild(stats.dom);
 
-    let renderController: RenderController = new RenderController(render, stats);
+    const threeEnv = initRenderer();
 
-    window.addEventListener('resize', () => onWindowResize(renderController));
+    let renderController: RenderController =
+        new RenderController(Render.render, stats, threeEnv, input);
+
+    window.addEventListener('resize', () => onWindowResize(renderController, threeEnv));
 
     Gui.initGUI(input, renderController);
 
-    initRenderer();
-
-    renderController.requestRender();
+    renderController.requestRender("init");
 }
 
 
-function initRenderer() {
-    renderer = new THREE.WebGLRenderer();
+function initRenderer(): ThreeEnv {
+    let renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    scene = new THREE.Scene();
+    let scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
+    let camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
     camera.position.set(input.camPosX, input.camPosY, input.camPosZ);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
+    let geometry = new THREE.BufferGeometry();
+    let material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
+
+    // new THREE.LineBasicMaterial({
+    //     blending: THREE.AdditiveBlending,
+    //     transparent: true
+    // });
+
+    let {positionsAttribute, colorsAttribute} = Render.buildGeometry(geometry, input.totalLines);
+
+    var mesh = new THREE.LineSegments(geometry, material);
+
+    scene.add(mesh);
+
+    return {renderer, scene, camera, geometry, material, positionsAttribute, colorsAttribute};
 }
 
-function onWindowResize(renderController: RenderController) {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+function onWindowResize(renderController: RenderController, threeEnv: ThreeEnv) {
+    threeEnv.camera.aspect = window.innerWidth / window.innerHeight;
+    threeEnv.camera.updateProjectionMatrix();
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    threeEnv.renderer.setSize(window.innerWidth, window.innerHeight);
 
-    renderController.requestRender();
-}
-
-let prevTotal: number = 0;
-
-function render(renderController: RenderController) {
-    if (prevTotal !== input.totalPoints) {
-        cleanUp(prevTotal);
-        createGeometryAndLines(input.totalPoints);
-    }
-
-    drawCircle(input.totalPoints, input.multiplier);
-
-    camera.position.set(input.camPosX, input.camPosY, input.camPosZ);
-
-    renderer.render(scene, camera);
-
-    prevTotal = input.totalPoints;
-    if (input.animate) {
-        input.multiplier += input.multiplierIncrement;
-        renderController.requestRender();
-    }
-}
-
-function getCircleCord(number: number, total: number): Point2D {
-    let normalized = (number / total) * 2 * Math.PI;
-    return new Point2D(Math.cos(normalized), Math.sin(normalized));
-}
-
-function createGeometryAndLines(total: number) {
-    lines = Array(total);
-
-    for (let i = 0; i < total; i++) {
-        let geometry = new THREE.Geometry();
-        geometry.vertices.push(new THREE.Vector3());
-        geometry.vertices.push(new THREE.Vector3());
-
-        let material = new THREE.LineBasicMaterial({
-            blending: THREE.AdditiveBlending,
-            transparent: true
-        });
-
-        let line = new THREE.Line(geometry, material);
-        lines[i] = line;
-        scene.add(line);
-    }
-}
-
-
-function drawCircle(total: number, multiplier: number): void {
-    for (let i = 0; i < total; i++) {
-        let cord = getCircleCord(i, total);
-        let cordMulti = getCircleCord(i * multiplier, total);
-        let distance = Point2D.distance(cord, cordMulti);
-
-        let line = lines[i];
-        let geometry = line.geometry;
-        if (geometry instanceof Geometry) {
-            geometry.vertices[0].set(cord.x, cord.y, 0);
-            geometry.vertices[1].set(cordMulti.x, cordMulti.y, 0);
-            geometry.verticesNeedUpdate = true;
-        }
-
-        let material = line.material;
-        if (material instanceof LineBasicMaterial) {
-            material.opacity = input.opacity;
-            if (input.colorLength) {
-                material.color.setHSL(distance / 2, 1, 0.5);
-            }
-            material.needsUpdate = true;
-        }
-    }
-}
-
-
-function cleanUp(total: number): void {
-    for (let i = 0; i < total; i++) {
-        let line = lines[i];
-        scene.remove(line);
-        line.geometry.dispose();
-        line.material.dispose();
-    }
-    lines = null;
+    renderController.requestRender("resize");
 }
 
 window.onload = init;

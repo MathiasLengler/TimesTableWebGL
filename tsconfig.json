@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "noEmit": true,
+    "noEmit": false,
     "outDir": "./build/",
     "sourceMap": true,
     "target": "es5",
-    "allowJs": true
+    "module": "commonjs",
+    "allowJs": false,
+    "noImplicitAny": true
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*"
   ]
 }

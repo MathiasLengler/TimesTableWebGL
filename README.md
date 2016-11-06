@@ -9,7 +9,8 @@ Written in Typescript, rendering with Three.js.
 
 ## Building
 - `npm install`
-- `npm pack`
+- `npm pack` to build once
+- `npm start` to start development server
 
 
 ## Ideas for further development
