@@ -1,5 +1,6 @@
 // webpack
 import "../assets/index.css";
+import "../node_modules/dat.gui/build/dat.gui.js";
 // npm
 import THREE = require("three");
 import Stats = require("stats.js");
@@ -9,23 +10,6 @@ import * as Render from "./render";
 import {ThreeEnv} from "./render";
 import {Input} from "./gui";
 
-
-class Point2D {
-    x: number;
-    y: number;
-
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-
-    static distance(a: Point2D, b: Point2D) {
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-}
 
 interface RenderFunction {
     (threeEnv: ThreeEnv, input: Input): void;
@@ -66,11 +50,17 @@ export class RenderController {
         this.waitOnUpdate = false;
 
         if (this.hasChanged["totalLines"]) {
-            Render.dispose(this.threeEnv);
-            const {positionsAttribute, colorsAttribute} =
-                Render.buildGeometry(this.threeEnv.geometry, this.input.totalLines);
-            this.threeEnv.positionsAttribute = positionsAttribute;
-            this.threeEnv.colorsAttribute = colorsAttribute;
+            Render.updateTotalLines(this.threeEnv, this.input.totalLines);
+        }
+
+        if (this.hasChanged["camPosX"] ||
+            this.hasChanged["camPosY"] ||
+            this.hasChanged["camPosZ"]) {
+            Render.updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
+        }
+
+        if (this.hasChanged["opacity"]) {
+            Render.updateOpacity(this.threeEnv, this.input.opacity);
         }
 
         // Execute main render
@@ -87,17 +77,18 @@ export class RenderController {
     }
 }
 
-// gui
-let input: Gui.Input = {
-    totalLines: 10000,
-    multiplier: 2,
-    animate: false,
-    multiplierIncrement: 0.005,
-    colorLength: true,
-    opacity: 0.3,
-    camPosX: 0,
-    camPosY: 0,
-    camPosZ: 1
+function getInitialInput() {
+    return {
+        totalLines: 200,
+        multiplier: 2,
+        animate: false,
+        multiplierIncrement: 0.005,
+        colorLength: true,
+        opacity: 1,
+        camPosX: 0,
+        camPosY: 0,
+        camPosZ: 1
+    }
 };
 
 
@@ -106,7 +97,9 @@ function init() {
     stats.showPanel(1);
     document.body.appendChild(stats.dom);
 
-    const threeEnv = initRenderer();
+    let input = getInitialInput();
+
+    const threeEnv = initRenderer(input);
 
     let renderController: RenderController =
         new RenderController(Render.render, stats, threeEnv, input);
@@ -119,7 +112,7 @@ function init() {
 }
 
 
-function initRenderer(): ThreeEnv {
+function initRenderer(input: Input): ThreeEnv {
     let renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -136,15 +129,15 @@ function initRenderer(): ThreeEnv {
         vertexColors: THREE.VertexColors,
         blending: THREE.AdditiveBlending,
         transparent: true,
-        opacity: 0.1
+        opacity: input.opacity
     });
 
-    // new THREE.LineBasicMaterial({
-    //     blending: THREE.AdditiveBlending,
-    //     transparent: true
-    // });
+    var {positions, colors} = Render.createPosColorArrays(input.totalLines);
 
-    let {positionsAttribute, colorsAttribute} = Render.buildGeometry(geometry, input.totalLines);
+    var positionsAttribute = new THREE.BufferAttribute(positions, 3);
+    var colorsAttribute = new THREE.BufferAttribute(colors, 3);
+    geometry.addAttribute('position', positionsAttribute);
+    geometry.addAttribute('color', colorsAttribute);
 
     var mesh = new THREE.LineSegments(geometry, material);
 

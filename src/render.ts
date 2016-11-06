@@ -35,10 +35,10 @@ function getCircleCord(number: number, total: number): Point2D {
     return new Point2D(Math.cos(normalized), Math.sin(normalized));
 }
 
-function updateArrays(positionsAttribute: THREE.BufferAttribute,
-                      colorsAttribute: THREE.BufferAttribute,
-                      multiplier: number,
-                      total: number) {
+function fillPosColorArrays(positionsAttribute: THREE.BufferAttribute,
+                            colorsAttribute: THREE.BufferAttribute,
+                            multiplier: number,
+                            total: number) {
     const positions = <Float32Array> positionsAttribute.array;
     const colors = <Float32Array> colorsAttribute.array;
     for (let i = 0; i < total; i++) {
@@ -69,25 +69,28 @@ function updateArrays(positionsAttribute: THREE.BufferAttribute,
     colorsAttribute.needsUpdate = true;
 }
 
-export function dispose(threeEnv: ThreeEnv) {
-    threeEnv.geometry.removeAttribute('position');
-    threeEnv.geometry.removeAttribute('color');
+export function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
+    threeEnv.material.opacity = opacity;
 }
 
-export function buildGeometry(geometry: THREE.BufferGeometry, totalLines: number) {
+export function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camPosZ: number) {
+    threeEnv.camera.position.set(camPosX,camPosY,camPosZ);
+}
+
+export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
+    var {positions, colors} = createPosColorArrays(totalLines);
+    threeEnv.positionsAttribute.setArray(positions);
+    threeEnv.colorsAttribute.setArray(colors);
+}
+
+export function createPosColorArrays(totalLines: number) {
     var positions = new Float32Array(totalLines * 6);
     var colors = new Float32Array(totalLines * 6);
-
-    var positionsAttribute = new THREE.BufferAttribute(positions, 3);
-    var colorsAttribute = new THREE.BufferAttribute(colors, 3);
-    geometry.addAttribute('position', positionsAttribute);
-    geometry.addAttribute('color', colorsAttribute);
-
-    return {positionsAttribute, colorsAttribute};
+    return {positions, colors};
 }
 
 export function render(threeEnv: ThreeEnv, input: Input) {
-    updateArrays(threeEnv.positionsAttribute, threeEnv.colorsAttribute, input.multiplier, input.totalLines);
+    fillPosColorArrays(threeEnv.positionsAttribute, threeEnv.colorsAttribute, input.multiplier, input.totalLines);
 
     threeEnv.renderer.render(threeEnv.scene, threeEnv.camera);
 }

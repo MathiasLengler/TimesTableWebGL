@@ -23,6 +23,11 @@ for single color mode
 
 ### Functionality
 
+- different coloring methods
 - 3D interpretation of the problem
 - Josephus Problem
 - Arbitrary shapes (Square, Triangle, ...)
+
+### Contributing
+
+- add BufferAttribute.setArray() to Type Definition

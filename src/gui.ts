@@ -1,6 +1,3 @@
-// webpack
-import "../node_modules/dat.gui/build/dat.gui.js";
-// own
 import {RenderController} from "./index";
 
 export interface Input {
