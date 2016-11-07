@@ -21,9 +21,7 @@
     "three": "^0.82.1"
   },
   "devDependencies": {
-    "@types/dat-gui": "^0.5.29",
     "@types/stats": "^0.16.30",
-    "@types/three": "0.0.24",
     "awesome-typescript-loader": "^2.2.4",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",

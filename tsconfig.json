@@ -6,7 +6,11 @@
     "target": "es5",
     "module": "commonjs",
     "allowJs": false,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "typeRoots": [
+      "./node_modules/@types/",
+      "./custom@types/"
+    ]
   },
   "include": [
     "src/**/*"

@@ -18,6 +18,7 @@ Written in Typescript, rendering with Three.js.
 
 - the first line has always 0 length
 - move modified TypeScript definitions out of node_modules
+- dat.gui ignores step setting and doesn't create sliders
 
 ### Functionality
 

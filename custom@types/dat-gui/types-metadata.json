@@ -1,0 +1,23 @@
+{
+    "authors": "Satoru Kimura <https://github.com/gyohk>",
+    "definitionFilename": "index.d.ts",
+    "libraryDependencies": [],
+    "moduleDependencies": [],
+    "libraryMajorVersion": "0",
+    "libraryMinorVersion": "5",
+    "libraryName": "dat.GUI v0.5",
+    "typingsPackageName": "dat-gui",
+    "projectName": "https://github.com/dataarts/dat.gui",
+    "sourceRepoURL": "https://www.github.com/DefinitelyTyped/DefinitelyTyped",
+    "sourceBranch": "types-2.0",
+    "kind": "Global",
+    "globals": [
+        "dat"
+    ],
+    "declaredModules": [],
+    "files": [
+        "index.d.ts"
+    ],
+    "hasPackageJson": false,
+    "contentHash": "da12f334083014844272eab721b85d6c3210f42ac83bad8c5fd8a5a78cf33bbf"
+}
