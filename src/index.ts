@@ -1,6 +1,6 @@
 // webpack
 import "../res/index.css";
-import "../res/dat.gui.js";
+import "../res/dat.gui/dat.gui.js";
 // npm
 import THREE = require("three");
 import Stats = require("stats.js");
