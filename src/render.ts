@@ -46,8 +46,45 @@ export class RenderController {
 
         this.waitOnUpdate = false;
 
+        this.update();
+
+        render(this.threeEnv, this.input);
+
+        this.hasChanged = {};
+
+        if (this.input.animate) {
+            this.input.multiplier += this.input.multiplierIncrement;
+            this.requestRender("multiplier");
+        }
+
+        this.stats.end();
+    }
+
+    private update() {
+        if (this.hasChanged["init"]) {
+            updateTotalLines(this.threeEnv, this.input.totalLines);
+            fillPosColorArrays(
+                this.threeEnv.positionsAttribute,
+                this.threeEnv.colorsAttribute,
+                this.input.multiplier,
+                this.input.totalLines
+            );
+            updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
+            updateOpacity(this.threeEnv, this.input.opacity);
+        }
+
         if (this.hasChanged["totalLines"]) {
             updateTotalLines(this.threeEnv, this.input.totalLines);
+        }
+
+        if (this.hasChanged["multiplier"] ||
+            this.hasChanged["totalLines"]) {
+            fillPosColorArrays(
+                this.threeEnv.positionsAttribute,
+                this.threeEnv.colorsAttribute,
+                this.input.multiplier,
+                this.input.totalLines
+            );
         }
 
         if (this.hasChanged["camPosX"] ||
@@ -59,18 +96,6 @@ export class RenderController {
         if (this.hasChanged["opacity"]) {
             updateOpacity(this.threeEnv, this.input.opacity);
         }
-
-        // Execute main render
-        render(this.threeEnv, this.input);
-
-        this.hasChanged = {};
-
-        if (this.input.animate) {
-            this.input.multiplier += this.input.multiplierIncrement;
-            this.requestRender("multiplier");
-        }
-
-        this.stats.end();
     }
 }
 
@@ -118,23 +143,16 @@ function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
 }
 
 function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camPosZ: number) {
-    threeEnv.camera.position.set(camPosX,camPosY,camPosZ);
+    threeEnv.camera.position.set(camPosX, camPosY, camPosZ);
 }
 
 function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
-    var {positions, colors} = createPosColorArrays(totalLines);
+    var positions = new Float32Array(totalLines * 6);
+    var colors = new Float32Array(totalLines * 6);
     threeEnv.positionsAttribute.setArray(positions);
     threeEnv.colorsAttribute.setArray(colors);
 }
 
-export function createPosColorArrays(totalLines: number) {
-    var positions = new Float32Array(totalLines * 6);
-    var colors = new Float32Array(totalLines * 6);
-    return {positions, colors};
-}
-
 function render(threeEnv: ThreeEnv, input: Input) {
-    fillPosColorArrays(threeEnv.positionsAttribute, threeEnv.colorsAttribute, input.multiplier, input.totalLines);
-
     threeEnv.renderer.render(threeEnv.scene, threeEnv.camera);
 }

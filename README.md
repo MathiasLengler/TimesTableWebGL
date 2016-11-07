@@ -18,10 +18,16 @@ requires browser that supports WebGL
 
 - the first line has always 0 length
 - move modified TypeScript definitions out of node_modules
+- dat.gui source map
 
 ### Functionality
 
-- different coloring methods
+- slow animate
+- GUI
+    - multiplierIncrement x^3 slider
+    - opacity x^2 slider/gamma slider
+- coloring methods
+- winston logging
 - arbitrary shapes (Square, Triangle, ...)
 - 3D:
     - tube with multiple stages

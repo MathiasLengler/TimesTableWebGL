@@ -49,7 +49,7 @@ function init() {
 
     const input = getInitialInput();
 
-    const threeEnv = initRenderer(input);
+    const threeEnv = getThreeEnv();
 
     const renderController = new RenderController(stats, threeEnv, input);
 
@@ -60,35 +60,36 @@ function init() {
     renderController.requestRender("init");
 }
 
-
-function initRenderer(input: Input): ThreeEnv {
-    let renderer = new THREE.WebGLRenderer();
+/**
+ * Static initialization of render environment
+ */
+function getThreeEnv(): ThreeEnv {
+    const renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    let scene = new THREE.Scene();
+    const scene = new THREE.Scene();
 
-    let camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
-    camera.position.set(input.camPosX, input.camPosY, input.camPosZ);
+    const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-    let geometry = new THREE.BufferGeometry();
-    let material = new THREE.LineBasicMaterial({
+    const geometry = new THREE.BufferGeometry();
+    const material = new THREE.LineBasicMaterial({
         vertexColors: THREE.VertexColors,
         blending: THREE.AdditiveBlending,
-        transparent: true,
-        opacity: input.opacity
+        transparent: true
     });
 
-    var {positions, colors} = Render.createPosColorArrays(input.totalLines);
+    const positions = new Float32Array(0);
+    const colors = new Float32Array(0);
 
-    var positionsAttribute = new THREE.BufferAttribute(positions, 3);
-    var colorsAttribute = new THREE.BufferAttribute(colors, 3);
+    const positionsAttribute = new THREE.BufferAttribute(positions, 3);
+    const colorsAttribute = new THREE.BufferAttribute(colors, 3);
     geometry.addAttribute('position', positionsAttribute);
     geometry.addAttribute('color', colorsAttribute);
 
-    var mesh = new THREE.LineSegments(geometry, material);
+    const mesh = new THREE.LineSegments(geometry, material);
 
     scene.add(mesh);
 
