@@ -1,4 +1,4 @@
-import {RenderController} from "./index";
+import {RenderController} from "./render";
 
 export interface Input {
     totalLines: number,

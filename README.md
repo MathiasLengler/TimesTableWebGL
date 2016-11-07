@@ -12,22 +12,29 @@ Written in Typescript, rendering with Three.js.
 - `npm pack` to build once
 - `npm start` to start development server
 
+## Todo
 
-## Ideas for further development
+### Bugs
 
-### Performance
-
-- test BufferGeometry
-- use https://threejs.org/docs/#Reference/Objects/LineSegments 
-for single color mode
+- the first line has always 0 length
+- move modified TypeScript definitions out of node_modules
 
 ### Functionality
 
 - different coloring methods
-- 3D interpretation of the problem
+- arbitrary shapes (Square, Triangle, ...)
+- 3D:
+    - tube with multiple stages
+    - transform lines into quads in z direction
+    - sphere interpretation
 - Josephus Problem
-- Arbitrary shapes (Square, Triangle, ...)
+
+### Performance
+
+- benchmarking
+- optimize use of BufferAttribute (internal gl calls, [discussion](https://github.com/mrdoob/three.js/pull/9631))
 
 ### Contributing
 
 - add BufferAttribute.setArray() to Type Definition
+

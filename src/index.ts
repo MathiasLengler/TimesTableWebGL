@@ -9,75 +9,25 @@ import * as Gui from "./gui";
 import * as Render from "./render";
 import {ThreeEnv} from "./render";
 import {Input} from "./gui";
+import {RenderController} from "./render";
 
-
-interface RenderFunction {
-    (threeEnv: ThreeEnv, input: Input): void;
-}
-
-export class RenderController {
-    private waitOnUpdate = false;
-    private hasChanged: {
-        [source: string]: boolean
-    } = {};
-
-    private readonly renderMethod: RenderFunction;
-    private readonly stats: Stats;
-    private readonly threeEnv: ThreeEnv;
-    private readonly input: Input;
-
-    constructor(renderMethod: RenderFunction, stats: Stats, threeEnv: ThreeEnv, input: Input) {
-        this.renderMethod = renderMethod;
-        this.stats = stats;
-        this.threeEnv = threeEnv;
-        this.input = input;
-    }
-
-    public requestRender(source: string) {
-        this.hasChanged[source] = true;
-
-        if (!this.waitOnUpdate) {
-            this.waitOnUpdate = true;
-            requestAnimationFrame(() => this.render());
-        }
-    }
-
-    private render() {
-        this.stats.begin();
-
-        console.log(this.hasChanged);
-
-        this.waitOnUpdate = false;
-
-        if (this.hasChanged["totalLines"]) {
-            Render.updateTotalLines(this.threeEnv, this.input.totalLines);
-        }
-
-        if (this.hasChanged["camPosX"] ||
-            this.hasChanged["camPosY"] ||
-            this.hasChanged["camPosZ"]) {
-            Render.updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
-        }
-
-        if (this.hasChanged["opacity"]) {
-            Render.updateOpacity(this.threeEnv, this.input.opacity);
-        }
-
-        // Execute main render
-        this.renderMethod(this.threeEnv, this.input);
-
-        this.hasChanged = {};
-
-        if (this.input.animate) {
-            this.input.multiplier += this.input.multiplierIncrement;
-            this.requestRender("multiplier");
-        }
-
-        this.stats.end();
-    }
-}
+const debug = false;
 
 function getInitialInput() {
+    if (debug) {
+        return {
+            totalLines: 4,
+            multiplier: 2,
+            animate: false,
+            multiplierIncrement: 0.005,
+            colorLength: true,
+            opacity: 1,
+            camPosX: 0,
+            camPosY: 0,
+            camPosZ: 1
+        }
+    }
+
     return {
         totalLines: 200,
         multiplier: 2,
@@ -89,20 +39,19 @@ function getInitialInput() {
         camPosY: 0,
         camPosZ: 1
     }
-};
+}
 
 
 function init() {
-    let stats = new Stats();
+    const stats = new Stats();
     stats.showPanel(1);
     document.body.appendChild(stats.dom);
 
-    let input = getInitialInput();
+    const input = getInitialInput();
 
     const threeEnv = initRenderer(input);
 
-    let renderController: RenderController =
-        new RenderController(Render.render, stats, threeEnv, input);
+    const renderController = new RenderController(stats, threeEnv, input);
 
     window.addEventListener('resize', () => onWindowResize(renderController, threeEnv));
 

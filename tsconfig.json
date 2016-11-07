@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noEmit": false,
+    "noEmit": true,
     "outDir": "./build/",
     "sourceMap": true,
     "target": "es5",

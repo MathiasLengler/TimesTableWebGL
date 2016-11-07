@@ -1,7 +1,7 @@
 import THREE = require("three");
 
-import {RenderController} from "./index";
 import {Input} from "./gui";
+import {Point2D} from "./point2D";
 
 export interface ThreeEnv {
     readonly renderer: THREE.WebGLRenderer,
@@ -13,20 +13,64 @@ export interface ThreeEnv {
     colorsAttribute: THREE.BufferAttribute
 }
 
-class Point2D {
-    x: number;
-    y: number;
 
-    constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
+export class RenderController {
+    private waitOnUpdate = false;
+    private hasChanged: {
+        [source: string]: boolean
+    } = {};
+
+    private readonly stats: Stats;
+    private readonly threeEnv: ThreeEnv;
+    private readonly input: Input;
+
+    constructor(stats: Stats, threeEnv: ThreeEnv, input: Input) {
+        this.stats = stats;
+        this.threeEnv = threeEnv;
+        this.input = input;
     }
 
-    static distance(a: Point2D, b: Point2D) {
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
+    public requestRender(source: string) {
+        this.hasChanged[source] = true;
 
-        return Math.sqrt(dx * dx + dy * dy);
+        if (!this.waitOnUpdate) {
+            this.waitOnUpdate = true;
+            requestAnimationFrame(() => this.render());
+        }
+    }
+
+    private render() {
+        this.stats.begin();
+
+        console.log(this.hasChanged);
+
+        this.waitOnUpdate = false;
+
+        if (this.hasChanged["totalLines"]) {
+            updateTotalLines(this.threeEnv, this.input.totalLines);
+        }
+
+        if (this.hasChanged["camPosX"] ||
+            this.hasChanged["camPosY"] ||
+            this.hasChanged["camPosZ"]) {
+            updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
+        }
+
+        if (this.hasChanged["opacity"]) {
+            updateOpacity(this.threeEnv, this.input.opacity);
+        }
+
+        // Execute main render
+        render(this.threeEnv, this.input);
+
+        this.hasChanged = {};
+
+        if (this.input.animate) {
+            this.input.multiplier += this.input.multiplierIncrement;
+            this.requestRender("multiplier");
+        }
+
+        this.stats.end();
     }
 }
 
@@ -69,15 +113,15 @@ function fillPosColorArrays(positionsAttribute: THREE.BufferAttribute,
     colorsAttribute.needsUpdate = true;
 }
 
-export function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
+function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
     threeEnv.material.opacity = opacity;
 }
 
-export function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camPosZ: number) {
+function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camPosZ: number) {
     threeEnv.camera.position.set(camPosX,camPosY,camPosZ);
 }
 
-export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
+function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
     var {positions, colors} = createPosColorArrays(totalLines);
     threeEnv.positionsAttribute.setArray(positions);
     threeEnv.colorsAttribute.setArray(colors);
@@ -89,7 +133,7 @@ export function createPosColorArrays(totalLines: number) {
     return {positions, colors};
 }
 
-export function render(threeEnv: ThreeEnv, input: Input) {
+function render(threeEnv: ThreeEnv, input: Input) {
     fillPosColorArrays(threeEnv.positionsAttribute, threeEnv.colorsAttribute, input.multiplier, input.totalLines);
 
     threeEnv.renderer.render(threeEnv.scene, threeEnv.camera);
