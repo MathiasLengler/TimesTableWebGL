@@ -5,7 +5,7 @@ Written in Typescript, rendering with Three.js.
 
 ## [Live Demo](https://mathiaslengler.github.io/demos/TimesTableWebGL/index.html)
 
-- requires browser that supports WebGL
+requires browser that supports WebGL
 
 ## Building
 - `npm install`
@@ -18,7 +18,6 @@ Written in Typescript, rendering with Three.js.
 
 - the first line has always 0 length
 - move modified TypeScript definitions out of node_modules
-- dat.gui ignores step setting and doesn't create sliders
 
 ### Functionality
 
@@ -37,5 +36,8 @@ Written in Typescript, rendering with Three.js.
 
 ### Contributing
 
-- add BufferAttribute.setArray() to Type Definition
-
+- Typings
+    - Three (update to r82)
+        - add BufferAttribute.setArray() to Type Definition
+    - dat.gui
+        - add GUIController.max()
