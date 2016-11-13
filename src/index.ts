@@ -6,39 +6,45 @@ import THREE = require("three");
 import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
-import * as Render from "./render";
 import {ThreeEnv} from "./render";
-import {Input} from "./gui";
 import {RenderController} from "./render";
 
-const debug = false;
 
 function getInitialInput() {
-    if (debug) {
-        return {
+    const initialInputs = {
+        standard: {
+            totalLines: 200,
+            multiplier: 2,
+            animate: false,
+            multiplierIncrement: 0.005,
+            opacity: 1,
+            camPosX: 0,
+            camPosY: 0,
+            camPosZ: 1
+        },
+        benchmark: {
+            totalLines: 250000,
+            multiplier: 100000,
+            animate: false,
+            multiplierIncrement: 1,
+            opacity: 0.005,
+            camPosX: 0,
+            camPosY: 0,
+            camPosZ: 1
+        },
+        debug: {
             totalLines: 4,
             multiplier: 2,
             animate: false,
             multiplierIncrement: 0.005,
-            colorLength: true,
             opacity: 1,
             camPosX: 0,
             camPosY: 0,
             camPosZ: 1
         }
-    }
+    };
 
-    return {
-        totalLines: 200,
-        multiplier: 2,
-        animate: false,
-        multiplierIncrement: 0.005,
-        colorLength: true,
-        opacity: 1,
-        camPosX: 0,
-        camPosY: 0,
-        camPosZ: 1
-    }
+    return initialInputs.standard;
 }
 
 

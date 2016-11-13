@@ -53,7 +53,7 @@ export class RenderController {
         this.hasChanged = {};
 
         if (this.input.animate) {
-            this.input.multiplier += this.input.multiplierIncrement;
+            this.input.multiplier += Math.pow(this.input.multiplierIncrement,3);
             this.requestRender("multiplier");
         }
 

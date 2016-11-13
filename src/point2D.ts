@@ -1,6 +1,6 @@
 export class Point2D {
-    x: number;
-    y: number;
+    readonly x: number;
+    readonly y: number;
 
     constructor(x: number, y: number) {
         this.x = x;
