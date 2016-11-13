@@ -6,6 +6,7 @@ export interface Input {
     animate: boolean,
     multiplierIncrement: number,
     opacity: number,
+    colorMethod: string,
     camPosX: number,
     camPosY: number,
     camPosZ: number
@@ -18,8 +19,8 @@ export function initGUI(input: Input, renderController: RenderController) {
     const multiplier = "multiplier";
     const animate = "animate";
     const multiplierIncrement = "multiplierIncrement";
-    const colorLength = "colorLength";
     const opacity = "opacity";
+    const colorMethod = "colorMethod";
     const camPosX = "camPosX";
     const camPosY = "camPosY";
     const camPosZ = "camPosZ";
@@ -34,13 +35,15 @@ export function initGUI(input: Input, renderController: RenderController) {
     let f2 = gui.addFolder("Animation");
     f2.add(input, animate)
         .onChange(() => renderController.requestRender(animate));
-    f2.add(input, multiplierIncrement).min(-1).max(1)
+    f2.add(input, multiplierIncrement).min(-1).max(1).step(0.001)
         .onChange(() => renderController.requestRender(multiplierIncrement));
     f2.open();
 
     let f3 = gui.addFolder("Color");
     f3.add(input, opacity, 0, 1).step(0.001)
         .onChange(() => renderController.requestRender(opacity));
+    f3.add(input, colorMethod, ['solid', 'faded', 'length'])
+        .onChange(() => renderController.requestRender(colorMethod));
     f3.open();
 
     let f4 = gui.addFolder("Camera");

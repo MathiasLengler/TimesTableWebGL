@@ -11,13 +11,15 @@ import {RenderController} from "./render";
 
 
 function getInitialInput() {
+
     const initialInputs = {
         standard: {
             totalLines: 200,
             multiplier: 2,
             animate: false,
-            multiplierIncrement: 0.005,
+            multiplierIncrement: 0.2,
             opacity: 1,
+            colorMethod: 'faded',
             camPosX: 0,
             camPosY: 0,
             camPosZ: 1
@@ -28,6 +30,7 @@ function getInitialInput() {
             animate: false,
             multiplierIncrement: 1,
             opacity: 0.005,
+            colorMethod: 'faded',
             camPosX: 0,
             camPosY: 0,
             camPosZ: 1
@@ -38,6 +41,7 @@ function getInitialInput() {
             animate: false,
             multiplierIncrement: 0.005,
             opacity: 1,
+            colorMethod: 'faded',
             camPosX: 0,
             camPosY: 0,
             camPosZ: 1
@@ -89,17 +93,19 @@ function getThreeEnv(): ThreeEnv {
 
     const positions = new Float32Array(0);
     const colors = new Float32Array(0);
+    const distances = new Float32Array(0);
 
     const positionsAttribute = new THREE.BufferAttribute(positions, 3);
     const colorsAttribute = new THREE.BufferAttribute(colors, 3);
     geometry.addAttribute('position', positionsAttribute);
     geometry.addAttribute('color', colorsAttribute);
 
+
     const mesh = new THREE.LineSegments(geometry, material);
 
     scene.add(mesh);
 
-    return {renderer, scene, camera, geometry, material, positionsAttribute, colorsAttribute};
+    return {renderer, scene, camera, geometry, material, positionsAttribute, colorsAttribute, distances};
 }
 
 function onWindowResize(renderController: RenderController, threeEnv: ThreeEnv) {
