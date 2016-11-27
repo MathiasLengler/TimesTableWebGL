@@ -17,9 +17,11 @@
   "license": "MIT",
   "dependencies": {
     "stats.js": "^0.17.0",
-    "three": "^0.82.1"
+    "three": "^0.82.1",
+    "dat.gui": "dataarts/dat.gui"
   },
   "devDependencies": {
+    "@types/dat-gui": "^0.6.0",
     "@types/stats": "^0.16.30",
     "awesome-typescript-loader": "^2.2.4",
     "babel-core": "^6.18.2",

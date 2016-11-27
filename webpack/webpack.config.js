@@ -1,12 +1,14 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: {
+        "bundle": './src/index.ts'
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name].js',
         path: './build'
     },
-    devtool: "source-map",
+    devtool: "eval-source-map",
     resolve: {
         extensions: ['', '.js', '.ts']
     },
@@ -29,8 +31,12 @@ module.exports = {
                 loader: "script-loader"
             }
         ]
-    },
-    plugins: [new HtmlWebpackPlugin({
-        title: "Times Table JS"
-    })]
-};
+    }
+    ,
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: "Times Table JS"
+        })
+    ]
+}
+;

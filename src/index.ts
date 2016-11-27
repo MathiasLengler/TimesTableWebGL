@@ -1,6 +1,6 @@
 // webpack
 import "../res/index.css";
-import "../res/dat.gui/dat.gui.js";
+import "../node_modules/dat.gui/build/dat.gui.js";
 // npm
 import THREE = require("three");
 import Stats = require("stats.js");
@@ -8,44 +8,51 @@ import Stats = require("stats.js");
 import * as Gui from "./gui";
 import {ThreeEnv} from "./render";
 import {RenderController} from "./render";
+import {Input} from "./gui";
 
 
-function getInitialInput() {
+function getInitialInput(): Input {
+
+    const standard: Input = {
+        totalLines: 200,
+        multiplier: 2,
+        animate: false,
+        multiplierIncrement: 0.2,
+        opacity: 1,
+        colorMethod: 'solid',
+        camPosX: 0,
+        camPosY: 0,
+        camPosZ: 1
+    };
+
+    const benchmark: Input = {
+        totalLines: 250000,
+        multiplier: 100000,
+        animate: false,
+        multiplierIncrement: 1,
+        opacity: 0.005,
+        colorMethod: 'faded',
+        camPosX: 0,
+        camPosY: 0,
+        camPosZ: 1
+    };
+
+    const debug: Input = {
+        totalLines: 4,
+        multiplier: 2,
+        animate: false,
+        multiplierIncrement: 0.005,
+        opacity: 1,
+        colorMethod: 'faded',
+        camPosX: 0,
+        camPosY: 0,
+        camPosZ: 1
+    };
 
     const initialInputs = {
-        standard: {
-            totalLines: 200,
-            multiplier: 2,
-            animate: false,
-            multiplierIncrement: 0.2,
-            opacity: 1,
-            colorMethod: 'faded',
-            camPosX: 0,
-            camPosY: 0,
-            camPosZ: 1
-        },
-        benchmark: {
-            totalLines: 250000,
-            multiplier: 100000,
-            animate: false,
-            multiplierIncrement: 1,
-            opacity: 0.005,
-            colorMethod: 'faded',
-            camPosX: 0,
-            camPosY: 0,
-            camPosZ: 1
-        },
-        debug: {
-            totalLines: 4,
-            multiplier: 2,
-            animate: false,
-            multiplierIncrement: 0.005,
-            opacity: 1,
-            colorMethod: 'faded',
-            camPosX: 0,
-            camPosY: 0,
-            camPosZ: 1
-        }
+        standard,
+        benchmark,
+        debug
     };
 
     return initialInputs.standard;

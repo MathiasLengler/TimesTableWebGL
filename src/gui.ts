@@ -1,12 +1,14 @@
 import {RenderController} from "./render";
 
+export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
+
 export interface Input {
     totalLines: number,
     multiplier: number,
     animate: boolean,
     multiplierIncrement: number,
     opacity: number,
-    colorMethod: string,
+    colorMethod: ColorMethod,
     camPosX: number,
     camPosY: number,
     camPosZ: number
@@ -42,7 +44,7 @@ export function initGUI(input: Input, renderController: RenderController) {
     let f3 = gui.addFolder("Color");
     f3.add(input, opacity, 0, 1).step(0.001)
         .onChange(() => renderController.requestRender(opacity));
-    f3.add(input, colorMethod, ['solid', 'faded', 'length'])
+    f3.add(input, colorMethod, ['solid', 'faded', 'lengthOpacity', 'lengthHue'])
         .onChange(() => renderController.requestRender(colorMethod));
     f3.open();
 

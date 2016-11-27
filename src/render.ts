@@ -1,6 +1,6 @@
 import THREE = require("three");
 
-import {Input} from "./gui";
+import {Input, ColorMethod} from "./gui";
 import {Point2D} from "./point2D";
 
 export interface ThreeEnv {
@@ -49,7 +49,7 @@ export class RenderController {
 
         this.update();
 
-        render(this.threeEnv, this.input);
+        render(this.threeEnv);
 
         this.hasChanged = {};
 
@@ -137,10 +137,8 @@ function updatePositions(positionsAttribute: THREE.BufferAttribute, distances: F
     positionsAttribute.needsUpdate = true;
 }
 
-function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32Array, total: number, colorMethod: string) {
+function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32Array, total: number, colorMethod: ColorMethod) {
     const colors = <Float32Array> colorsAttribute.array;
-
-    const options = ['solid', 'faded', 'length'];
 
     switch (colorMethod) {
         case 'solid':
@@ -167,13 +165,9 @@ function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32
                 colors[i * 6 + 5] = 0;
             }
             break;
-        case 'length':
+        case 'lengthOpacity':
             for (let i = 0; i < total; i++) {
-                // TODO: use old color logic
-
-                const distance = 1- distances[i] / 2;
-
-                console.log(distance);
+                const distance = 1 - distances[i] / 2;
 
                 // colors start point
                 colors[i * 6] = distance;
@@ -185,8 +179,22 @@ function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32
                 colors[i * 6 + 5] = distance;
             }
             break;
+        case 'lengthHue':
+            for (let i = 0; i < total; i++) {
+                const {r,g,b} = new THREE.Color().setHSL(distances[i] / 2, 1, 0.5);
+
+                // colors start point
+                colors[i * 6] = r;
+                colors[i * 6 + 1] = g;
+                colors[i * 6 + 2] = b;
+                // colors end point
+                colors[i * 6 + 3] = r;
+                colors[i * 6 + 4] = g;
+                colors[i * 6 + 5] = b;
+            }
+            break;
         default:
-            throw "Use an enum";
+            throw "Unexpected ColorValue";
     }
 
     colorsAttribute.needsUpdate = true;
@@ -201,14 +209,14 @@ function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camP
 }
 
 function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
-    var positions = new Float32Array(totalLines * 6);
-    var colors = new Float32Array(totalLines * 6);
-    var distances = new Float32Array(totalLines);
+    const positions = new Float32Array(totalLines * 6);
+    const colors = new Float32Array(totalLines * 6);
+    const distances = new Float32Array(totalLines);
     threeEnv.positionsAttribute.setArray(positions);
     threeEnv.colorsAttribute.setArray(colors);
     threeEnv.distances = distances;
 }
 
-function render(threeEnv: ThreeEnv, input: Input) {
+function render(threeEnv: ThreeEnv) {
     threeEnv.renderer.render(threeEnv.scene, threeEnv.camera);
 }
