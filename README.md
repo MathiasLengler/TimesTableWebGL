@@ -17,8 +17,6 @@ requires browser that supports WebGL
 ### Bugs
 
 - the first line has always 0 length
-- move modified TypeScript definitions out of node_modules
-- dat.gui source map
 
 ### Functionality
 
@@ -45,5 +43,3 @@ requires browser that supports WebGL
 - Typings
     - Three (update to r82)
         - add BufferAttribute.setArray() to Type Definition
-    - dat.gui
-        - add GUIController.max()
