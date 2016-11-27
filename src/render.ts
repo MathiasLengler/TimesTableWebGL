@@ -53,10 +53,7 @@ export class RenderController {
 
         this.hasChanged = {};
 
-        if (this.input.animate) {
-            this.input.multiplier += Math.pow(this.input.multiplierIncrement, 3);
-            this.requestRender("multiplier");
-        }
+        this.prepareNextRender();
 
         this.stats.end();
     }
@@ -93,9 +90,18 @@ export class RenderController {
                 this.input.multiplier,
                 this.input.totalLines
             );
+
+            if (this.input.recolor) {
+                // Only recolor on multiplier update when the color method depends on line length
+                if (this.input.colorMethod === "lengthOpacity" ||
+                    this.input.colorMethod === "lengthHue") {
+                    updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
+                }
+            }
         }
 
-        if (this.hasChanged["colorMethod"]) {
+        if (this.hasChanged["colorMethod"] ||
+            this.hasChanged["recolor"]) {
             updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
         }
 
@@ -107,6 +113,13 @@ export class RenderController {
 
         if (this.hasChanged["opacity"]) {
             updateOpacity(this.threeEnv, this.input.opacity);
+        }
+    }
+
+    private prepareNextRender() {
+        if (this.input.animate) {
+            this.input.multiplier += Math.pow(this.input.multiplierIncrement, 3);
+            this.requestRender("multiplier");
         }
     }
 }
@@ -181,7 +194,7 @@ function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32
             break;
         case 'lengthHue':
             for (let i = 0; i < total; i++) {
-                const {r,g,b} = new THREE.Color().setHSL(distances[i] / 2, 1, 0.5);
+                const {r, g, b} = new THREE.Color().setHSL(distances[i] / 2, 1, 0.5);
 
                 // colors start point
                 colors[i * 6] = r;

@@ -20,6 +20,7 @@ function getInitialInput(): Input {
         multiplierIncrement: 0.2,
         opacity: 1,
         colorMethod: 'solid',
+        recolor: false,
         camPosX: 0,
         camPosY: 0,
         camPosZ: 1
@@ -32,6 +33,7 @@ function getInitialInput(): Input {
         multiplierIncrement: 1,
         opacity: 0.005,
         colorMethod: 'faded',
+        recolor: false,
         camPosX: 0,
         camPosY: 0,
         camPosZ: 1
@@ -44,6 +46,7 @@ function getInitialInput(): Input {
         multiplierIncrement: 0.005,
         opacity: 1,
         colorMethod: 'faded',
+        recolor: false,
         camPosX: 0,
         camPosY: 0,
         camPosZ: 1
