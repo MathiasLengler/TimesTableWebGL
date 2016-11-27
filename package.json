@@ -1,13 +1,14 @@
 {
   "name": "times-table-js",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Interactive rendering of times tables",
   "main": "main.js",
   "scripts": {
     "clean": "rimraf build/**/* dist/**/*",
-    "server": "webpack-dev-server --config webpack/webpack.config.js --content-base build/ --open",
+    "start": "webpack-dev-server --config webpack/webpack.config.js --content-base build/ --open",
     "pack": "webpack --config webpack/webpack.config.js",
-    "pack-prod": "webpack --config webpack/webpack.production.config.js"
+    "dist": "webpack --config webpack/webpack.production.config.js",
+    "pack-profile": "webpack --config webpack/webpack.config.js --profile --json > stats.json"
   },
   "repository": {
     "type": "git",
@@ -16,14 +17,13 @@
   "author": "Mathias Lengler",
   "license": "MIT",
   "dependencies": {
-    "dat.gui": "^0.6.1",
     "stats.js": "^0.17.0",
-    "three": "^0.82.1"
+    "three": "^0.82.1",
+    "dat.gui": "dataarts/dat.gui"
   },
   "devDependencies": {
-    "@types/dat-gui": "^0.5.29",
+    "@types/dat-gui": "^0.6.0",
     "@types/stats": "^0.16.30",
-    "@types/three": "0.0.24",
     "awesome-typescript-loader": "^2.2.4",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",

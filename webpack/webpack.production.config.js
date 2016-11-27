@@ -1,8 +1,11 @@
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.ts',
+    entry: {
+        "app": './src/index.ts',
+        "vendor": ['three', 'stats.js', './node_modules/dat.gui/build/dat.gui.js']
+    },
     output: {
         filename: 'bundle.js',
         path: './dist'
@@ -19,13 +22,25 @@ module.exports = {
             {
                 test: /\.css$/,
                 loader: "style-loader!css-loader"
+            },
+            {
+                test: /dat.gui.js$/,
+                loader: "script-loader"
             }
         ]
-    },
+    }
+    ,
     plugins: [
+        new webpack.optimize.UglifyJsPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(true),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.CommonsChunkPlugin(
+            /* chunkName= */"vendor",
+            /* filename= */"vendor.bundle.js"
+        ),
         new HtmlWebpackPlugin({
             title: "Times Table JS"
-        }),
-        new webpack.optimize.UglifyJsPlugin()
+        })
     ]
-};
+}
+;

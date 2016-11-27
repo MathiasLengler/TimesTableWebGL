@@ -4,9 +4,20 @@
     "outDir": "./build/",
     "sourceMap": true,
     "target": "es5",
-    "allowJs": true
+    "module": "commonjs",
+    "allowJs": false,
+    "noImplicitAny": true,
+    "typeRoots": [
+      "./node_modules/@types/",
+      "./custom@types/"
+    ]
   },
   "include": [
-    "src/**/*.ts"
-  ]
+    "src/**/*"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "useCache": false,
+    "emitRequireType": false
+  }
 }
