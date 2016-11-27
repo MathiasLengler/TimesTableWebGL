@@ -8,7 +8,7 @@ module.exports = {
     },
     output: {
         filename: 'bundle.js',
-        path: './dist'
+        path: __dirname + '/build/'
     },
     resolve: {
         extensions: ['', '.js', '.ts']
