@@ -2,7 +2,7 @@ const gulp = require('gulp');
 const ghPages = require('gulp-gh-pages');
 const webpack = require('webpack-stream');
 
-gulp.task('gh-pages', function () {
+gulp.task('deploy', ['dist'], function () {
     return gulp.src('./dist/**/*')
         .pipe(ghPages());
 });
@@ -18,5 +18,3 @@ gulp.task('dist', function () {
         .pipe(webpack(require('./webpack/webpack.production.config.js')))
         .pipe(gulp.dest('dist/'));
 });
-
-gulp.task('deploy', ['dist', 'gh-pages']);
