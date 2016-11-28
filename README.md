@@ -17,7 +17,7 @@ requires browser that supports WebGL
 ### Bugs
 
 - the first line has always 0 length
-- gui does not get updated when values get changed by the application
+- gui does not get updated when values get changed by the application ([updateDisplay](https://workshop.chromeexperiments.com/examples/gui/#10--Updating-the-Display-Manually))
 
 ### Functionality
 
