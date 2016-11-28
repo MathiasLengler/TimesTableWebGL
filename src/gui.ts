@@ -12,7 +12,8 @@ export interface Input {
     recolor: boolean,
     camPosX: number,
     camPosY: number,
-    camPosZ: number
+    camPosZ: number,
+    resetCamera: () => void
 }
 
 export function initGUI(input: Input, renderController: RenderController) {
@@ -28,6 +29,7 @@ export function initGUI(input: Input, renderController: RenderController) {
     const camPosX = "camPosX";
     const camPosY = "camPosY";
     const camPosZ = "camPosZ";
+    const resetCamera = "resetCamera";
 
     let f1 = gui.addFolder("Maths");
     f1.add(input, totalLines).min(0).step(1)
@@ -59,5 +61,7 @@ export function initGUI(input: Input, renderController: RenderController) {
         .onChange(() => renderController.requestRender(camPosY));
     f4.add(input, camPosZ, 0, 1).step(0.001)
         .onChange(() => renderController.requestRender(camPosZ));
-
+    f4.add(input, resetCamera)
+        .onChange(() => renderController.requestRender(resetCamera));
+    f4.open();
 }

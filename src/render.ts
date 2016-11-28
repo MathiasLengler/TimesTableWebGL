@@ -105,7 +105,15 @@ export class RenderController {
             updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
         }
 
-        if (this.hasChanged["camPosX"] ||
+        if (this.hasChanged["resetCamera"]) {
+            // TODO: update gui
+            this.input.camPosX = 0;
+            this.input.camPosY = 0;
+            this.input.camPosZ = 1;
+        }
+
+        if (this.hasChanged["resetCamera"] ||
+            this.hasChanged["camPosX"] ||
             this.hasChanged["camPosY"] ||
             this.hasChanged["camPosZ"]) {
             updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);

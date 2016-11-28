@@ -17,15 +17,13 @@ requires browser that supports WebGL
 ### Bugs
 
 - the first line has always 0 length
+- gui does not get updated when values get changed by the application
 
 ### Functionality
 
-- slow animate
+- slow animate mode
 - GUI
-    - multiplierIncrement x^3 slider
     - opacity x^2 slider/gamma slider
-- coloring methods
-- winston logging
 - arbitrary shapes (Square, Triangle, ...)
 - 3D:
     - tube with multiple stages
@@ -35,7 +33,6 @@ requires browser that supports WebGL
 
 ### Performance
 
-- benchmarking
 - optimize use of BufferAttribute (internal gl calls, [discussion](https://github.com/mrdoob/three.js/pull/9631))
 
 ### Contributing

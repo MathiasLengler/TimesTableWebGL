@@ -23,7 +23,8 @@ function getInitialInput(): Input {
         recolor: true,
         camPosX: 0,
         camPosY: 0,
-        camPosZ: 1
+        camPosZ: 1,
+        resetCamera: () => {}
     };
 
     const benchmark: Input = {
@@ -36,7 +37,8 @@ function getInitialInput(): Input {
         recolor: false,
         camPosX: 0,
         camPosY: 0,
-        camPosZ: 1
+        camPosZ: 1,
+        resetCamera: () => {}
     };
 
     const debug: Input = {
@@ -49,7 +51,8 @@ function getInitialInput(): Input {
         recolor: false,
         camPosX: 0,
         camPosY: 0,
-        camPosZ: 1
+        camPosZ: 1,
+        resetCamera: () => {}
     };
 
     const initialInputs = {
