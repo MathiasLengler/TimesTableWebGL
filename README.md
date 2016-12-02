@@ -34,6 +34,7 @@ requires browser that supports WebGL
 ### Performance
 
 - optimize use of BufferAttribute (internal gl calls, [discussion](https://github.com/mrdoob/three.js/pull/9631))
+- calculate updatePositions() in a vertex shader
 
 ### Contributing
 
