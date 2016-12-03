@@ -1,6 +1,8 @@
 // webpack
-import "../res/index.css";
+import "../res/style/index.css";
 import "../node_modules/dat.gui/build/dat.gui.js";
+import fragmentShader = require("../res/shaders/fragmentShader.glsl");
+import vertexShader = require("../res/shaders/vertexShader.glsl");
 // npm
 import THREE = require("three");
 import Stats = require("stats.js");
@@ -66,6 +68,9 @@ function getInitialInput(): Input {
 
 
 function init() {
+    console.log(fragmentShader);
+    console.log(vertexShader);
+
     const stats = new Stats();
     stats.showPanel(1);
     document.body.appendChild(stats.dom);

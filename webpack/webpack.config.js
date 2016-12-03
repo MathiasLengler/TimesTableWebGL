@@ -21,6 +21,10 @@ module.exports = {
         ],
         loaders: [
             {
+                test: /\.glsl$/,
+                loader: 'webpack-glsl-loader'
+            },
+            {
                 test: /\.ts$/,
                 loader: 'awesome-typescript-loader'
             },
