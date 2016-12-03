@@ -1,3 +1,5 @@
+uniform float multiplier;
+
 /**
  * Multiply each vertex by the
  * model-view matrix and the
@@ -6,7 +8,8 @@
  * vertex position
  */
 void main() {
+  vec3 newPosition = position * multiplier;
   gl_Position = projectionMatrix *
                 modelViewMatrix *
-                vec4(position,1.0);
+                vec4(newPosition,1.0);
 }

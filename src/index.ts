@@ -9,7 +9,7 @@ import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
 import {ThreeEnv} from "./render";
-import {RenderController} from "./render";
+import {RenderController} from "./render"
 import {Input} from "./gui";
 
 
@@ -68,9 +68,6 @@ function getInitialInput(): Input {
 
 
 function init() {
-    console.log(fragmentShader);
-    console.log(vertexShader);
-
     const stats = new Stats();
     stats.showPanel(1);
     document.body.appendChild(stats.dom);
@@ -103,9 +100,12 @@ function getThreeEnv(): ThreeEnv {
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     const geometry = new THREE.BufferGeometry();
-    const material = new THREE.LineBasicMaterial({
-        vertexColors: THREE.VertexColors,
-        blending: THREE.AdditiveBlending,
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            multiplier: {value: 2.0}
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
         transparent: true
     });
 

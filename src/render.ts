@@ -8,7 +8,7 @@ export interface ThreeEnv {
     readonly scene: THREE.Scene,
     readonly camera: THREE.PerspectiveCamera,
     readonly geometry: THREE.BufferGeometry,
-    readonly material: THREE.LineBasicMaterial,
+    readonly material: THREE.Material,
     positionsAttribute: THREE.BufferAttribute,
     colorsAttribute: THREE.BufferAttribute,
     distances: Float32Array
