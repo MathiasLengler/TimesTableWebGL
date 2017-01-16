@@ -101,7 +101,7 @@ function getThreeEnv(): ThreeEnv {
     const geometry = new THREE.BufferGeometry();
     const material = new THREE.ShaderMaterial({
         uniforms: {
-            multiplier: {value: 2.0}
+            multiplier: {value: 1.0}
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
