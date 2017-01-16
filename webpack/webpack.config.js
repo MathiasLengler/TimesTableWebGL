@@ -6,11 +6,14 @@ module.exports = {
         "app": './src/index.ts',
         "vendor": ['three', 'stats.js', './node_modules/dat.gui/build/dat.gui.js']
     },
+    externals: {
+        "dat.gui": "dat"
+    },
     output: {
         filename: 'bundle.js',
         path: __dirname + '/build/'
     },
-    devtool: "eval-source-map",
+    devtool: "source-map",
     resolve: {
         extensions: ['', '.js', '.ts']
     },

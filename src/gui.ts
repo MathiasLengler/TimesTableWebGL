@@ -1,4 +1,5 @@
 import {RenderController} from "./render";
+import * as dat from 'dat.gui';
 
 export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
 
