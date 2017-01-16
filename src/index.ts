@@ -14,7 +14,6 @@ import {Input} from "./gui";
 
 
 function getInitialInput(): Input {
-
     const standard: Input = {
         totalLines: 200,
         multiplier: 2,
