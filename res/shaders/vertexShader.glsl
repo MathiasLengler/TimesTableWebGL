@@ -16,7 +16,7 @@ void main() {
   newPosition.x = number.x;
   gl_Position = projectionMatrix *
                 modelViewMatrix *
-                vec4(position,1.0);
+                vec4(newPosition,1.0);
 }
 
 struct Point2D {
