@@ -11,6 +11,7 @@ export interface ThreeEnv {
     readonly material: THREE.Material,
     positionsAttribute: THREE.BufferAttribute,
     colorsAttribute: THREE.BufferAttribute,
+    numbersAttribute: THREE.BufferAttribute,
     distances: Float32Array
 }
 
@@ -70,6 +71,7 @@ export class RenderController {
             updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
             updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
             updateOpacity(this.threeEnv, this.input.opacity);
+            updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
         }
 
         if (this.hasChanged["totalLines"]) {
@@ -135,6 +137,14 @@ export class RenderController {
 function getCircleCord(number: number, total: number): Point2D {
     let normalized = (number / total) * 2 * Math.PI;
     return new Point2D(Math.cos(normalized), Math.sin(normalized));
+}
+
+function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: number) {
+    const numbers = <Float32Array> numbersAttribute.array;
+
+    for (let i = 0; i < total; i++) {
+        numbers[i] = i / 100.0;
+    }
 }
 
 function updatePositions(positionsAttribute: THREE.BufferAttribute, distances: Float32Array, multiplier: number, total: number) {
@@ -232,9 +242,11 @@ function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camP
 function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
     const positions = new Float32Array(totalLines * 6);
     const colors = new Float32Array(totalLines * 6);
+    const numbers = new Float32Array(totalLines * 2);
     const distances = new Float32Array(totalLines);
     threeEnv.positionsAttribute.setArray(positions);
     threeEnv.colorsAttribute.setArray(colors);
+    threeEnv.numbersAttribute.setArray(numbers);
     threeEnv.distances = distances;
 }
 

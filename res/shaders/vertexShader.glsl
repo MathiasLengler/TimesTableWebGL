@@ -1,4 +1,6 @@
-uniform float multiplier;
+uniform float total;
+
+attribute vec2 number;
 
 #define PI 3.1415926535897932384626433832795
 
@@ -10,7 +12,8 @@ uniform float multiplier;
  * vertex position
  */
 void main() {
-  vec3 newPosition = position * multiplier;
+  vec3 newPosition = position;
+  newPosition.x = number.x;
   gl_Position = projectionMatrix *
                 modelViewMatrix *
                 vec4(position,1.0);

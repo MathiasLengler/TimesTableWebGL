@@ -25,7 +25,8 @@ function getInitialInput(): Input {
         camPosX: 0,
         camPosY: 0,
         camPosZ: 1,
-        resetCamera: () => {}
+        resetCamera: () => {
+        }
     };
 
     const benchmark: Input = {
@@ -39,7 +40,8 @@ function getInitialInput(): Input {
         camPosX: 0,
         camPosY: 0,
         camPosZ: 1,
-        resetCamera: () => {}
+        resetCamera: () => {
+        }
     };
 
     const debug: Input = {
@@ -53,7 +55,8 @@ function getInitialInput(): Input {
         camPosX: 0,
         camPosY: 0,
         camPosZ: 1,
-        resetCamera: () => {}
+        resetCamera: () => {
+        }
     };
 
     const initialInputs = {
@@ -101,7 +104,7 @@ function getThreeEnv(): ThreeEnv {
     const geometry = new THREE.BufferGeometry();
     const material = new THREE.ShaderMaterial({
         uniforms: {
-            multiplier: {value: 1.0}
+            total: {value: 1.0}
         },
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
@@ -109,20 +112,34 @@ function getThreeEnv(): ThreeEnv {
     });
 
     const positions = new Float32Array(0);
-    const colors = new Float32Array(0);
-    const distances = new Float32Array(0);
-
     const positionsAttribute = new THREE.BufferAttribute(positions, 3);
-    const colorsAttribute = new THREE.BufferAttribute(colors, 3);
     geometry.addAttribute('position', positionsAttribute);
+
+    const colors = new Float32Array(0);
+    const colorsAttribute = new THREE.BufferAttribute(colors, 3);
     geometry.addAttribute('color', colorsAttribute);
 
+    const numbers = new Float32Array(0);
+    const numbersAttribute = new THREE.BufferAttribute(numbers, 1);
+    geometry.addAttribute('number', numbersAttribute);
+
+    const distances = new Float32Array(0);
 
     const mesh = new THREE.LineSegments(geometry, material);
 
     scene.add(mesh);
 
-    return {renderer, scene, camera, geometry, material, positionsAttribute, colorsAttribute, distances};
+    return {
+        renderer,
+        scene,
+        camera,
+        geometry,
+        material,
+        positionsAttribute,
+        colorsAttribute,
+        numbersAttribute,
+        distances
+    };
 }
 
 function onWindowResize(renderController: RenderController, threeEnv: ThreeEnv) {
