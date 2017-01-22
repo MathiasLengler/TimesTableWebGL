@@ -1,6 +1,6 @@
-uniform float total;
+uniform float multiplier;
 
-attribute vec2 number;
+attribute float number;
 
 #define PI 3.1415926535897932384626433832795
 
@@ -13,20 +13,27 @@ attribute vec2 number;
  */
 void main() {
   vec3 newPosition = position;
-  newPosition.x = number.x;
+
+  if (useMultiplier(number)) {
+
+  } else {
+
+  }
+
+  newPosition.x = 0.5;
+
   gl_Position = projectionMatrix *
                 modelViewMatrix *
                 vec4(newPosition,1.0);
 }
 
-struct Point2D {
-  float x;
-  float y;
-} point2d;
+bool useMultiplier(float number) {
 
-Point2D getCircleCord(int number, int total) {
-    float normalized = (float(number) / float(total)) * 2.0 * PI;
-    return Point2D(cos(normalized), sin(normalized));
+}
+
+vec2 getCircleCord(float number, float total) {
+    float normalized = (number / total) * 2.0 * PI;
+    return vec2(cos(normalized), sin(normalized));
 }
 
 //function updatePositions(positionsAttribute: THREE.BufferAttribute, distances: Float32Array, multiplier: number, total: number) {
