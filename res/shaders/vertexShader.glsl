@@ -37,24 +37,3 @@ vec2 getCircleCord(float number, float total) {
     float normalized = (number / total) * 2.0 * PI;
     return vec2(cos(normalized), sin(normalized));
 }
-
-//function updatePositions(positionsAttribute: THREE.BufferAttribute, distances: Float32Array, multiplier: number, total: number) {
-//    const positions = <Float32Array> positionsAttribute.array;
-//
-//    for (let i = 0; i < total; i++) {
-//        let startCord = getCircleCord(i, total);
-//        let endCord = getCircleCord(i * multiplier, total);
-//        distances[i] = Point2D.distance(startCord, endCord);
-//
-//        // Position start point
-//        positions[i * 6] = startCord.x;
-//        positions[i * 6 + 1] = startCord.y;
-//        positions[i * 6 + 2] = 0;
-//        // Position end point
-//        positions[i * 6 + 3] = endCord.x;
-//        positions[i * 6 + 4] = endCord.y;
-//        positions[i * 6 + 5] = 0;
-//    }
-//
-//    positionsAttribute.needsUpdate = true;
-//}
