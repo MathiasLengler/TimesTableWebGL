@@ -64,12 +64,6 @@ export class RenderController {
     if (this.hasChanged["init"]) {
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
-      updatePositions(
-        this.threeEnv.positionsAttribute,
-        this.threeEnv.distances,
-        this.input.multiplier,
-        this.input.totalLines
-      );
       updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
       updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
       updateOpacity(this.threeEnv, this.input.opacity);
@@ -78,23 +72,10 @@ export class RenderController {
     if (this.hasChanged["totalLines"]) {
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
-      updatePositions(
-        this.threeEnv.positionsAttribute,
-        this.threeEnv.distances,
-        this.input.multiplier,
-        this.input.totalLines
-      );
       updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
     }
 
     if (this.hasChanged["multiplier"]) {
-      updatePositions(
-        this.threeEnv.positionsAttribute,
-        this.threeEnv.distances,
-        this.input.multiplier,
-        this.input.totalLines
-      );
-
       updateMultiplier(this.threeEnv.material, this.input.multiplier);
 
       if (this.input.recolor) {
@@ -150,36 +131,12 @@ function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: number) {
     numbers[i] = i;
   }
 
-
-  console.log(numbers);
-
   numbersAttribute.needsUpdate = true;
 }
 
 function updateMultiplier(material: THREE.ShaderMaterial, multiplier: number) {
   material.uniforms.multiplier.value = multiplier;
   material.needsUpdate = true;
-}
-
-function updatePositions(positionsAttribute: THREE.BufferAttribute, distances: Float32Array, multiplier: number, total: number) {
-  const positions = <Float32Array> positionsAttribute.array;
-
-  for (let i = 0; i < total; i++) {
-    let startCord = getCircleCord(i, total);
-    let endCord = getCircleCord(i * multiplier, total);
-    distances[i] = Point2D.distance(startCord, endCord);
-
-    // Position start point
-    positions[i * 6] = startCord.x;
-    positions[i * 6 + 1] = startCord.y;
-    positions[i * 6 + 2] = 0;
-    // Position end point
-    positions[i * 6 + 3] = endCord.x;
-    positions[i * 6 + 4] = endCord.y;
-    positions[i * 6 + 5] = 0;
-  }
-
-  positionsAttribute.needsUpdate = true;
 }
 
 function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32Array, total: number, colorMethod: ColorMethod) {
@@ -268,6 +225,8 @@ function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
 
   threeEnv.material.uniforms.total.value = totalLines;
   threeEnv.material.needsUpdate = true;
+
+  threeEnv.positionsAttribute.needsUpdate = true;
 }
 
 function render(threeEnv: ThreeEnv) {
