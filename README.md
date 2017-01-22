@@ -21,7 +21,6 @@ requires browser that supports WebGL
 
 ### Functionality
 
-- slow animate mode
 - GUI
     - opacity x^2 slider/gamma slider
 - arbitrary shapes (Square, Triangle, ...)

@@ -139,6 +139,7 @@ function updateMultiplier(material: THREE.ShaderMaterial, multiplier: number) {
   material.needsUpdate = true;
 }
 
+// TODO: move calculations to vertex shader because distances is now only available there
 function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32Array, total: number, colorMethod: ColorMethod) {
   const colors = <Float32Array> colorsAttribute.array;
 
