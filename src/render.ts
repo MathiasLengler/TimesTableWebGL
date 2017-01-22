@@ -203,7 +203,8 @@ function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32
 }
 
 function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
-  threeEnv.material.opacity = opacity;
+  threeEnv.material.uniforms.opacity.value = opacity;
+  threeEnv.material.needsUpdate = true;
 }
 
 function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camPosZ: number) {

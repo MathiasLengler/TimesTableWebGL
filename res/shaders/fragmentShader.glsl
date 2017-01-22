@@ -4,9 +4,10 @@
  * Vector, R,G,B and A and each part
  * runs from 0.0 to 1.0
  */
+
+uniform float opacity;
+varying vec3 vColor;
+
 void main() {
-  gl_FragColor = vec4(1.0,  // R
-                      1.0,  // G
-                      1.0,  // B
-                      1.0); // A
+  gl_FragColor = vec4(vColor, opacity);
 }

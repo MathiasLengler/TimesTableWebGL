@@ -3,6 +3,9 @@ uniform float total;
 
 attribute float number;
 
+attribute vec3 color;
+varying vec3 vColor;
+
 #define PI 3.1415926535897932384626433832795
 
 bool isStartCord(float number);
@@ -27,6 +30,8 @@ void main() {
   gl_Position = projectionMatrix *
                 modelViewMatrix *
                 vec4(newPosition,1.0);
+
+  vColor.xyz = color.xyz;
 }
 
 bool isStartCord(float number) {

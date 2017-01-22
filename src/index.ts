@@ -106,7 +106,8 @@ function getThreeEnv(): ThreeEnv {
     uniforms: {
       multiplier: {value: 2},
       // can be int
-      total: {value: 10}
+      total: {value: 10},
+      opacity: {value: 1}
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
