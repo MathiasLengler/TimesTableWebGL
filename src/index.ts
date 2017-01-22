@@ -103,7 +103,6 @@ function getThreeEnv(): ThreeEnv {
 
   const geometry = new THREE.BufferGeometry();
   const material = new THREE.ShaderMaterial({
-    // TODO: update uniform values in render.ts
     uniforms: {
       multiplier: {value: 2},
       // can be int
