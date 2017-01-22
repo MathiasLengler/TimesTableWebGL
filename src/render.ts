@@ -8,12 +8,13 @@ export interface ThreeEnv {
   readonly scene: THREE.Scene,
   readonly camera: THREE.PerspectiveCamera,
   readonly geometry: THREE.BufferGeometry,
-  readonly material: THREE.Material,
+  readonly material: THREE.ShaderMaterial,
   positionsAttribute: THREE.BufferAttribute,
   colorsAttribute: THREE.BufferAttribute,
   numbersAttribute: THREE.BufferAttribute,
   distances: Float32Array
 }
+
 
 
 export class RenderController {
@@ -94,6 +95,8 @@ export class RenderController {
         this.input.totalLines
       );
 
+      updateMultiplier(this.threeEnv.material, this.input.multiplier);
+
       if (this.input.recolor) {
         // Only recolor on multiplier update when the color method depends on line length
         if (this.input.colorMethod === "lengthOpacity" ||
@@ -151,6 +154,11 @@ function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: number) {
   console.log(numbers);
 
   numbersAttribute.needsUpdate = true;
+}
+
+function updateMultiplier(material: THREE.ShaderMaterial, multiplier: number) {
+  material.uniforms.multiplier.value = multiplier;
+  material.needsUpdate = true;
 }
 
 function updatePositions(positionsAttribute: THREE.BufferAttribute, distances: Float32Array, multiplier: number, total: number) {
@@ -257,6 +265,9 @@ function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
 
   const distances = new Float32Array(totalLines);
   threeEnv.distances = distances;
+
+  threeEnv.material.uniforms.total.value = totalLines;
+  threeEnv.material.needsUpdate = true;
 }
 
 function render(threeEnv: ThreeEnv) {

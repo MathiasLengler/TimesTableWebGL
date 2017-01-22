@@ -30,7 +30,7 @@ void main() {
 }
 
 bool isStartCord(float number) {
-  return mod(number, 2.0) == 0.0;
+  return mod(number, 2.0) < 0.01;
 }
 
 vec2 getCircleCord(float number, float total) {
