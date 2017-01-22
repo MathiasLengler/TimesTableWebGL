@@ -1,8 +1,12 @@
 uniform float multiplier;
+uniform float total;
 
 attribute float number;
 
 #define PI 3.1415926535897932384626433832795
+
+bool isStartCord(float number);
+vec2 getCircleCord(float number, float total);
 
 /**
  * Multiply each vertex by the
@@ -14,21 +18,19 @@ attribute float number;
 void main() {
   vec3 newPosition = position;
 
-  if (useMultiplier(number)) {
-
+  if (isStartCord(number)) {
+    newPosition.xy =  getCircleCord(number / 2.0, total);
   } else {
-
+    newPosition.xy =  getCircleCord( floor(number / 2.0) * multiplier, total);
   }
-
-  newPosition.x = 0.5;
 
   gl_Position = projectionMatrix *
                 modelViewMatrix *
                 vec4(newPosition,1.0);
 }
 
-bool useMultiplier(float number) {
-
+bool isStartCord(float number) {
+  return mod(number, 2.0) == 0.0;
 }
 
 vec2 getCircleCord(float number, float total) {

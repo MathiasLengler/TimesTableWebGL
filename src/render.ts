@@ -143,9 +143,10 @@ function getCircleCord(number: number, total: number): Point2D {
 function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: number) {
   const numbers = <Float32Array> numbersAttribute.array;
 
-  for (let i = 0; i < total; i++) {
+  for (let i = 0; i < total * 2; i++) {
     numbers[i] = i;
   }
+
 
   console.log(numbers);
 
@@ -246,12 +247,15 @@ function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camP
 
 function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   const positions = new Float32Array(totalLines * 6);
-  const colors = new Float32Array(totalLines * 6);
-  const numbers = new Float32Array(totalLines);
-  const distances = new Float32Array(totalLines);
   threeEnv.positionsAttribute.setArray(positions);
+
+  const colors = new Float32Array(totalLines * 6);
   threeEnv.colorsAttribute.setArray(colors);
+
+  const numbers = new Float32Array((totalLines * 2));
   threeEnv.numbersAttribute.setArray(numbers);
+
+  const distances = new Float32Array(totalLines);
   threeEnv.distances = distances;
 }
 

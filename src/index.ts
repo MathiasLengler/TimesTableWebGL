@@ -45,7 +45,7 @@ function getInitialInput(): Input {
   };
 
   const debug: Input = {
-    totalLines: 4,
+    totalLines: 10,
     multiplier: 2,
     animate: false,
     multiplierIncrement: 0.005,
@@ -103,8 +103,11 @@ function getThreeEnv(): ThreeEnv {
 
   const geometry = new THREE.BufferGeometry();
   const material = new THREE.ShaderMaterial({
+    // TODO: update uniform values in render.ts
     uniforms: {
-      multiplier: {value: 1.0}
+      multiplier: {value: 2},
+      // can be int
+      total: {value: 10}
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
