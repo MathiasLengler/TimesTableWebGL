@@ -6,7 +6,7 @@ import {Point2D} from "./point2D";
 export interface ThreeEnv {
   readonly renderer: THREE.WebGLRenderer,
   readonly scene: THREE.Scene,
-  readonly camera: THREE.PerspectiveCamera,
+  readonly camera: THREE.OrthographicCamera,
   readonly geometry: THREE.BufferGeometry,
   readonly material: THREE.ShaderMaterial,
   positionsAttribute: THREE.BufferAttribute,
@@ -14,8 +14,6 @@ export interface ThreeEnv {
   numbersAttribute: THREE.BufferAttribute,
   distances: Float32Array
 }
-
-
 
 export class RenderController {
   private waitOnUpdate = false;
@@ -65,8 +63,9 @@ export class RenderController {
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
       updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
-      updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
+      updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY);
       updateOpacity(this.threeEnv, this.input.opacity);
+      updateZoom(this.threeEnv, this.input.camZoom);
     }
 
     if (this.hasChanged["totalLines"]) {
@@ -96,14 +95,17 @@ export class RenderController {
       // TODO: update gui
       this.input.camPosX = 0;
       this.input.camPosY = 0;
-      this.input.camPosZ = 1;
+      this.input.camZoom = 1;
     }
 
     if (this.hasChanged["resetCamera"] ||
       this.hasChanged["camPosX"] ||
-      this.hasChanged["camPosY"] ||
-      this.hasChanged["camPosZ"]) {
-      updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY, this.input.camPosZ);
+      this.hasChanged["camPosY"]) {
+      updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY);
+    }
+
+    if (this.hasChanged["camZoom"]) {
+      updateZoom(this.threeEnv, this.input.camZoom);
     }
 
     if (this.hasChanged["opacity"]) {
@@ -208,8 +210,15 @@ function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
   threeEnv.material.needsUpdate = true;
 }
 
-function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number, camPosZ: number) {
-  threeEnv.camera.position.set(camPosX, camPosY, camPosZ);
+function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number) {
+  threeEnv.camera.position.setX(camPosX);
+  threeEnv.camera.position.setX(camPosY);
+}
+
+function updateZoom(threeEnv: ThreeEnv, zoom: number) {
+  console.log(zoom)
+  threeEnv.camera.zoom = zoom;
+  threeEnv.camera.updateProjectionMatrix();
 }
 
 function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {

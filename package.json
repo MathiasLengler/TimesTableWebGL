@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "clean": "rimraf .publish/**/* build/**/* dist/**/*",
-    "start": "webpack-dev-server --config webpack/webpack.config.js --content-base build/ --open",
+    "start": "webpack-dev-server --config webpack/webpack.config.js --content-base build/",
     "pack": "webpack --config webpack/webpack.config.js",
     "dist": "webpack --config webpack/webpack.production.config.js",
     "pack-profile": "webpack --config webpack/webpack.config.js --profile --json > stats.json"

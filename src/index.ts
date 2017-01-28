@@ -20,11 +20,11 @@ function getInitialInput(): Input {
     animate: false,
     multiplierIncrement: 0.2,
     opacity: 1,
-    colorMethod: 'lengthHue',
+    colorMethod: 'solid',
     recolor: true,
     camPosX: 0,
     camPosY: 0,
-    camPosZ: 1,
+    camZoom: 1,
     resetCamera: () => {
     }
   };
@@ -39,7 +39,7 @@ function getInitialInput(): Input {
     recolor: false,
     camPosX: 0,
     camPosY: 0,
-    camPosZ: 1,
+    camZoom: 1,
     resetCamera: () => {
     }
   };
@@ -54,7 +54,7 @@ function getInitialInput(): Input {
     recolor: false,
     camPosX: 0,
     camPosY: 0,
-    camPosZ: 1,
+    camZoom: 1,
     resetCamera: () => {
     }
   };
@@ -98,21 +98,29 @@ function getThreeEnv(): ThreeEnv {
 
   const scene = new THREE.Scene();
 
-  const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.01, 500);
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1);
+  // const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.00001, 500);
+  camera.position.setZ(1);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   const geometry = new THREE.BufferGeometry();
   const material = new THREE.ShaderMaterial({
     uniforms: {
       multiplier: {value: 2},
-      // can be int
       total: {value: 10},
       opacity: {value: 1}
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
+    blending: THREE.AdditiveBlending,
+    depthTest: false,
     transparent: true
   });
+
+  // material.blending = THREE.CustomBlending;
+  // material.blendEquation = THREE.MaxEquation; //default
+  // material.blendSrc = THREE.SrcAlphaFactor; //default
+  // material.blendDst = <any> THREE.OneMinusDstAlphaFactor; //default
 
   const positions = new Float32Array(0);
   const positionsAttribute = new THREE.BufferAttribute(positions, 3);
@@ -129,6 +137,8 @@ function getThreeEnv(): ThreeEnv {
   const distances = new Float32Array(0);
 
   const mesh = new THREE.LineSegments(geometry, material);
+  // TODO: find out why this is needed with OrthographicCamera and zoom
+  mesh.frustumCulled = false;
 
   scene.add(mesh);
 
@@ -146,7 +156,25 @@ function getThreeEnv(): ThreeEnv {
 }
 
 function onWindowResize(renderController: RenderController, threeEnv: ThreeEnv) {
-  threeEnv.camera.aspect = window.innerWidth / window.innerHeight;
+  let innerHeight = window.innerHeight;
+  let innerWidth = window.innerWidth;
+
+  const aspectRatio = innerWidth / innerHeight;
+
+  const camera = threeEnv.camera;
+
+  if (aspectRatio > 1) {
+    camera.left = -aspectRatio;
+    camera.right = aspectRatio;
+    camera.top = 1;
+    camera.bottom = -1;
+  } else {
+    camera.left = -1;
+    camera.right = 1;
+    camera.top = Math.pow(aspectRatio, -1);
+    camera.bottom = -Math.pow(aspectRatio, -1);
+  }
+
   threeEnv.camera.updateProjectionMatrix();
 
   threeEnv.renderer.setSize(window.innerWidth, window.innerHeight);
