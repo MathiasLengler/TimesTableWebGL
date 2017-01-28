@@ -216,8 +216,7 @@ function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number) {
 }
 
 function updateZoom(threeEnv: ThreeEnv, zoom: number) {
-  console.log(zoom)
-  threeEnv.camera.zoom = zoom;
+  threeEnv.camera.zoom = zoom * zoom;
   threeEnv.camera.updateProjectionMatrix();
 }
 

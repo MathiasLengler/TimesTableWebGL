@@ -60,7 +60,7 @@ export function initGUI(input: Input, renderController: RenderController) {
     .onChange(() => renderController.requestRender(camPosX));
   f4.add(input, camPosY, -1, 1).step(0.001)
     .onChange(() => renderController.requestRender(camPosY));
-  f4.add(input, camZoom, 1).step(1)
+  f4.add(input, camZoom, 1).step(0.01)
     .onChange(() => renderController.requestRender(camZoom));
   f4.add(input, resetCamera)
     .onChange(() => renderController.requestRender(resetCamera));
