@@ -1,12 +1,4 @@
-
-import {Point2D} from "./point2D";
 import {ColorMethod, ThreeEnv} from "./interfaces";
-
-
-export function getCircleCord(number: number, total: number): Point2D {
-  let normalized = (number / total) * 2 * Math.PI;
-  return new Point2D(Math.cos(normalized), Math.sin(normalized));
-}
 
 export function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: number) {
   const numbers = <Float32Array> numbersAttribute.array;

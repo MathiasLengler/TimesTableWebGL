@@ -43,7 +43,7 @@ export class RenderController {
 
     this.update();
 
-    render(this.threeEnv);
+    executeRender(this.threeEnv);
 
     this.hasChanged = {};
 
@@ -116,6 +116,6 @@ export class RenderController {
 }
 
 
-function render(threeEnv: ThreeEnv) {
+function executeRender(threeEnv: ThreeEnv) {
   threeEnv.renderer.render(threeEnv.scene, threeEnv.camera);
 }
