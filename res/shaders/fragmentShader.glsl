@@ -8,7 +8,6 @@
 uniform float opacity;
 varying vec3 vColor;
 
-// TODO: alpha blending (here or vertex shader?)
 void main() {
   gl_FragColor = vec4(vColor, opacity);
 }
