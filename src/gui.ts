@@ -1,21 +1,6 @@
 import {RenderController} from "./render";
 import * as dat from 'dat.gui';
-
-export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
-
-export interface Input {
-  totalLines: number,
-  multiplier: number,
-  animate: boolean,
-  multiplierIncrement: number,
-  opacity: number,
-  colorMethod: ColorMethod,
-  recolor: boolean,
-  camPosX: number,
-  camPosY: number,
-  camZoom: number,
-  resetCamera: () => void
-}
+import {Input} from "./interfaces";
 
 export function initGUI(input: Input, renderController: RenderController) {
   let gui = new dat.GUI();

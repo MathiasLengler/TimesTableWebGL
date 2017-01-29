@@ -8,9 +8,8 @@ import THREE = require("three");
 import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
-import {ThreeEnv} from "./render";
 import {RenderController} from "./render"
-import {Input} from "./gui";
+import {ThreeEnv, Input} from "./interfaces";
 
 
 function getInitialInput(): Input {
