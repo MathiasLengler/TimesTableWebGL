@@ -1,5 +1,20 @@
 export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
 
+export type UpdateSource =
+  "totalLines" |
+  "multiplier" |
+  "animate" |
+  "multiplierIncrement" |
+  "opacity" |
+  "colorMethod" |
+  "recolor" |
+  "camPosX" |
+  "camPosY" |
+  "camZoom" |
+  "resetCamera" |
+  "init" |
+  "resize"
+
 export interface ThreeEnv {
   readonly renderer: THREE.WebGLRenderer,
   readonly scene: THREE.Scene,

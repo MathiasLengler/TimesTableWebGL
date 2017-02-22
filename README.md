@@ -7,15 +7,16 @@ Written in Typescript, rendering with Three.js.
 
 requires browser that supports WebGL
 
-## Building
+## Development
 - `npm install`
-- `npm pack` to build once
-- `npm start` to start development server
+- `npm start`
 
 ## Todo
 
-### Bugs
+### Dependencies
+- update to typescript 2.2 when intellij supports it
 
+### Bugs
 - first line has 0 length
 - gui does not update
 - reimplement colorLength in the vertex shader
@@ -37,7 +38,6 @@ requires browser that supports WebGL
   - Josephus Problem
 
 ### Performance
-
 - optimize use of BufferAttribute (internal gl calls, [discussion](https://github.com/mrdoob/three.js/pull/9631))
 
 ### Contributing
