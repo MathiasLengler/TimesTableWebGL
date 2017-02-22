@@ -8,7 +8,8 @@ import {
   updateCamera,
   updateOpacity,
   updateZoom,
-  updateMultiplier
+  updateMultiplier,
+  updateRendererSize
 } from "./updateActions";
 
 export class RenderController {
@@ -51,6 +52,7 @@ export class RenderController {
 
   private update() {
     if (this.updateSources.has("init")) {
+      updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
       updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
@@ -101,6 +103,10 @@ export class RenderController {
 
     if (this.updateSources.has("opacity")) {
       updateOpacity(this.threeEnv, this.input.opacity);
+    }
+
+    if (this.updateSources.has("resize")) {
+      updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
     }
   }
 

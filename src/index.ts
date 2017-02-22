@@ -79,7 +79,7 @@ function init() {
 
   const renderController = new RenderController(stats, threeEnv, input);
 
-  window.addEventListener('resize', () => onWindowResize(renderController, threeEnv));
+  window.addEventListener('resize', () => renderController.requestRender("resize"));
 
   Gui.initGUI(input, renderController);
 
@@ -98,7 +98,6 @@ function getThreeEnv(): ThreeEnv {
   const scene = new THREE.Scene();
 
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1);
-  // const camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.00001, 500);
   camera.position.setZ(1);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
@@ -152,33 +151,6 @@ function getThreeEnv(): ThreeEnv {
     numbersAttribute,
     distances
   };
-}
-
-function onWindowResize(renderController: RenderController, threeEnv: ThreeEnv) {
-  let innerHeight = window.innerHeight;
-  let innerWidth = window.innerWidth;
-
-  const aspectRatio = innerWidth / innerHeight;
-
-  const camera = threeEnv.camera;
-
-  if (aspectRatio > 1) {
-    camera.left = -aspectRatio;
-    camera.right = aspectRatio;
-    camera.top = 1;
-    camera.bottom = -1;
-  } else {
-    camera.left = -1;
-    camera.right = 1;
-    camera.top = Math.pow(aspectRatio, -1);
-    camera.bottom = -Math.pow(aspectRatio, -1);
-  }
-
-  threeEnv.camera.updateProjectionMatrix();
-
-  threeEnv.renderer.setSize(window.innerWidth, window.innerHeight);
-
-  renderController.requestRender("resize");
 }
 
 window.onload = init;

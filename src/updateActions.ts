@@ -94,6 +94,28 @@ export function updateZoom(threeEnv: ThreeEnv, zoom: number) {
   threeEnv.camera.updateProjectionMatrix();
 }
 
+export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: number) {
+  const aspectRatio = width / height;
+
+  const camera = threeEnv.camera;
+
+  if (aspectRatio > 1) {
+    camera.left = -aspectRatio;
+    camera.right = aspectRatio;
+    camera.top = 1;
+    camera.bottom = -1;
+  } else {
+    camera.left = -1;
+    camera.right = 1;
+    camera.top = Math.pow(aspectRatio, -1);
+    camera.bottom = -Math.pow(aspectRatio, -1);
+  }
+
+  threeEnv.camera.updateProjectionMatrix();
+
+  threeEnv.renderer.setSize(width, height);
+}
+
 export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   const positions = new Float32Array(totalLines * 6);
   threeEnv.positionsAttribute.setArray(positions);
@@ -104,8 +126,7 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   const numbers = new Float32Array((totalLines * 2));
   threeEnv.numbersAttribute.setArray(numbers);
 
-  const distances = new Float32Array(totalLines);
-  threeEnv.distances = distances;
+  threeEnv.distances = new Float32Array(totalLines);
 
   threeEnv.material.uniforms.total.value = totalLines;
   threeEnv.material.needsUpdate = true;
