@@ -1,9 +1,10 @@
 import {RenderController} from "./render";
-import * as dat from 'dat.gui';
+import {GUI} from '../lib/dat.gui/dat.gui';
 import {Input} from "./interfaces";
 
+
 export function initGUI(input: Input, renderController: RenderController) {
-  let gui = new dat.GUI();
+  let gui = new GUI();
 
   const totalLines = "totalLines";
   const multiplier = "multiplier";

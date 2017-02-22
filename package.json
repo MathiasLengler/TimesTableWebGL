@@ -8,7 +8,8 @@
     "start": "webpack-dev-server --config webpack/webpack.config.js --content-base build/",
     "pack": "webpack --config webpack/webpack.config.js",
     "dist": "webpack --config webpack/webpack.production.config.js",
-    "pack-profile": "webpack --config webpack/webpack.config.js --profile --json > stats.json"
+    "pack-profile": "webpack --config webpack/webpack.config.js --profile --json > stats.json",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
@@ -17,27 +18,27 @@
   "author": "Mathias Lengler",
   "license": "MIT",
   "dependencies": {
-    "dat.gui": "dataarts/dat.gui",
+    "dat.gui": "github:dataarts/dat.gui",
     "stats.js": "^0.17.0",
-    "three": "^0.83.0"
+    "three": "^0.84.0"
   },
   "devDependencies": {
-    "@types/dat-gui": "^0.6.0",
+    "@types/dat-gui": "^0.6.2",
     "@types/stats": "^0.16.30",
-    "awesome-typescript-loader": "3.0.0-beta.18",
-    "babel-core": "^6.18.2",
-    "babel-loader": "^6.2.7",
+    "awesome-typescript-loader": "^3.0.7",
+    "babel-core": "^6.23.1",
+    "babel-loader": "^6.3.2",
     "babel-preset-es2015": "^6.18.0",
     "css-loader": "^0.26.1",
     "gulp": "^3.9.1",
     "gulp-gh-pages": "^0.5.4",
     "html-webpack-plugin": "^2.24.1",
     "rimraf": "^2.5.4",
-    "script-loader": "^0.7.0",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.1",
     "typescript": "^2.0.6",
-    "webpack": "^1.13.3",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.4.1",
     "webpack-glsl-loader": "^1.0.1",
     "webpack-stream": "^3.2.0"
   }
