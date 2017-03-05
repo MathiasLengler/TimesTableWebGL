@@ -1,5 +1,6 @@
 uniform float multiplier;
 uniform float total;
+uniform float colorMethod;
 
 attribute float number;
 
@@ -31,7 +32,29 @@ void main() {
                 modelViewMatrix *
                 vec4(newPosition,1.0);
 
-  vColor.xyz = color.xyz;
+
+
+  // colorMethod switch
+  if (colorMethod == 0.0) {
+    // solid
+    vColor.xyz = vec3(1.0, 1.0, 1.0);
+  } else if (colorMethod == 1.0) {
+    // faded
+    if (isStartCord(number)) {
+      vColor.xyz = vec3(1.0, 1.0, 1.0);
+    } else {
+      vColor.xyz = vec3(0.0, 0.0, 0.0);
+    }
+  } else if (colorMethod == 2.0) {
+    // lengthOpacity
+    vColor.xyz = vec3(0.0, 0.0, 1.0);
+  } else if (colorMethod == 3.0) {
+    // lengthHue
+    vColor.xyz = vec3(0.0, 0.0, 1.0);
+  } else {
+    // fallback error red
+    vColor.xyz = vec3(1.0, 0.0, 0.0);
+  }
 }
 
 bool isStartCord(float number) {

@@ -1,7 +1,6 @@
 import {RenderController} from "./render";
-import {GUI} from '../lib/dat.gui/dat.gui';
+import {GUI} from "../lib/dat.gui/dat.gui";
 import {Input} from "./interfaces";
-
 
 export function initGUI(input: Input, renderController: RenderController) {
   let gui = new GUI();

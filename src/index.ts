@@ -1,10 +1,9 @@
 // webpack
 import "../res/style/index.css";
-import "../node_modules/dat.gui/build/dat.gui.js";
 import fragmentShader = require("../res/shaders/fragmentShader.glsl");
 import vertexShader = require("../res/shaders/vertexShader.glsl");
 // npm
-import THREE = require("three");
+import * as THREE from "three";
 import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
@@ -106,7 +105,8 @@ function getThreeEnv(): ThreeEnv {
     uniforms: {
       multiplier: {value: 2},
       total: {value: 10},
-      opacity: {value: 1}
+      opacity: {value: 1},
+      colorMethod: {value: 0}
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,

@@ -1,4 +1,6 @@
 import {ColorMethod, ThreeEnv} from "./interfaces";
+import * as THREE from "three";
+
 
 export function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: number) {
   const numbers = <Float32Array> numbersAttribute.array;
@@ -10,14 +12,36 @@ export function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: nu
   numbersAttribute.needsUpdate = true;
 }
 
+
+export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
+  switch (colorMethod) {
+    case 'solid':
+      material.uniforms.colorMethod.value = 0.0;
+      break;
+    case 'faded':
+      material.uniforms.colorMethod.value = 1.0;
+      break;
+    case 'lengthOpacity':
+      material.uniforms.colorMethod.value = 2.0;
+      break;
+    case 'lengthHue':
+      material.uniforms.colorMethod.value = 3.0;
+      break;
+  }
+
+  material.needsUpdate = true;
+}
+
 export function updateMultiplier(material: THREE.ShaderMaterial, multiplier: number) {
   material.uniforms.multiplier.value = multiplier;
+
   material.needsUpdate = true;
 }
 
 // TODO: move calculations to vertex shader because distances is now only available there
 export function updateColors(colorsAttribute: THREE.BufferAttribute, distances: Float32Array, total: number, colorMethod: ColorMethod) {
   const colors = <Float32Array> colorsAttribute.array;
+
 
   switch (colorMethod) {
     case 'solid':

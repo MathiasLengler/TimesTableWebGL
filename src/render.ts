@@ -9,7 +9,8 @@ import {
   updateOpacity,
   updateZoom,
   updateMultiplier,
-  updateRendererSize
+  updateRendererSize,
+  updateColorMethod
 } from "./updateActions";
 
 export class RenderController {
@@ -81,6 +82,7 @@ export class RenderController {
 
     if (this.updateSources.has("colorMethod") ||
       this.updateSources.has("recolor")) {
+      updateColorMethod(this.threeEnv.material, this.input.colorMethod);
       updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
     }
 
