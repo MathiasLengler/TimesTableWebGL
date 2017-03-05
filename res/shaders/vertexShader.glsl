@@ -28,11 +28,12 @@ void main() {
     newPosition.xy =  getCircleCord( floor(number / 2.0) * multiplier, total);
   }
 
+  float theta = 2.0 * PI * (floor(number / 2.0) * (multiplier - 1.0) / total);
+  float distance = abs(sin(theta / 2.0));
+
   gl_Position = projectionMatrix *
                 modelViewMatrix *
                 vec4(newPosition,1.0);
-
-
 
   // colorMethod switch
   if (colorMethod == 0.0) {
@@ -47,7 +48,8 @@ void main() {
     }
   } else if (colorMethod == 2.0) {
     // lengthOpacity
-    vColor.xyz = vec3(0.0, 0.0, 1.0);
+
+    vColor.xyz = vec3(1.0-distance);
   } else if (colorMethod == 3.0) {
     // lengthHue
     vColor.xyz = vec3(0.0, 0.0, 1.0);
