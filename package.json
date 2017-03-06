@@ -4,12 +4,14 @@
   "description": "Interactive rendering of times tables",
   "main": "main.js",
   "scripts": {
-    "clean": "rimraf .publish/**/* build/**/* dist/**/*",
-    "start": "webpack-dev-server --config webpack/webpack.config.js --content-base build/",
-    "pack": "webpack --config webpack/webpack.config.js",
-    "pack-prod": "webpack -p --config webpack/webpack.config.js",
-    "pack-profile": "webpack --config webpack/webpack.config.js --profile --json > stats.json",
-    "tsc": "tsc"
+    "start": "webpack-dev-server",
+    "publish": "npm run clean && npm run pack-prod && npm run gh-pages",
+    "pack": "webpack",
+    "pack-prod": "webpack -p",
+    "pack-profile": "webpack --profile --json > stats.json",
+    "clean": "rimraf build/**/*",
+    "tsc": "tsc --traceResolution",
+    "gh-pages": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,7 @@
     "babel-loader": "^6.3.2",
     "babel-preset-es2015": "^6.18.0",
     "css-loader": "^0.26.1",
+    "gh-pages": "^0.12.0",
     "html-webpack-plugin": "^2.24.1",
     "rimraf": "^2.5.4",
     "source-map-loader": "^0.1.5",

@@ -13,7 +13,10 @@ module.exports = {
   },
   devtool: "source-map",
   resolve: {
-    extensions: ['.js', '.ts']
+    extensions: ['.js', '.ts'],
+    alias: {
+      "dat.gui": path.resolve(__dirname, 'lib/dat.gui/dat.gui')
+    }
   },
   module: {
     rules: [
@@ -42,7 +45,7 @@ module.exports = {
       {name: 'vendor', filename: 'vendor.bundle.js'}
     ),
     new HtmlWebpackPlugin({
-      title: "Times Table JS"
+      title: "TimesTableWebGL"
     })
   ]
 }
