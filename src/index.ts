@@ -18,7 +18,7 @@ function getInitialInput(): Input {
     animate: false,
     multiplierIncrement: 0.2,
     opacity: 1,
-    colorMethod: 'solid',
+    colorMethod: 'lengthHue',
     recolor: true,
     camPosX: 0,
     camPosY: 0,

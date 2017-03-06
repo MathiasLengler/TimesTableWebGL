@@ -56,6 +56,7 @@ export class RenderController {
       updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
+      updateColorMethod(this.threeEnv.material, this.input.colorMethod);
       updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
       updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY);
       updateOpacity(this.threeEnv, this.input.opacity);
