@@ -18,8 +18,7 @@ requires browser that supports WebGL
 
 ### Bugs
 - first line has 0 length
-- gui does not update
-- reimplement colorLength in the vertex shader
+- gui does not update ([updateDisplay](https://workshop.chromeexperiments.com/examples/gui/#10--Updating-the-Display-Manually))
 
 ### Features
 - UX/UI
