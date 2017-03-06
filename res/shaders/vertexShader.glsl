@@ -13,13 +13,7 @@ bool isStartCord(float number);
 vec2 getCircleCord(float number, float total);
 vec3 hsv2rgb(vec3 c);
 
-/**
- * Multiply each vertex by the
- * model-view matrix and the
- * projection matrix (both provided
- * by Three.js) to get a final
- * vertex position
- */
+
 void main() {
   vec3 newPosition = position;
 
@@ -29,7 +23,7 @@ void main() {
     newPosition.xy =  getCircleCord( floor(number / 2.0) * multiplier, total);
   }
 
-  float theta = 2.0 * PI * (floor(number / 2.0) * (multiplier - 1.0) / total);
+  float theta = 2.0 * PI * floor(number / 2.0) * (multiplier - 1.0) / total;
   float distance = abs(sin(theta / 2.0));
 
   gl_Position = projectionMatrix *
