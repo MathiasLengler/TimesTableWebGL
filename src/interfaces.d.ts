@@ -7,7 +7,6 @@ export type UpdateSource =
   "multiplierIncrement" |
   "opacity" |
   "colorMethod" |
-  "recolor" |
   "camPosX" |
   "camPosY" |
   "camZoom" |

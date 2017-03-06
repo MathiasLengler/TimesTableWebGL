@@ -4,7 +4,6 @@ import {ThreeEnv, Input, UpdateSource} from "./interfaces";
 import {
   updateTotalLines,
   updateNumbers,
-  updateColors,
   updateCamera,
   updateOpacity,
   updateZoom,
@@ -57,7 +56,6 @@ export class RenderController {
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
       updateColorMethod(this.threeEnv.material, this.input.colorMethod);
-      updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
       updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY);
       updateOpacity(this.threeEnv, this.input.opacity);
       updateZoom(this.threeEnv, this.input.camZoom);
@@ -66,25 +64,14 @@ export class RenderController {
     if (this.updateSources.has("totalLines")) {
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
-      updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
     }
 
     if (this.updateSources.has("multiplier")) {
       updateMultiplier(this.threeEnv.material, this.input.multiplier);
-
-      if (this.input.recolor) {
-        // Only recolor on multiplier update when the color method depends on line length
-        if (this.input.colorMethod === "lengthOpacity" ||
-          this.input.colorMethod === "lengthHue") {
-          updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
-        }
-      }
     }
 
-    if (this.updateSources.has("colorMethod") ||
-      this.updateSources.has("recolor")) {
+    if (this.updateSources.has("colorMethod")) {
       updateColorMethod(this.threeEnv.material, this.input.colorMethod);
-      updateColors(this.threeEnv.colorsAttribute, this.threeEnv.distances, this.input.totalLines, this.input.colorMethod);
     }
 
     if (this.updateSources.has("resetCamera")) {

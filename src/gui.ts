@@ -11,7 +11,6 @@ export function initGUI(input: Input, renderController: RenderController) {
   const multiplierIncrement = "multiplierIncrement";
   const opacity = "opacity";
   const colorMethod = "colorMethod";
-  const recolor = "recolor";
   const camPosX = "camPosX";
   const camPosY = "camPosY";
   const camZoom = "camZoom";
@@ -36,8 +35,6 @@ export function initGUI(input: Input, renderController: RenderController) {
     .onChange(() => renderController.requestRender(opacity));
   f3.add(input, colorMethod, ['solid', 'faded', 'lengthOpacity', 'lengthHue'])
     .onChange(() => renderController.requestRender(colorMethod));
-  f3.add(input, recolor)
-    .onChange(() => renderController.requestRender(recolor));
   f3.open();
 
   let f4 = gui.addFolder("Camera");
