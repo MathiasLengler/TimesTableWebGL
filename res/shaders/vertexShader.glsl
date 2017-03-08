@@ -1,6 +1,6 @@
 uniform float multiplier;
 uniform float total;
-uniform float colorMethod;
+uniform int colorMethod;
 
 attribute float number;
 
@@ -17,7 +17,9 @@ vec3 hsv2rgb(vec3 c);
 void main() {
   vec3 newPosition = position;
 
-  if (isStartCord(number)) {
+  bool startCord = isStartCord(number);
+
+  if (startCord) {
     newPosition.xy =  getCircleCord(number / 2.0, total);
   } else {
     newPosition.xy =  getCircleCord( floor(number / 2.0) * multiplier, total);
@@ -31,20 +33,20 @@ void main() {
                 vec4(newPosition,1.0);
 
   // colorMethod switch
-  if (colorMethod == 0.0) {
+  if (colorMethod == 0) {
     // solid
     vColor.xyz = vec3(1.0);
-  } else if (colorMethod == 1.0) {
+  } else if (colorMethod == 1) {
     // faded
-    if (isStartCord(number)) {
+    if (startCord) {
       vColor.xyz = vec3(1.0);
     } else {
       vColor.xyz = vec3(0.0);
     }
-  } else if (colorMethod == 2.0) {
+  } else if (colorMethod == 2) {
     // lengthOpacity
     vColor.xyz = vec3(1.0 - distance);
-  } else if (colorMethod == 3.0) {
+  } else if (colorMethod == 3) {
     // lengthHue
     vColor.xyz = vec3(hsv2rgb(vec3(distance, 1.0, 1.0)));
   } else {
@@ -58,7 +60,7 @@ bool isStartCord(float number) {
 }
 
 vec2 getCircleCord(float number, float total) {
-    float normalized = (number / total) * 2.0 * PI;
+    float normalized = 2.0 * PI * number / total;
     return vec2(cos(normalized), sin(normalized));
 }
 

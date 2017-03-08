@@ -1,31 +1,19 @@
 import {ColorMethod, ThreeEnv} from "./interfaces";
 import * as THREE from "three";
 
-
-export function updateNumbers(numbersAttribute: THREE.BufferAttribute, total: number) {
-  const numbers = <Float32Array> numbersAttribute.array;
-
-  for (let i = 0; i < total * 2; i++) {
-    numbers[i] = i;
-  }
-
-  numbersAttribute.needsUpdate = true;
-}
-
-
 export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
   switch (colorMethod) {
     case 'solid':
-      material.uniforms.colorMethod.value = 0.0;
+      material.uniforms.colorMethod.value = 0;
       break;
     case 'faded':
-      material.uniforms.colorMethod.value = 1.0;
+      material.uniforms.colorMethod.value = 1;
       break;
     case 'lengthOpacity':
-      material.uniforms.colorMethod.value = 2.0;
+      material.uniforms.colorMethod.value = 2;
       break;
     case 'lengthHue':
-      material.uniforms.colorMethod.value = 3.0;
+      material.uniforms.colorMethod.value = 3;
       break;
   }
 
@@ -43,12 +31,12 @@ export function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
   threeEnv.material.needsUpdate = true;
 }
 
-export function updateCamera(threeEnv: ThreeEnv, camPosX: number, camPosY: number) {
+export function updateCameraPosition(threeEnv: ThreeEnv, camPosX: number, camPosY: number) {
   threeEnv.camera.position.setX(camPosX);
-  threeEnv.camera.position.setX(camPosY);
+  threeEnv.camera.position.setY(camPosY);
 }
 
-export function updateZoom(threeEnv: ThreeEnv, zoom: number) {
+export function updateCameraZoom(threeEnv: ThreeEnv, zoom: number) {
   threeEnv.camera.zoom = zoom * zoom;
   threeEnv.camera.updateProjectionMatrix();
 }
@@ -82,8 +70,12 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   const colors = new Float32Array(totalLines * 6);
   threeEnv.colorsAttribute.setArray(colors);
 
-  const numbers = new Float32Array((totalLines * 2));
+  const numbers = new Float32Array(totalLines * 2);
   threeEnv.numbersAttribute.setArray(numbers);
+  for (let i = 0; i < totalLines * 2; i++) {
+    numbers[i] = i;
+  }
+  threeEnv.numbersAttribute.needsUpdate = true;
 
   threeEnv.distances = new Float32Array(totalLines);
 
@@ -91,4 +83,8 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   threeEnv.material.needsUpdate = true;
 
   threeEnv.positionsAttribute.needsUpdate = true;
+
+
+
+
 }

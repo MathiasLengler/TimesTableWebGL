@@ -3,14 +3,19 @@ import THREE = require("three");
 import {ThreeEnv, Input, UpdateSource} from "./interfaces";
 import {
   updateTotalLines,
-  updateNumbers,
-  updateCamera,
+  updateCameraPosition,
   updateOpacity,
-  updateZoom,
+  updateCameraZoom,
   updateMultiplier,
   updateRendererSize,
   updateColorMethod
 } from "./updateActions";
+
+class UpdateController {
+  public updateTotalLines(){
+
+  }
+}
 
 export class RenderController {
   private frameRequested = false;
@@ -19,6 +24,8 @@ export class RenderController {
   private readonly stats: Stats;
   private readonly threeEnv: ThreeEnv;
   private readonly input: Input;
+
+  private static updateSourcesToActions = new Map<UpdateSource, Array<keyof UpdateController>>();
 
   constructor(stats: Stats, threeEnv: ThreeEnv, input: Input) {
     this.stats = stats;
@@ -54,16 +61,14 @@ export class RenderController {
     if (this.updateSources.has("init")) {
       updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
       updateTotalLines(this.threeEnv, this.input.totalLines);
-      updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
       updateColorMethod(this.threeEnv.material, this.input.colorMethod);
-      updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY);
+      updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
       updateOpacity(this.threeEnv, this.input.opacity);
-      updateZoom(this.threeEnv, this.input.camZoom);
+      updateCameraZoom(this.threeEnv, this.input.camZoom);
     }
 
     if (this.updateSources.has("totalLines")) {
       updateTotalLines(this.threeEnv, this.input.totalLines);
-      updateNumbers(this.threeEnv.numbersAttribute, this.input.totalLines);
     }
 
     if (this.updateSources.has("multiplier")) {
@@ -79,16 +84,17 @@ export class RenderController {
       this.input.camPosX = 0;
       this.input.camPosY = 0;
       this.input.camZoom = 1;
+      updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
+      updateCameraZoom(this.threeEnv, this.input.camZoom);
     }
 
-    if (this.updateSources.has("resetCamera") ||
-      this.updateSources.has("camPosX") ||
+    if (this.updateSources.has("camPosX") ||
       this.updateSources.has("camPosY")) {
-      updateCamera(this.threeEnv, this.input.camPosX, this.input.camPosY);
+      updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
     }
 
     if (this.updateSources.has("camZoom")) {
-      updateZoom(this.threeEnv, this.input.camZoom);
+      updateCameraZoom(this.threeEnv, this.input.camZoom);
     }
 
     if (this.updateSources.has("opacity")) {
