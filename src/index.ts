@@ -60,7 +60,7 @@ function getInitialInput(): Input {
     debug
   };
 
-  return initialInputs.debug;
+  return initialInputs.standard;
 }
 
 
