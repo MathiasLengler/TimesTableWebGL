@@ -11,35 +11,34 @@ import {
   updateColorMethod
 } from "./updateActions";
 
-class UpdateController {
-  public updateTotalLines(){
-
-  }
-}
 
 export class RenderController {
   private frameRequested = false;
+  private postRenderCallbacks: Set<() => void>;
 
   private readonly updateSources: Set<UpdateSource>;
   private readonly stats: Stats;
   private readonly threeEnv: ThreeEnv;
   private readonly input: Input;
 
-  private static updateSourcesToActions = new Map<UpdateSource, Array<keyof UpdateController>>();
-
   constructor(stats: Stats, threeEnv: ThreeEnv, input: Input) {
     this.stats = stats;
     this.threeEnv = threeEnv;
     this.input = input;
     this.updateSources = new Set();
+    this.postRenderCallbacks = new Set();
   }
 
-  public requestRender(source: UpdateSource) {
+  public requestRender(source: UpdateSource, postRenderCallback?: () => void) {
     this.updateSources.add(source);
 
     if (!this.frameRequested) {
       this.frameRequested = true;
       requestAnimationFrame(() => this.render());
+    }
+
+    if (postRenderCallback) {
+      this.postRenderCallbacks.add(postRenderCallback);
     }
   }
 
@@ -61,6 +60,7 @@ export class RenderController {
     if (this.updateSources.has("init")) {
       updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
       updateTotalLines(this.threeEnv, this.input.totalLines);
+      updateMultiplier(this.threeEnv.material, this.input.multiplier);
       updateColorMethod(this.threeEnv.material, this.input.colorMethod);
       updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
       updateOpacity(this.threeEnv, this.input.opacity);
@@ -80,10 +80,6 @@ export class RenderController {
     }
 
     if (this.updateSources.has("resetCamera")) {
-      // TODO: update gui
-      this.input.camPosX = 0;
-      this.input.camPosY = 0;
-      this.input.camZoom = 1;
       updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
       updateCameraZoom(this.threeEnv, this.input.camZoom);
     }
@@ -109,9 +105,12 @@ export class RenderController {
   private prepareNextRender() {
     this.updateSources.clear();
 
-    if (this.input.animate) {
-      this.input.multiplier += Math.pow(this.input.multiplierIncrement, 3);
-      this.requestRender("multiplier");
-    }
+    // clear postRenderCallbacks before executing the previous callbacks
+    // this allows renderCallbacks to requestRender with callbacks
+    const oldPostRenderCallbacks = this.postRenderCallbacks;
+
+    this.postRenderCallbacks = new Set();
+
+    oldPostRenderCallbacks.forEach(callback => callback());
   }
 }

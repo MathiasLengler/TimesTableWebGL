@@ -19,7 +19,6 @@ function getInitialInput(): Input {
     multiplierIncrement: 0.2,
     opacity: 1,
     colorMethod: 'lengthHue',
-    recolor: true,
     camPosX: 0,
     camPosY: 0,
     camZoom: 1,
@@ -34,7 +33,6 @@ function getInitialInput(): Input {
     multiplierIncrement: 1,
     opacity: 0.005,
     colorMethod: 'faded',
-    recolor: false,
     camPosX: 0,
     camPosY: 0,
     camZoom: 1,
@@ -49,7 +47,6 @@ function getInitialInput(): Input {
     multiplierIncrement: 0.005,
     opacity: 1,
     colorMethod: 'faded',
-    recolor: false,
     camPosX: 0,
     camPosY: 0,
     camZoom: 1,
@@ -63,7 +60,7 @@ function getInitialInput(): Input {
     debug
   };
 
-  return initialInputs.standard;
+  return initialInputs.debug;
 }
 
 

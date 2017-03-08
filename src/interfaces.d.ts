@@ -33,7 +33,6 @@ export interface Input {
   multiplierIncrement: number,
   opacity: number,
   colorMethod: ColorMethod,
-  recolor: boolean,
   camPosX: number,
   camPosY: number,
   camZoom: number,
