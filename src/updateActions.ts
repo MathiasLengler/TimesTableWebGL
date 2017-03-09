@@ -22,13 +22,17 @@ export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: C
 
 export function updateMultiplier(material: THREE.ShaderMaterial, multiplier: number) {
   material.uniforms.multiplier.value = multiplier;
-
   material.needsUpdate = true;
 }
 
-export function updateOpacity(threeEnv: ThreeEnv, opacity: number) {
-  threeEnv.material.uniforms.opacity.value = opacity;
-  threeEnv.material.needsUpdate = true;
+export function updateOpacity(material: THREE.ShaderMaterial, opacity: number) {
+  material.uniforms.opacity.value = opacity;
+  material.needsUpdate = true;
+}
+
+export function updateNoiseStrength(material: THREE.ShaderMaterial, noiseStrength: number) {
+  material.uniforms.noiseStrength.value = noiseStrength;
+  material.needsUpdate = true;
 }
 
 export function updateCameraPosition(threeEnv: ThreeEnv, camPosX: number, camPosY: number) {

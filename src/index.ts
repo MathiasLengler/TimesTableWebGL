@@ -19,6 +19,7 @@ function getInitialInput(): Input {
     multiplierIncrement: 0.2,
     opacity: 1,
     colorMethod: 'lengthHue',
+    noiseStrength: 0.5,
     camPosX: 0,
     camPosY: 0,
     camZoom: 1,
@@ -27,40 +28,36 @@ function getInitialInput(): Input {
   };
 
   const benchmark: Input = {
+    ...standard,
     totalLines: 250000,
     multiplier: 100000,
-    animate: false,
     multiplierIncrement: 1,
     opacity: 0.005,
     colorMethod: 'faded',
-    camPosX: 0,
-    camPosY: 0,
-    camZoom: 1,
-    resetCamera: () => {
-    }
   };
 
   const debug: Input = {
+    ...standard,
     totalLines: 10,
     multiplier: 2,
-    animate: false,
     multiplierIncrement: 0.005,
-    opacity: 1,
     colorMethod: 'faded',
-    camPosX: 0,
-    camPosY: 0,
-    camZoom: 1,
-    resetCamera: () => {
-    }
+  };
+
+  const debugBlending: Input = {
+    ...standard,
+    totalLines: 10000,
+    opacity: 0.05,
   };
 
   const initialInputs = {
     standard,
     benchmark,
-    debug
+    debug,
+    debugBlending
   };
 
-  return initialInputs.standard;
+  return initialInputs.debugBlending;
 }
 
 
@@ -80,6 +77,20 @@ function init() {
   Gui.initGUI(input, renderController);
 
   renderController.requestRender("init");
+}
+
+// TODO: try other kinds of noises
+function getRandomNoiseTexture() {
+  const width = 1024;
+  const data = new Uint8Array(4 * width);
+  for (let i = 0; i < width * 4; i++) {
+    data[i] = Math.random() * 255 | 0;
+  }
+
+  const dataTexture = new THREE.DataTexture(data, width, 1, THREE.RGBAFormat, THREE.UnsignedByteType, THREE.UVMapping,
+    THREE.RepeatWrapping, THREE.RepeatWrapping, THREE.LinearFilter, THREE.LinearFilter);
+  dataTexture.needsUpdate = true;
+  return dataTexture;
 }
 
 /**
@@ -103,7 +114,9 @@ function getThreeEnv(): ThreeEnv {
       multiplier: {value: 2},
       total: {value: 10},
       opacity: {value: 1},
-      colorMethod: {value: 0}
+      colorMethod: {value: 0},
+      noise: {value: getRandomNoiseTexture()},
+      noiseStrength: {value: 1}
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
@@ -112,10 +125,10 @@ function getThreeEnv(): ThreeEnv {
     transparent: true
   });
 
-  // material.blending = THREE.CustomBlending;
-  // material.blendEquation = THREE.MaxEquation; //default
-  // material.blendSrc = THREE.SrcAlphaFactor; //default
-  // material.blendDst = <any> THREE.OneMinusDstAlphaFactor; //default
+  material.blending = THREE.CustomBlending;
+  material.blendEquation = THREE.AddEquation;
+  material.blendSrc = THREE.SrcAlphaFactor;
+  material.blendDst = <any> THREE.OneFactor;
 
   const positions = new Float32Array(0);
   const positionsAttribute = new THREE.BufferAttribute(positions, 3);

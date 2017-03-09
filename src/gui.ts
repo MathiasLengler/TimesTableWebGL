@@ -1,20 +1,21 @@
 import {RenderController} from "./render";
 import {GUI} from "dat.gui";
-import {Input, ColorMethod} from "./interfaces";
+import {Input, ColorMethod, UpdateSource} from "./interfaces";
 
 export function initGUI(input: Input, renderController: RenderController) {
   let gui = new GUI();
 
-  const totalLines = "totalLines";
-  const multiplier = "multiplier";
-  const animate = "animate";
-  const multiplierIncrement = "multiplierIncrement";
-  const opacity = "opacity";
-  const colorMethod = "colorMethod";
-  const camPosX = "camPosX";
-  const camPosY = "camPosY";
-  const camZoom = "camZoom";
-  const resetCamera = "resetCamera";
+  const totalLines: UpdateSource = "totalLines";
+  const multiplier: UpdateSource = "multiplier";
+  const animate: UpdateSource = "animate";
+  const multiplierIncrement: UpdateSource = "multiplierIncrement";
+  const opacity: UpdateSource = "opacity";
+  const colorMethod: UpdateSource = "colorMethod";
+  const noiseStrength: UpdateSource = "noiseStrength";
+  const camPosX: UpdateSource = "camPosX";
+  const camPosY: UpdateSource = "camPosY";
+  const camZoom: UpdateSource = "camZoom";
+  const resetCamera: UpdateSource = "resetCamera";
 
   let f1 = gui.addFolder("Maths");
   f1.add(input, totalLines).min(0).step(1)
@@ -44,6 +45,8 @@ export function initGUI(input: Input, renderController: RenderController) {
   const colorMethods: Array<ColorMethod> = ['solid', 'faded', 'lengthOpacity', 'lengthHue'];
   f3.add(input, colorMethod, colorMethods)
     .onChange(() => renderController.requestRender(colorMethod));
+  f3.add(input, noiseStrength, 0, 255).step(0.5)
+    .onChange(() => renderController.requestRender(noiseStrength));
   f3.open();
 
   let f4 = gui.addFolder("Camera");

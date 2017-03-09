@@ -3,9 +3,10 @@ uniform float total;
 uniform int colorMethod;
 
 attribute float number;
-
 attribute vec3 color;
+
 varying vec3 vColor;
+varying float vLinePosition;
 
 #define PI 3.1415926535897932384626433832795
 
@@ -21,8 +22,10 @@ void main() {
 
   if (startCord) {
     newPosition.xy =  getCircleCord(number / 2.0, total);
+    vLinePosition = 1.0;
   } else {
     newPosition.xy =  getCircleCord( floor(number / 2.0) * multiplier, total);
+    vLinePosition = 0.0;
   }
 
   float theta = 2.0 * PI * floor(number / 2.0) * (multiplier - 1.0) / total;

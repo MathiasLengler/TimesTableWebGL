@@ -8,7 +8,8 @@ import {
   updateCameraZoom,
   updateMultiplier,
   updateRendererSize,
-  updateColorMethod
+  updateColorMethod,
+  updateNoiseStrength
 } from "./updateActions";
 
 
@@ -62,8 +63,8 @@ export class RenderController {
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateMultiplier(this.threeEnv.material, this.input.multiplier);
       updateColorMethod(this.threeEnv.material, this.input.colorMethod);
+      updateOpacity(this.threeEnv.material, this.input.opacity);
       updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
-      updateOpacity(this.threeEnv, this.input.opacity);
       updateCameraZoom(this.threeEnv, this.input.camZoom);
     }
 
@@ -77,6 +78,10 @@ export class RenderController {
 
     if (this.updateSources.has("colorMethod")) {
       updateColorMethod(this.threeEnv.material, this.input.colorMethod);
+    }
+
+    if (this.updateSources.has("noiseStrength")) {
+      updateNoiseStrength(this.threeEnv.material, this.input.noiseStrength);
     }
 
     if (this.updateSources.has("resetCamera")) {
@@ -94,7 +99,7 @@ export class RenderController {
     }
 
     if (this.updateSources.has("opacity")) {
-      updateOpacity(this.threeEnv, this.input.opacity);
+      updateOpacity(this.threeEnv.material, this.input.opacity);
     }
 
     if (this.updateSources.has("resize")) {

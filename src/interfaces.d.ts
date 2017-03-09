@@ -1,18 +1,6 @@
 export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
 
-export type UpdateSource =
-  "totalLines" |
-  "multiplier" |
-  "animate" |
-  "multiplierIncrement" |
-  "opacity" |
-  "colorMethod" |
-  "camPosX" |
-  "camPosY" |
-  "camZoom" |
-  "resetCamera" |
-  "init" |
-  "resize"
+export type UpdateSource = keyof Input | "init" | "resize"
 
 export interface ThreeEnv {
   readonly renderer: THREE.WebGLRenderer,
@@ -33,6 +21,7 @@ export interface Input {
   multiplierIncrement: number,
   opacity: number,
   colorMethod: ColorMethod,
+  noiseStrength: number,
   camPosX: number,
   camPosY: number,
   camZoom: number,
