@@ -25,7 +25,6 @@ requires browser that supports WebGL
   - mouse pan/zoom
 
 - Rendering
-  - better alpha blending (HDR?)
   - WebGl 2 (more shader features)
 
 - Geometry
