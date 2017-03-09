@@ -20,6 +20,7 @@ function getInitialInput(): Input {
     opacity: 1,
     colorMethod: 'lengthHue',
     noiseStrength: 0.5,
+    antialias: false,
     camPosX: 0,
     camPosY: 0,
     camZoom: 1,
@@ -100,7 +101,12 @@ function getThreeEnv(): ThreeEnv {
   const renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+
+  const renderContainer = document.createElement("div");
+  renderContainer.id = "render-container";
+  document.body.appendChild(renderContainer);
+
+  renderContainer.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
 
@@ -151,6 +157,7 @@ function getThreeEnv(): ThreeEnv {
 
   return {
     renderer,
+    renderContainer,
     scene,
     camera,
     geometry,

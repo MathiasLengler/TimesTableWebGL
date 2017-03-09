@@ -3,14 +3,15 @@ export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
 export type UpdateSource = keyof Input | "init" | "resize"
 
 export interface ThreeEnv {
-  readonly renderer: THREE.WebGLRenderer,
+  renderer: THREE.WebGLRenderer,
+  readonly renderContainer: Node,
   readonly scene: THREE.Scene,
   readonly camera: THREE.OrthographicCamera,
   readonly geometry: THREE.BufferGeometry,
   readonly material: THREE.ShaderMaterial,
-  positionsAttribute: THREE.BufferAttribute,
-  colorsAttribute: THREE.BufferAttribute,
-  numbersAttribute: THREE.BufferAttribute,
+  readonly positionsAttribute: THREE.BufferAttribute,
+  readonly colorsAttribute: THREE.BufferAttribute,
+  readonly numbersAttribute: THREE.BufferAttribute,
 }
 
 export interface Input {
@@ -21,6 +22,7 @@ export interface Input {
   opacity: number,
   colorMethod: ColorMethod,
   noiseStrength: number,
+  antialias: boolean,
   camPosX: number,
   camPosY: number,
   camZoom: number,

@@ -9,7 +9,8 @@ import {
   updateMultiplier,
   updateRendererSize,
   updateColorMethod,
-  updateNoiseStrength
+  updateNoiseStrength,
+  updateRenderer
 } from "./updateActions";
 
 
@@ -59,6 +60,7 @@ export class RenderController {
 
   private update() {
     if (this.updateSources.has("init")) {
+      updateRenderer(this.threeEnv, this.input.antialias);
       updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateMultiplier(this.threeEnv.material, this.input.multiplier);
@@ -66,6 +68,10 @@ export class RenderController {
       updateOpacity(this.threeEnv.material, this.input.opacity);
       updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
       updateCameraZoom(this.threeEnv, this.input.camZoom);
+    }
+
+    if (this.updateSources.has("antialias")) {
+      updateRenderer(this.threeEnv, this.input.antialias);
     }
 
     if (this.updateSources.has("totalLines")) {

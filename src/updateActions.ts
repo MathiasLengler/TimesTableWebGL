@@ -85,8 +85,14 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   threeEnv.material.needsUpdate = true;
 
   threeEnv.positionsAttribute.needsUpdate = true;
+}
 
+export function updateRenderer(threeEnv: ThreeEnv, antialias: boolean) {
+  const newRenderer = new THREE.WebGLRenderer({antialias});
+  newRenderer.setPixelRatio(window.devicePixelRatio);
+  newRenderer.setSize(window.innerWidth, window.innerHeight);
 
+  threeEnv.renderContainer.replaceChild(newRenderer.domElement, threeEnv.renderContainer.firstChild);
 
-
+  threeEnv.renderer = newRenderer;
 }
