@@ -81,8 +81,6 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   }
   threeEnv.numbersAttribute.needsUpdate = true;
 
-  threeEnv.distances = new Float32Array(totalLines);
-
   threeEnv.material.uniforms.total.value = totalLines;
   threeEnv.material.needsUpdate = true;
 

@@ -57,7 +57,7 @@ function getInitialInput(): Input {
     debugBlending
   };
 
-  return initialInputs.debugBlending;
+  return initialInputs.standard;
 }
 
 
@@ -97,7 +97,7 @@ function getRandomNoiseTexture() {
  * Static initialization of render environment
  */
 function getThreeEnv(): ThreeEnv {
-  const renderer = new THREE.WebGLRenderer();
+  const renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -142,7 +142,6 @@ function getThreeEnv(): ThreeEnv {
   const numbersAttribute = new THREE.BufferAttribute(numbers, 1);
   geometry.addAttribute('number', numbersAttribute);
 
-  const distances = new Float32Array(0);
 
   const mesh = new THREE.LineSegments(geometry, material);
   // TODO: find out why this is needed with OrthographicCamera and zoom
@@ -158,8 +157,7 @@ function getThreeEnv(): ThreeEnv {
     material,
     positionsAttribute,
     colorsAttribute,
-    numbersAttribute,
-    distances
+    numbersAttribute
   };
 }
 

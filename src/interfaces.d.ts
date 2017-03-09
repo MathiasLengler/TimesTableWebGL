@@ -11,7 +11,6 @@ export interface ThreeEnv {
   positionsAttribute: THREE.BufferAttribute,
   colorsAttribute: THREE.BufferAttribute,
   numbersAttribute: THREE.BufferAttribute,
-  distances: Float32Array
 }
 
 export interface Input {
