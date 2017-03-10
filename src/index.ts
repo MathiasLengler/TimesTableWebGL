@@ -8,7 +8,7 @@ import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
 import {RenderController} from "./render"
-import {ThreeEnv, Input} from "./interfaces";
+import {ThreeEnv, Input, RenderContainer} from "./interfaces";
 
 
 function getInitialInput(): Input {
@@ -71,13 +71,25 @@ function init() {
 
   const threeEnv = getThreeEnv();
 
-  const renderController = new RenderController(stats, threeEnv, input);
+  const renderContainer = getRenderContainer(threeEnv.renderer);
+
+  const renderController = new RenderController(stats, threeEnv, input, renderContainer);
 
   window.addEventListener('resize', () => renderController.requestRender("resize"));
 
-  Gui.initGUI(input, renderController);
+  Gui.initGUI(input, renderController, renderContainer);
 
   renderController.requestRender("init");
+}
+
+function getRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
+  const renderContainer = document.createElement("div");
+  renderContainer.id = "render-container";
+  document.body.appendChild(renderContainer);
+
+  renderContainer.appendChild(renderer.domElement);
+
+  return renderContainer;
 }
 
 // TODO: try other kinds of noises
@@ -102,11 +114,6 @@ function getThreeEnv(): ThreeEnv {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  const renderContainer = document.createElement("div");
-  renderContainer.id = "render-container";
-  document.body.appendChild(renderContainer);
-
-  renderContainer.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
 
@@ -157,7 +164,6 @@ function getThreeEnv(): ThreeEnv {
 
   return {
     renderer,
-    renderContainer,
     scene,
     camera,
     geometry,

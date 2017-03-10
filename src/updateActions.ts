@@ -1,4 +1,4 @@
-import {ColorMethod, ThreeEnv} from "./interfaces";
+import {ColorMethod, ThreeEnv, RenderContainer} from "./interfaces";
 import * as THREE from "three";
 
 export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
@@ -35,14 +35,14 @@ export function updateNoiseStrength(material: THREE.ShaderMaterial, noiseStrengt
   material.needsUpdate = true;
 }
 
-export function updateCameraPosition(threeEnv: ThreeEnv, camPosX: number, camPosY: number) {
-  threeEnv.camera.position.setX(camPosX);
-  threeEnv.camera.position.setY(camPosY);
+export function updateCameraPosition(camera: THREE.OrthographicCamera, camPosX: number, camPosY: number) {
+  camera.position.setX(camPosX);
+  camera.position.setY(camPosY);
 }
 
-export function updateCameraZoom(threeEnv: ThreeEnv, zoom: number) {
-  threeEnv.camera.zoom = zoom * zoom;
-  threeEnv.camera.updateProjectionMatrix();
+export function updateCameraZoom(camera: THREE.OrthographicCamera, zoom: number) {
+  camera.zoom = Math.pow(Math.E, zoom - 1);
+  camera.updateProjectionMatrix();
 }
 
 export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: number) {
@@ -87,12 +87,12 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   threeEnv.positionsAttribute.needsUpdate = true;
 }
 
-export function updateRenderer(threeEnv: ThreeEnv, antialias: boolean) {
+export function updateRenderer(threeEnv: ThreeEnv, renderContainer: RenderContainer, antialias: boolean) {
   const newRenderer = new THREE.WebGLRenderer({antialias});
   newRenderer.setPixelRatio(window.devicePixelRatio);
   newRenderer.setSize(window.innerWidth, window.innerHeight);
 
-  threeEnv.renderContainer.replaceChild(newRenderer.domElement, threeEnv.renderContainer.firstChild);
+  renderContainer.replaceChild(newRenderer.domElement, renderContainer.firstChild);
 
   threeEnv.renderer = newRenderer;
 }

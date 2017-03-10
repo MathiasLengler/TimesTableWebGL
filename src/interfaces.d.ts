@@ -2,9 +2,10 @@ export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
 
 export type UpdateSource = keyof Input | "init" | "resize"
 
+export type RenderContainer = HTMLElement;
+
 export interface ThreeEnv {
   renderer: THREE.WebGLRenderer,
-  readonly renderContainer: Node,
   readonly scene: THREE.Scene,
   readonly camera: THREE.OrthographicCamera,
   readonly geometry: THREE.BufferGeometry,

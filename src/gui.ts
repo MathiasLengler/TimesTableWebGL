@@ -1,8 +1,8 @@
 import {RenderController} from "./render";
 import {GUI} from "dat.gui";
-import {Input, ColorMethod, UpdateSource} from "./interfaces";
+import {Input, ColorMethod, UpdateSource, RenderContainer} from "./interfaces";
 
-export function initGUI(input: Input, renderController: RenderController) {
+export function initGUI(input: Input, renderController: RenderController, renderContainer: RenderContainer) {
   let gui = new GUI();
 
   const totalLines: UpdateSource = "totalLines";
@@ -23,11 +23,13 @@ export function initGUI(input: Input, renderController: RenderController) {
     .onChange(() => renderController.requestRender(totalLines));
 
   const multiplierController = mathsFolder.add(input, multiplier).step(1e-06);
+
   function postRenderCallback() {
     if (input.animate) {
       multiplierController.setValue(input.multiplier + Math.pow(input.multiplierIncrement, 3));
     }
   }
+
   multiplierController.onChange(
     () => renderController.requestRender(multiplier, postRenderCallback)
   );
@@ -56,9 +58,9 @@ export function initGUI(input: Input, renderController: RenderController) {
   renderFolder.open();
 
   const cameraFolder = gui.addFolder("Camera");
-  const camPosXController = cameraFolder.add(input, camPosX, -1, 1).step(0.001);
+  const camPosXController = cameraFolder.add(input, camPosX, -1, 1).step(1e-06);
   camPosXController.onChange(() => renderController.requestRender(camPosX));
-  const camPosYController = cameraFolder.add(input, camPosY, -1, 1).step(0.001);
+  const camPosYController = cameraFolder.add(input, camPosY, -1, 1).step(1e-06);
   camPosYController.onChange(() => renderController.requestRender(camPosY));
   const camZoomController = cameraFolder.add(input, camZoom, 1).step(0.01);
   camZoomController.onChange(() => renderController.requestRender(camZoom));
@@ -69,4 +71,24 @@ export function initGUI(input: Input, renderController: RenderController) {
       camZoomController.setValue(1);
     });
   cameraFolder.open();
+
+
+  renderContainer.addEventListener("wheel", (e: WheelEvent) => {
+    if (e.shiftKey) {
+      camZoomController.setValue(input.camZoom - e.deltaY / 1000);
+    }
+  });
+
+  renderContainer.addEventListener("mousemove", (e: MouseEvent) => {
+    if (e.buttons === 1 && e.shiftKey) {
+      const circleDiameterPx = Math.min(renderContainer.clientHeight, renderContainer.clientWidth);
+
+      const realZoom = Math.pow(Math.E, input.camZoom - 1);
+
+      const movementFactor = realZoom * circleDiameterPx / 2;
+
+      camPosXController.setValue(input.camPosX - e.movementX / movementFactor);
+      camPosYController.setValue(input.camPosY + e.movementY / movementFactor);
+    }
+  })
 }

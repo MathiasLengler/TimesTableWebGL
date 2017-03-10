@@ -4,3 +4,8 @@ canvas {
 body {
     margin: 0;
 }
+
+#render-container {
+  user-select: none;
+  cursor: default;
+}

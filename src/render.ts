@@ -1,6 +1,6 @@
 import THREE = require("three");
 
-import {ThreeEnv, Input, UpdateSource} from "./interfaces";
+import {ThreeEnv, Input, UpdateSource, RenderContainer} from "./interfaces";
 import {
   updateTotalLines,
   updateCameraPosition,
@@ -22,11 +22,13 @@ export class RenderController {
   private readonly stats: Stats;
   private readonly threeEnv: ThreeEnv;
   private readonly input: Input;
+  private readonly renderContainer: RenderContainer;
 
-  constructor(stats: Stats, threeEnv: ThreeEnv, input: Input) {
+  constructor(stats: Stats, threeEnv: ThreeEnv, input: Input, renderContainer: RenderContainer) {
     this.stats = stats;
     this.threeEnv = threeEnv;
     this.input = input;
+    this.renderContainer = renderContainer;
     this.updateSources = new Set();
     this.postRenderCallbacks = new Set();
   }
@@ -60,18 +62,18 @@ export class RenderController {
 
   private update() {
     if (this.updateSources.has("init")) {
-      updateRenderer(this.threeEnv, this.input.antialias);
+      updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
       updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateMultiplier(this.threeEnv.material, this.input.multiplier);
       updateColorMethod(this.threeEnv.material, this.input.colorMethod);
       updateOpacity(this.threeEnv.material, this.input.opacity);
-      updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
-      updateCameraZoom(this.threeEnv, this.input.camZoom);
+      updateCameraPosition(this.threeEnv.camera, this.input.camPosX, this.input.camPosY);
+      updateCameraZoom(this.threeEnv.camera, this.input.camZoom);
     }
 
     if (this.updateSources.has("antialias")) {
-      updateRenderer(this.threeEnv, this.input.antialias);
+      updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
     }
 
     if (this.updateSources.has("totalLines")) {
@@ -90,18 +92,13 @@ export class RenderController {
       updateNoiseStrength(this.threeEnv.material, this.input.noiseStrength);
     }
 
-    if (this.updateSources.has("resetCamera")) {
-      updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
-      updateCameraZoom(this.threeEnv, this.input.camZoom);
-    }
-
     if (this.updateSources.has("camPosX") ||
       this.updateSources.has("camPosY")) {
-      updateCameraPosition(this.threeEnv, this.input.camPosX, this.input.camPosY);
+      updateCameraPosition(this.threeEnv.camera, this.input.camPosX, this.input.camPosY);
     }
 
     if (this.updateSources.has("camZoom")) {
-      updateCameraZoom(this.threeEnv, this.input.camZoom);
+      updateCameraZoom(this.threeEnv.camera, this.input.camZoom);
     }
 
     if (this.updateSources.has("opacity")) {

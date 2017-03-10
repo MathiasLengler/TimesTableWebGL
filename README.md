@@ -16,16 +16,14 @@ requires browser that supports WebGL
 ### Dependencies
 - update to typescript 2.2 when intellij supports it
 
-### Bugs
-- first line has 0 length
-- gui does not update ([updateDisplay](https://workshop.chromeexperiments.com/examples/gui/#10--Updating-the-Display-Manually))
-
 ### Features
 - UX/UI
-  - mouse pan/zoom
-
+  - replace dat.gui with react/react-toolbox
+  - responsive
+  - touch support
+  
 - Rendering
-  - WebGl 2 (more shader features)
+  - WebGl 2
 
 - Geometry
   - arbitrary shapes (Square, Triangle, ...)
@@ -34,9 +32,6 @@ requires browser that supports WebGL
     - transform lines into quads in z direction
     - sphere interpretation
   - Josephus Problem
-
-### Performance
-- optimize use of BufferAttribute (internal gl calls, [discussion](https://github.com/mrdoob/three.js/pull/9631))
 
 ### Contributing
 - Typings
