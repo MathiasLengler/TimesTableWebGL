@@ -5,7 +5,9 @@ body {
     margin: 0;
 }
 
-#render-container {
+:global #render-container {
   user-select: none;
   cursor: default;
+  width: 100%;
+  height: 100%;
 }

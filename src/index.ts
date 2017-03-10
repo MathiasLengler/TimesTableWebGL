@@ -8,70 +8,24 @@ import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
 import {RenderController} from "./render"
-import {ThreeEnv, Input, RenderContainer} from "./interfaces";
-
-
-function getInitialInput(): Input {
-  const standard: Input = {
-    totalLines: 200,
-    multiplier: 2,
-    animate: false,
-    multiplierIncrement: 0.2,
-    opacity: 1,
-    colorMethod: 'lengthHue',
-    noiseStrength: 0.5,
-    antialias: false,
-    camPosX: 0,
-    camPosY: 0,
-    camZoom: 1,
-    resetCamera: () => {
-    }
-  };
-
-  const benchmark: Input = {
-    ...standard,
-    totalLines: 250000,
-    multiplier: 100000,
-    multiplierIncrement: 1,
-    opacity: 0.005,
-    colorMethod: 'faded',
-  };
-
-  const debug: Input = {
-    ...standard,
-    totalLines: 10,
-    multiplier: 2,
-    multiplierIncrement: 0.005,
-    colorMethod: 'faded',
-  };
-
-  const debugBlending: Input = {
-    ...standard,
-    totalLines: 10000,
-    opacity: 0.05,
-  };
-
-  const initialInputs = {
-    standard,
-    benchmark,
-    debug,
-    debugBlending
-  };
-
-  return initialInputs.standard;
-}
+import {ThreeEnv, RenderContainer} from "./interfaces";
+import {getInitialInput} from "./config";
+import {render} from "./react";
 
 
 function init() {
-  const stats = new Stats();
-  stats.showPanel(1);
-  document.body.appendChild(stats.dom);
 
   const input = getInitialInput();
 
-  const threeEnv = getThreeEnv();
+  const renderContainer = getRenderContainer();
 
-  const renderContainer = getRenderContainer(threeEnv.renderer);
+  const threeEnv = getThreeEnv(renderContainer);
+
+  render();
+
+  const stats = new Stats();
+  stats.showPanel(1);
+  renderContainer.appendChild(stats.dom);
 
   const renderController = new RenderController(stats, threeEnv, input, renderContainer);
 
@@ -82,38 +36,24 @@ function init() {
   renderController.requestRender("init");
 }
 
-function getRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
+function getRenderContainer(): RenderContainer {
   const renderContainer = document.createElement("div");
   renderContainer.id = "render-container";
   document.body.appendChild(renderContainer);
 
-  renderContainer.appendChild(renderer.domElement);
-
   return renderContainer;
 }
 
-// TODO: try other kinds of noises
-function getRandomNoiseTexture() {
-  const width = 1024;
-  const data = new Uint8Array(4 * width);
-  for (let i = 0; i < width * 4; i++) {
-    data[i] = Math.random() * 255 | 0;
-  }
-
-  const dataTexture = new THREE.DataTexture(data, width, 1, THREE.RGBAFormat, THREE.UnsignedByteType, THREE.UVMapping,
-    THREE.RepeatWrapping, THREE.RepeatWrapping, THREE.LinearFilter, THREE.LinearFilter);
-  dataTexture.needsUpdate = true;
-  return dataTexture;
-}
 
 /**
  * Static initialization of render environment
  */
-function getThreeEnv(): ThreeEnv {
+function getThreeEnv(renderContainer: RenderContainer): ThreeEnv {
   const renderer = new THREE.WebGLRenderer({antialias: true});
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
+  renderContainer.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
 
@@ -122,6 +62,20 @@ function getThreeEnv(): ThreeEnv {
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   const geometry = new THREE.BufferGeometry();
+
+  // TODO: try other kinds of noises
+  function getRandomNoiseTexture() {
+    const width = 1024;
+    const data = new Uint8Array(4 * width);
+    for (let i = 0; i < width * 4; i++) {
+      data[i] = Math.random() * 255 | 0;
+    }
+
+    const dataTexture = new THREE.DataTexture(data, width, 1, THREE.RGBAFormat, THREE.UnsignedByteType, THREE.UVMapping,
+      THREE.RepeatWrapping, THREE.RepeatWrapping, THREE.LinearFilter, THREE.LinearFilter);
+    dataTexture.needsUpdate = true;
+    return dataTexture;
+  }
   const material = new THREE.ShaderMaterial({
     uniforms: {
       multiplier: {value: 2},
@@ -154,7 +108,6 @@ function getThreeEnv(): ThreeEnv {
   const numbers = new Float32Array(0);
   const numbersAttribute = new THREE.BufferAttribute(numbers, 1);
   geometry.addAttribute('number', numbersAttribute);
-
 
   const mesh = new THREE.LineSegments(geometry, material);
   // TODO: find out why this is needed with OrthographicCamera and zoom

@@ -74,13 +74,15 @@ export function initGUI(input: Input, renderController: RenderController, render
 
 
   renderContainer.addEventListener("wheel", (e: WheelEvent) => {
-    if (e.shiftKey) {
+    if (e.altKey) {
       camZoomController.setValue(input.camZoom - e.deltaY / 1000);
+
+      e.preventDefault();
     }
   });
 
   renderContainer.addEventListener("mousemove", (e: MouseEvent) => {
-    if (e.buttons === 1 && e.shiftKey) {
+    if (e.buttons === 1 && e.altKey) {
       const circleDiameterPx = Math.min(renderContainer.clientHeight, renderContainer.clientWidth);
 
       const realZoom = Math.pow(Math.E, input.camZoom - 1);
@@ -89,6 +91,8 @@ export function initGUI(input: Input, renderController: RenderController, render
 
       camPosXController.setValue(input.camPosX - e.movementX / movementFactor);
       camPosYController.setValue(input.camPosY + e.movementY / movementFactor);
+
+      e.preventDefault();
     }
   })
 }
