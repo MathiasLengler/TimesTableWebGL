@@ -38,8 +38,7 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       }
     ]
-  }
-  ,
+  },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin(
       {name: 'vendor', filename: 'vendor.bundle.js'}
@@ -48,5 +47,4 @@ module.exports = {
       title: "TimesTableWebGL"
     })
   ]
-}
-;
+};
