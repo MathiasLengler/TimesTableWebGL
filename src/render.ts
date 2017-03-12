@@ -22,13 +22,11 @@ export class RenderController {
   private readonly stats: Stats;
   private readonly threeEnv: ThreeEnv;
   private readonly input: Input;
-  private readonly renderContainer: RenderContainer;
 
-  constructor(stats: Stats, threeEnv: ThreeEnv, input: Input, renderContainer: RenderContainer) {
+  constructor(stats: Stats, threeEnv: ThreeEnv, input: Input) {
     this.stats = stats;
     this.threeEnv = threeEnv;
     this.input = input;
-    this.renderContainer = renderContainer;
     this.updateSources = new Set();
     this.postRenderCallbacks = new Set();
   }
@@ -62,7 +60,7 @@ export class RenderController {
 
   private update() {
     if (this.updateSources.has("init")) {
-      updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
+      updateRenderer(this.threeEnv, this.input.antialias);
       updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
       updateTotalLines(this.threeEnv, this.input.totalLines);
       updateMultiplier(this.threeEnv.material, this.input.multiplier);
@@ -73,7 +71,7 @@ export class RenderController {
     }
 
     if (this.updateSources.has("antialias")) {
-      updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
+      updateRenderer(this.threeEnv, this.input.antialias);
     }
 
     if (this.updateSources.has("totalLines")) {

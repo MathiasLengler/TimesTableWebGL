@@ -8,40 +8,30 @@ import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
 import {RenderController} from "./render"
-import {ThreeEnv, RenderContainer} from "./interfaces";
-import {getInitialInput} from "./config";
-import {render} from "./react";
+import {ThreeEnv, RenderContainer, Input} from "./interfaces";
+import {renderReact} from "./react";
 
 
 function init() {
+  renderReact();
+}
 
-  const input = getInitialInput();
-
-  const renderContainer = getRenderContainer();
-
+export function initRender(input: Input, renderContainer: RenderContainer) {
   const threeEnv = getThreeEnv(renderContainer);
-
-  render();
 
   const stats = new Stats();
   stats.showPanel(1);
-  renderContainer.appendChild(stats.dom);
+  // renderContainer.appendChild(stats.dom);
 
-  const renderController = new RenderController(stats, threeEnv, input, renderContainer);
+  const renderController = new RenderController(stats, threeEnv, input);
 
   window.addEventListener('resize', () => renderController.requestRender("resize"));
 
   Gui.initGUI(input, renderController, renderContainer);
 
   renderController.requestRender("init");
-}
 
-function getRenderContainer(): RenderContainer {
-  const renderContainer = document.createElement("div");
-  renderContainer.id = "render-container";
-  document.body.appendChild(renderContainer);
-
-  return renderContainer;
+  return renderController;
 }
 
 

@@ -4,7 +4,7 @@
   "description": "Interactive rendering of times tables",
   "main": "main.js",
   "scripts": {
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --host 0.0.0.0",
     "publish": "npm run clean && npm run pack-prod && npm run gh-pages",
     "pack": "webpack",
     "pack-prod": "webpack -p",

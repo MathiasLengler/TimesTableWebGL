@@ -87,12 +87,12 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
   threeEnv.positionsAttribute.needsUpdate = true;
 }
 
-export function updateRenderer(threeEnv: ThreeEnv, renderContainer: RenderContainer, antialias: boolean) {
+export function updateRenderer(threeEnv: ThreeEnv, antialias: boolean) {
   const newRenderer = new THREE.WebGLRenderer({antialias});
   newRenderer.setPixelRatio(window.devicePixelRatio);
   newRenderer.setSize(window.innerWidth, window.innerHeight);
 
-  renderContainer.replaceChild(newRenderer.domElement, renderContainer.firstChild);
+  threeEnv.renderer.domElement.parentNode.replaceChild(newRenderer.domElement, threeEnv.renderer.domElement);
 
   threeEnv.renderer = newRenderer;
 }
