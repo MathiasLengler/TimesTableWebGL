@@ -26,6 +26,24 @@ module.exports = {
       }
     ]
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        three: {
+          test: /[\\/]node_modules[\\/]three[\\/]/,
+          name: "three",
+          chunks: "all",
+          priority: 2
+        },
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendor",
+          chunks: "all",
+          priority: 1
+        }
+      }
+    }
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: "TimesTableWebGL"
