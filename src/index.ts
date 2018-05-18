@@ -1,7 +1,7 @@
 // webpack
 import "../res/style/index.css";
-import fragmentShader = require("../res/shaders/fragmentShader.glsl");
-import vertexShader = require("../res/shaders/vertexShader.glsl");
+import * as fragmentShader from "../res/shaders/fragmentShader.glsl";
+import * as vertexShader from "../res/shaders/vertexShader.glsl";
 // npm
 import * as THREE from "three";
 import Stats = require("stats.js");

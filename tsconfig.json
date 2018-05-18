@@ -1,31 +1,16 @@
 {
   "compilerOptions": {
-    "noEmit": true,
+    "strict": true,
     "outDir": "./build/",
     "sourceMap": true,
-    "target": "es5",
-    "module": "commonjs",
     "allowJs": false,
-    "noImplicitAny": true,
-    "typeRoots": [
-      "./custom@types/",
-      "./node_modules/@types/"
-    ],
     "lib": [
       "DOM",
       "ES6"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "dat.gui": ["./lib/dat.gui/dat.gui"]
-    }
+    ]
   },
   "include": [
-    "src/**/*"
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "useBabel": true,
-    "useCache": false,
-    "emitRequireType": false
-  }
+    "src/**/*",
+    "lib/**.*"
+  ]
 }
