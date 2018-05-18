@@ -2,8 +2,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  mode: "development",
-  devtool: "inline-source-map",
   entry: './src/index.ts',
   output: {
     filename: 'bundle.js',
@@ -27,9 +25,6 @@ module.exports = {
         use: ["style-loader", "css-loader"]
       }
     ]
-  },
-  optimization: {
-    splitChunks: {}
   },
   plugins: [
     new HtmlWebpackPlugin({
