@@ -92,7 +92,11 @@ export function updateRenderer(threeEnv: ThreeEnv, renderContainer: RenderContai
   newRenderer.setPixelRatio(window.devicePixelRatio);
   newRenderer.setSize(window.innerWidth, window.innerHeight);
 
-  renderContainer.replaceChild(newRenderer.domElement, renderContainer.firstChild);
+  if (renderContainer.firstChild) {
+    renderContainer.replaceChild(newRenderer.domElement, renderContainer.firstChild);
+  } else {
+    throw new Error("No Render Container");
+  }
 
   threeEnv.renderer = newRenderer;
 }

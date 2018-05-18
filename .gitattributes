@@ -1,4 +1,1 @@
-lib/dat.gui/* linguist-vendored
-custom@types/three/* linguist-vendored
-custom@types/webpack/* linguist-vendored
 res/shaders/compiled/** linguist-vendored

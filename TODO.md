@@ -1,19 +1,11 @@
 # Todo
 
-## Dependencies
-- [ ] Update
-  - [ ] TypeScript
-  - [ ] Webpack
-  - [ ] Three.js
-
 ## Features
 - UX/UI
   - replace dat.gui
     - react/react-toolbox
     - Other React Material Design Lib
   - touch support
-
-- Fix Webpack Imports and TS @Types
 
 - Rendering
   - WebGl 2
