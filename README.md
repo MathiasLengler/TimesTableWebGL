@@ -1,12 +1,12 @@
 # TimesTableWebGL
 
-![Teaser](https://mathiaslengler.github.io/res/img/timestable-teaser.png)
+![Teaser](https://lengler.dev/res/img/timestable-teaser.png)
 
 Interactive diagram of times tables as seen in [this video](https://www.youtube.com/watch?v=qhbuKbxJsk8) from Mathologer.
 
 Written in Typescript, rendering with Three.js.
 
-## [Live Demo](https://mathiaslengler.github.io/TimesTableWebGL/)
+## [Live Demo](https://lengler.dev/TimesTableWebGL/)
 
 requires browser that supports WebGL
 
