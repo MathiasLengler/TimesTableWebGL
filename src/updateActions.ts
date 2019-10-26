@@ -20,6 +20,9 @@ export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: C
     case 'indexHue':
       material.uniforms.colorMethod.value = 4;
       break;
+    case "fadedIndexHue":
+      material.uniforms.colorMethod.value = 5;
+      break;
     default:
       assertNever(colorMethod);
   }

@@ -45,7 +45,7 @@ export function initGUI(input: Input, renderController: RenderController, render
   const colorFolder = gui.addFolder("Color");
   colorFolder.add(input, opacity, 0, 1).step(0.001)
     .onChange(() => renderController.requestRender(opacity));
-  const colorMethods: Array<ColorMethod> = ['solid', 'faded', 'lengthOpacity', 'lengthHue', 'indexHue'];
+  const colorMethods: Array<ColorMethod> = ['solid', 'faded', 'lengthOpacity', 'lengthHue', 'indexHue', 'fadedIndexHue'];
   colorFolder.add(input, colorMethod, colorMethods)
     .onChange(() => renderController.requestRender(colorMethod));
   colorFolder.open();

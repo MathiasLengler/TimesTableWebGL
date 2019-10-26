@@ -48,6 +48,13 @@ void main() {
   } else if (colorMethod == 4) {
     // indexHue
     vColor = vec3(hsv2rgb(vec3(index / total, 1.0, 1.0)));
+  } else if (colorMethod == 5) {
+    // fadedIndexHue
+    if (isStart) {
+      vColor = vec3(hsv2rgb(vec3(index / total, 1.0, 1.0)));
+    } else {
+      vColor = vec3(hsv2rgb(vec3(mod(index * multiplier, total) / total, 1.0, 1.0)));
+    }
   } else {
     // fallback error red
     vColor = vec3(1.0, 0.0, 0.0);
