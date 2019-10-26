@@ -1,5 +1,7 @@
-import {ColorMethod, ThreeEnv, RenderContainer} from "./interfaces";
+import {ColorMethod, RenderContainer, ThreeEnv} from "./interfaces";
 import * as THREE from "three";
+import {getGeometry, getLines} from "./index";
+import assertNever from "assert-never";
 
 export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
   switch (colorMethod) {
@@ -15,6 +17,14 @@ export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: C
     case 'lengthHue':
       material.uniforms.colorMethod.value = 3;
       break;
+    case 'indexHue':
+      material.uniforms.colorMethod.value = 4;
+      break;
+    case "fadedIndexHue":
+      material.uniforms.colorMethod.value = 5;
+      break;
+    default:
+      assertNever(colorMethod);
   }
 
   material.needsUpdate = true;
@@ -68,23 +78,13 @@ export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: nu
 }
 
 export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
-  const positions = new Float32Array(totalLines * 6);
-  threeEnv.positionsAttribute.setArray(positions);
-
-  const colors = new Float32Array(totalLines * 6);
-  threeEnv.colorsAttribute.setArray(colors);
-
-  const numbers = new Float32Array(totalLines * 2);
-  threeEnv.numbersAttribute.setArray(numbers);
-  for (let i = 0; i < totalLines * 2; i++) {
-    numbers[i] = i;
-  }
-  threeEnv.numbersAttribute.needsUpdate = true;
+  threeEnv.scene.remove(threeEnv.lines);
 
   threeEnv.material.uniforms.total.value = totalLines;
   threeEnv.material.needsUpdate = true;
+  threeEnv.lines = getLines(getGeometry(totalLines), threeEnv.material);
 
-  threeEnv.positionsAttribute.needsUpdate = true;
+  threeEnv.scene.add(threeEnv.lines);
 }
 
 export function updateRenderer(threeEnv: ThreeEnv, renderContainer: RenderContainer, antialias: boolean) {

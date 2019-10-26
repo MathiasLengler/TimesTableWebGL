@@ -1,14 +1,14 @@
 // webpack
 import "../res/style/index.css";
-import * as fragmentShader from "../res/shaders/fragmentShader.glsl";
-import * as vertexShader from "../res/shaders/vertexShader.glsl";
+import fragmentShader from "../res/shaders/fragmentShader.glsl";
+import vertexShader from "../res/shaders/vertexShader.glsl";
 // npm
 import * as THREE from "three";
-import Stats = require("stats.js");
 // own
 import * as Gui from "./gui";
 import {RenderController} from "./render"
-import {ThreeEnv, Input, RenderContainer} from "./interfaces";
+import {Input, RenderContainer, ThreeEnv} from "./interfaces";
+import Stats = require("stats.js");
 
 
 function getInitialInput(): Input {
@@ -114,22 +114,20 @@ function getThreeEnv(): ThreeEnv {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-
   const scene = new THREE.Scene();
 
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1);
   camera.position.setZ(1);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-  const geometry = new THREE.BufferGeometry();
   const material = new THREE.ShaderMaterial({
     uniforms: {
-      multiplier: {value: 2},
-      total: {value: 10},
-      opacity: {value: 1},
+      multiplier: {value: 0},
+      total: {value: 0},
+      opacity: {value: 0},
       colorMethod: {value: 0},
       noise: {value: getRandomNoiseTexture()},
-      noiseStrength: {value: 1}
+      noiseStrength: {value: 0}
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
@@ -141,37 +139,49 @@ function getThreeEnv(): ThreeEnv {
   material.blending = THREE.CustomBlending;
   material.blendEquation = THREE.AddEquation;
   material.blendSrc = THREE.SrcAlphaFactor;
-  material.blendDst = <any> THREE.OneFactor;
+  material.blendDst = THREE.OneFactor;
 
-  const positions = new Float32Array(0);
-  const positionsAttribute = new THREE.BufferAttribute(positions, 3);
-  geometry.addAttribute('position', positionsAttribute);
+  const lines = getLines(getGeometry(0), material);
 
-  const colors = new Float32Array(0);
-  const colorsAttribute = new THREE.BufferAttribute(colors, 3);
-  geometry.addAttribute('color', colorsAttribute);
-
-  const numbers = new Float32Array(0);
-  const numbersAttribute = new THREE.BufferAttribute(numbers, 1);
-  geometry.addAttribute('number', numbersAttribute);
-
-
-  const mesh = new THREE.LineSegments(geometry, material);
-  // TODO: find out why this is needed with OrthographicCamera and zoom
-  mesh.frustumCulled = false;
-
-  scene.add(mesh);
+  scene.add(lines);
 
   return {
     renderer,
     scene,
     camera,
-    geometry,
     material,
-    positionsAttribute,
-    colorsAttribute,
-    numbersAttribute
+    lines
   };
+}
+
+export function getGeometry(totalLines: number): THREE.BufferGeometry {
+  const geometry = new THREE.BufferGeometry();
+
+  // We use position attributes as parameters for the vertex shader
+  // because THREE.js seems to expect a position attribute in every BufferAttribute.
+  // Position attribute format:
+  //  x - index
+  //  y - isStart (of line) ? 0.0 : 1.0
+  //  z - unused
+  const vertices = totalLines * 2;
+  const positionsLength = vertices * 3;
+  const positions = new Float32Array(positionsLength);
+  for (let i = 0; i < totalLines; i++) {
+    positions[i * 6] = i; // x start
+    positions[i * 6 + 1] = 0.0; // y start
+    positions[i * 6 + 3] = i; // x end
+    positions[i * 6 + 4] = 1.0; // y end
+  }
+
+  geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+  return geometry;
+}
+
+export function getLines(geometry: THREE.BufferGeometry, material: THREE.ShaderMaterial): THREE.LineSegments {
+  const lines = new THREE.LineSegments(geometry, material);
+  lines.frustumCulled = false;
+  return lines;
 }
 
 window.onload = init;

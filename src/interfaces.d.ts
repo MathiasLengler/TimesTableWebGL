@@ -1,4 +1,6 @@
-export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
+import * as THREE from 'three';
+
+export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue' | 'indexHue' | 'fadedIndexHue';
 
 export type UpdateSource = keyof Input | "init" | "resize"
 
@@ -8,11 +10,8 @@ export interface ThreeEnv {
   renderer: THREE.WebGLRenderer,
   readonly scene: THREE.Scene,
   readonly camera: THREE.OrthographicCamera,
-  readonly geometry: THREE.BufferGeometry,
   readonly material: THREE.ShaderMaterial,
-  readonly positionsAttribute: THREE.BufferAttribute,
-  readonly colorsAttribute: THREE.BufferAttribute,
-  readonly numbersAttribute: THREE.BufferAttribute,
+  lines: THREE.LineSegments,
 }
 
 export interface Input {
