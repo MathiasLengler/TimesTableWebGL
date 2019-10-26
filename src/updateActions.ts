@@ -1,6 +1,6 @@
-import {ColorMethod, ThreeEnv, RenderContainer} from "./interfaces";
+import {ColorMethod, RenderContainer, ThreeEnv} from "./interfaces";
 import * as THREE from "three";
-import {removeAttributes, setAttributes} from "./index";
+import {getGeometry, getLines} from "./index";
 
 export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
   switch (colorMethod) {
@@ -69,11 +69,13 @@ export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: nu
 }
 
 export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
-  removeAttributes(threeEnv.geometry);
-  setAttributes(threeEnv.geometry, totalLines);
+  threeEnv.scene.remove(threeEnv.lines);
 
   threeEnv.material.uniforms.total.value = totalLines;
   threeEnv.material.needsUpdate = true;
+  threeEnv.lines = getLines(getGeometry(totalLines), threeEnv.material);
+
+  threeEnv.scene.add(threeEnv.lines);
 }
 
 export function updateRenderer(threeEnv: ThreeEnv, renderContainer: RenderContainer, antialias: boolean) {

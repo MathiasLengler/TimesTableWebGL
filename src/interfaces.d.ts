@@ -10,8 +10,8 @@ export interface ThreeEnv {
   renderer: THREE.WebGLRenderer,
   readonly scene: THREE.Scene,
   readonly camera: THREE.OrthographicCamera,
-  readonly geometry: THREE.BufferGeometry,
   readonly material: THREE.ShaderMaterial,
+  lines: THREE.LineSegments,
 }
 
 export interface Input {

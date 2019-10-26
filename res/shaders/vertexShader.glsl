@@ -2,67 +2,64 @@ uniform float multiplier;
 uniform float total;
 uniform int colorMethod;
 
-attribute float number;
-
 varying vec3 vColor;
 varying float vLinePosition;
 
 #define PI 3.1415926535897932384626433832795
 
-bool isStartCord(float number);
+float distance(float index, float total, float multiplier);
 vec2 getCircleCord(float number, float total);
 vec3 hsv2rgb(vec3 c);
 
-
 void main() {
-  vec2 position;
+  vec2 circleCord;
 
-  bool isStart = isStartCord(number);
-
+  float index = position.x;
+  float isStartIndicator = position.y;
+  bool isStart = isStartIndicator == 0.0;
+  vLinePosition = isStartIndicator;
   if (isStart) {
-    position =  getCircleCord(number / 2.0, total);
-    vLinePosition = 1.0;
+    circleCord = getCircleCord(index, total);
   } else {
-    position =  getCircleCord( floor(number / 2.0) * multiplier, total);
-    vLinePosition = 0.0;
+    circleCord = getCircleCord(index * multiplier, total);
   }
-
-  float theta = 2.0 * PI * floor(number / 2.0) * (multiplier - 1.0) / total;
-  float distance = abs(sin(theta / 2.0));
 
   gl_Position = projectionMatrix *
                 modelViewMatrix *
-                vec4(position, 0.0, 1.0);
+  vec4(circleCord, 0.0, 1.0);
 
   // colorMethod switch
   if (colorMethod == 0) {
     // solid
-    vColor.xyz = vec3(1.0);
+    vColor = vec3(1.0);
   } else if (colorMethod == 1) {
     // faded
     if (isStart) {
-      vColor.xyz = vec3(1.0);
+      vColor = vec3(0.0);
     } else {
-      vColor.xyz = vec3(0.0);
+      vColor = vec3(1.0);
     }
   } else if (colorMethod == 2) {
     // lengthOpacity
-    vColor.xyz = vec3(1.0 - distance);
+    vColor = vec3(1.0 - distance(index, total, multiplier));
   } else if (colorMethod == 3) {
     // lengthHue
-    vColor.xyz = vec3(hsv2rgb(vec3(distance, 1.0, 1.0)));
+    vColor = vec3(hsv2rgb(vec3(distance(index, total, multiplier), 1.0, 1.0)));
+    // TODO: new colorMethod indexHue
+    //    vColor = vec3(hsv2rgb(vec3(index / total, 1.0, 1.0)));
   } else {
     // fallback error red
-    vColor.xyz = vec3(1.0, 0.0, 0.0);
+    vColor = vec3(1.0, 0.0, 0.0);
   }
 }
 
-bool isStartCord(float number) {
-  return mod(number, 2.0) < 0.01;
+float distance(float index, float total, float multiplier) {
+  float theta = 2.0 * PI * index * (multiplier - 1.0) / total;
+  return abs(sin(theta / 2.0));
 }
 
-vec2 getCircleCord(float number, float total) {
-    float normalized = 2.0 * PI * number / total;
+vec2 getCircleCord(float index, float total) {
+  float normalized = 2.0 * PI * index / total;
     return vec2(cos(normalized), sin(normalized));
 }
 
