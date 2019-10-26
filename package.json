@@ -22,7 +22,8 @@
   "dependencies": {
     "dat.gui": "^0.7.6",
     "stats.js": "^0.17.0",
-    "three": "^0.109.0"
+    "three": "^0.109.0",
+    "assert-never": "^1.2.0"
   },
   "devDependencies": {
     "@types/dat.gui": "^0.7.5",

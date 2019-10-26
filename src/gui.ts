@@ -1,6 +1,6 @@
 import {RenderController} from "./render";
 import {GUI} from "dat.gui";
-import {Input, ColorMethod, UpdateSource, RenderContainer} from "./interfaces";
+import {ColorMethod, Input, RenderContainer, UpdateSource} from "./interfaces";
 
 export function initGUI(input: Input, renderController: RenderController, renderContainer: RenderContainer) {
   let gui = new GUI();
@@ -45,7 +45,7 @@ export function initGUI(input: Input, renderController: RenderController, render
   const colorFolder = gui.addFolder("Color");
   colorFolder.add(input, opacity, 0, 1).step(0.001)
     .onChange(() => renderController.requestRender(opacity));
-  const colorMethods: Array<ColorMethod> = ['solid', 'faded', 'lengthOpacity', 'lengthHue'];
+  const colorMethods: Array<ColorMethod> = ['solid', 'faded', 'lengthOpacity', 'lengthHue', 'indexHue'];
   colorFolder.add(input, colorMethod, colorMethods)
     .onChange(() => renderController.requestRender(colorMethod));
   colorFolder.open();

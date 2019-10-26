@@ -45,8 +45,9 @@ void main() {
   } else if (colorMethod == 3) {
     // lengthHue
     vColor = vec3(hsv2rgb(vec3(distance(index, total, multiplier), 1.0, 1.0)));
-    // TODO: new colorMethod indexHue
-    //    vColor = vec3(hsv2rgb(vec3(index / total, 1.0, 1.0)));
+  } else if (colorMethod == 4) {
+    // indexHue
+    vColor = vec3(hsv2rgb(vec3(index / total, 1.0, 1.0)));
   } else {
     // fallback error red
     vColor = vec3(1.0, 0.0, 0.0);

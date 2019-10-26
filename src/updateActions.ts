@@ -1,6 +1,7 @@
 import {ColorMethod, RenderContainer, ThreeEnv} from "./interfaces";
 import * as THREE from "three";
 import {getGeometry, getLines} from "./index";
+import assertNever from "assert-never";
 
 export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
   switch (colorMethod) {
@@ -16,6 +17,11 @@ export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: C
     case 'lengthHue':
       material.uniforms.colorMethod.value = 3;
       break;
+    case 'indexHue':
+      material.uniforms.colorMethod.value = 4;
+      break;
+    default:
+      assertNever(colorMethod);
   }
 
   material.needsUpdate = true;

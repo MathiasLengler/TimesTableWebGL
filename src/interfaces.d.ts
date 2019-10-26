@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
+export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue' | 'indexHue';
 
 export type UpdateSource = keyof Input | "init" | "resize"
 
