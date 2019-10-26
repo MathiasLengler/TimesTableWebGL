@@ -1,7 +1,7 @@
 // webpack
 import "../res/style/index.css";
-import * as fragmentShader from "../res/shaders/fragmentShader.glsl";
-import * as vertexShader from "../res/shaders/vertexShader.glsl";
+import fragmentShader from "../res/shaders/fragmentShader.glsl";
+import vertexShader from "../res/shaders/vertexShader.glsl";
 // npm
 import * as THREE from "three";
 import Stats = require("stats.js");
@@ -114,14 +114,12 @@ function getThreeEnv(): ThreeEnv {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-
   const scene = new THREE.Scene();
 
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1);
   camera.position.setZ(1);
   camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-  const geometry = new THREE.BufferGeometry();
   const material = new THREE.ShaderMaterial({
     uniforms: {
       multiplier: {value: 2},
@@ -141,20 +139,11 @@ function getThreeEnv(): ThreeEnv {
   material.blending = THREE.CustomBlending;
   material.blendEquation = THREE.AddEquation;
   material.blendSrc = THREE.SrcAlphaFactor;
-  material.blendDst = <any> THREE.OneFactor;
+  material.blendDst = THREE.OneFactor;
 
-  const positions = new Float32Array(0);
-  const positionsAttribute = new THREE.BufferAttribute(positions, 3);
-  geometry.addAttribute('position', positionsAttribute);
+  const geometry = new THREE.BufferGeometry();
 
-  const colors = new Float32Array(0);
-  const colorsAttribute = new THREE.BufferAttribute(colors, 3);
-  geometry.addAttribute('color', colorsAttribute);
-
-  const numbers = new Float32Array(0);
-  const numbersAttribute = new THREE.BufferAttribute(numbers, 1);
-  geometry.addAttribute('number', numbersAttribute);
-
+  setAttributes(geometry, 0);
 
   const mesh = new THREE.LineSegments(geometry, material);
   // TODO: find out why this is needed with OrthographicCamera and zoom
@@ -168,10 +157,21 @@ function getThreeEnv(): ThreeEnv {
     camera,
     geometry,
     material,
-    positionsAttribute,
-    colorsAttribute,
-    numbersAttribute
   };
+}
+
+export function setAttributes(geometry: THREE.BufferGeometry, totalLines: number) {
+  const numbersLength = totalLines * 2;
+  const numbers = new Float32Array(numbersLength);
+  for (let i = 0; i < numbersLength; i++) {
+    numbers[i] = i;
+  }
+  const numbersAttribute = new THREE.BufferAttribute(numbers, 1);
+  geometry.addAttribute('number', numbersAttribute);
+}
+
+export function removeAttributes(geometry: THREE.BufferGeometry) {
+  geometry.removeAttribute('number').dispose();
 }
 
 window.onload = init;

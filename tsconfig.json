@@ -5,8 +5,8 @@
     "sourceMap": true,
     "allowJs": false,
     "lib": [
-      "DOM",
-      "ES6"
+      "dom",
+      "es6"
     ]
   },
   "include": [

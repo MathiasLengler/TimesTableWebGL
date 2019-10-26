@@ -3,7 +3,6 @@ uniform float total;
 uniform int colorMethod;
 
 attribute float number;
-attribute vec3 color;
 
 varying vec3 vColor;
 varying float vLinePosition;
@@ -16,15 +15,15 @@ vec3 hsv2rgb(vec3 c);
 
 
 void main() {
-  vec3 newPosition = position;
+  vec2 position;
 
-  bool startCord = isStartCord(number);
+  bool isStart = isStartCord(number);
 
-  if (startCord) {
-    newPosition.xy =  getCircleCord(number / 2.0, total);
+  if (isStart) {
+    position =  getCircleCord(number / 2.0, total);
     vLinePosition = 1.0;
   } else {
-    newPosition.xy =  getCircleCord( floor(number / 2.0) * multiplier, total);
+    position =  getCircleCord( floor(number / 2.0) * multiplier, total);
     vLinePosition = 0.0;
   }
 
@@ -33,7 +32,7 @@ void main() {
 
   gl_Position = projectionMatrix *
                 modelViewMatrix *
-                vec4(newPosition,1.0);
+                vec4(position, 0.0, 1.0);
 
   // colorMethod switch
   if (colorMethod == 0) {
@@ -41,7 +40,7 @@ void main() {
     vColor.xyz = vec3(1.0);
   } else if (colorMethod == 1) {
     // faded
-    if (startCord) {
+    if (isStart) {
       vColor.xyz = vec3(1.0);
     } else {
       vColor.xyz = vec3(0.0);

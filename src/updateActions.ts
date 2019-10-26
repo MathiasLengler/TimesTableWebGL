@@ -1,5 +1,6 @@
 import {ColorMethod, ThreeEnv, RenderContainer} from "./interfaces";
 import * as THREE from "three";
+import {removeAttributes, setAttributes} from "./index";
 
 export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
   switch (colorMethod) {
@@ -68,23 +69,11 @@ export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: nu
 }
 
 export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
-  const positions = new Float32Array(totalLines * 6);
-  threeEnv.positionsAttribute.setArray(positions);
-
-  const colors = new Float32Array(totalLines * 6);
-  threeEnv.colorsAttribute.setArray(colors);
-
-  const numbers = new Float32Array(totalLines * 2);
-  threeEnv.numbersAttribute.setArray(numbers);
-  for (let i = 0; i < totalLines * 2; i++) {
-    numbers[i] = i;
-  }
-  threeEnv.numbersAttribute.needsUpdate = true;
+  removeAttributes(threeEnv.geometry);
+  setAttributes(threeEnv.geometry, totalLines);
 
   threeEnv.material.uniforms.total.value = totalLines;
   threeEnv.material.needsUpdate = true;
-
-  threeEnv.positionsAttribute.needsUpdate = true;
 }
 
 export function updateRenderer(threeEnv: ThreeEnv, renderContainer: RenderContainer, antialias: boolean) {

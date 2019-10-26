@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 export type ColorMethod = 'solid' | 'faded' | 'lengthOpacity' | 'lengthHue';
 
 export type UpdateSource = keyof Input | "init" | "resize"
@@ -10,9 +12,6 @@ export interface ThreeEnv {
   readonly camera: THREE.OrthographicCamera,
   readonly geometry: THREE.BufferGeometry,
   readonly material: THREE.ShaderMaterial,
-  readonly positionsAttribute: THREE.BufferAttribute,
-  readonly colorsAttribute: THREE.BufferAttribute,
-  readonly numbersAttribute: THREE.BufferAttribute,
 }
 
 export interface Input {
