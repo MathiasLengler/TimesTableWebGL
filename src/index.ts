@@ -173,7 +173,7 @@ export function getGeometry(totalLines: number): THREE.BufferGeometry {
     positions[i * 6 + 4] = 1.0; // y end
   }
 
-  geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
   return geometry;
 }
