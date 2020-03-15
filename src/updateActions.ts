@@ -36,7 +36,7 @@ export function updateMultiplier(material: THREE.ShaderMaterial, multiplier: num
 }
 
 export function updateOpacity(material: THREE.ShaderMaterial, opacity: number) {
-  material.uniforms.opacity.value = opacity;
+  material.uniforms.opacity.value = Math.pow(opacity, 3);
   material.needsUpdate = true;
 }
 
