@@ -131,15 +131,13 @@ function getThreeEnv(): ThreeEnv {
     },
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
-    blending: THREE.AdditiveBlending,
     depthTest: false,
-    transparent: true
+    transparent: true,
+    blending: THREE.CustomBlending,
+    blendEquation: THREE.AddEquation,
+    blendSrc: THREE.SrcAlphaFactor,
+    blendDst: THREE.OneFactor
   });
-
-  material.blending = THREE.CustomBlending;
-  material.blendEquation = THREE.AddEquation;
-  material.blendSrc = THREE.SrcAlphaFactor;
-  material.blendDst = THREE.OneFactor;
 
   const lines = getLines(getGeometry(0), material);
 
