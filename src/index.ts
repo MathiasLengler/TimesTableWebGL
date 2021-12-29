@@ -190,4 +190,4 @@ export function getLines(geometry: THREE.BufferGeometry, material: THREE.ShaderM
     return lines;
 }
 
-window.onload = init;
+init();
