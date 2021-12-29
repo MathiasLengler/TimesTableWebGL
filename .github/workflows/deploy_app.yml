@@ -36,3 +36,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+
+#      - name: Deploy to Cloudflare Pages
+#        uses: distributhor/workflow-webhook@v2
+#        env:
+#          webhook_url: ${{ secrets.CLOUDFLARE_WEBHOOK_URL }}
+#          webhook_secret: ${{ secrets.CLOUDFLARE_WEBHOOK_SECRET }}
