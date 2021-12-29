@@ -9,7 +9,8 @@
     "build": "webpack --mode production",
     "build:stats": "webpack --mode production --profile --json=compilation-stats.json",
     "lint:tsc": "tsc",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "serve": "npx serve -l 8080 build"
   },
   "repository": {
     "type": "git",
