@@ -4,14 +4,12 @@
   "description": "Interactive rendering of times tables",
   "main": "main.js",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.dev.js",
-    "publish": "npm run clean && npm run build-prod && npm run gh-pages",
-    "build": "webpack --config webpack.dev.js",
-    "build-prod": "webpack --config webpack.prod.js",
-    "build-prod-profile": "webpack --config webpack.prod.js --profile --json > stats.json",
-    "clean": "rimraf build/**/*",
-    "tsc": "tsc --traceResolution",
-    "gh-pages": "gh-pages -d build"
+    "start": "webpack serve --mode development",
+    "publish": "npm run clean && npm run build-prod && npm run deploy",
+    "build": "webpack --mode production",
+    "build:stats": "webpack --mode production --profile --json=compilation-stats.json",
+    "tsc": "tsc",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -24,10 +22,11 @@
     "dat.gui": "^0.7.7",
     "prettier": "^2.5.1",
     "stats.js": "^0.17.0",
-    "three": "^0.136.0",
+    "three": "0.135.0",
     "workbox-webpack-plugin": "^6.4.2"
   },
   "devDependencies": {
+    "@types/three": "0.135.0",
     "@types/dat.gui": "^0.7.7",
     "@types/stats": "^0.16.30",
     "css-loader": "6.5.1",
