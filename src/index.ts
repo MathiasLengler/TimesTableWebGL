@@ -1,3 +1,4 @@
+/// <reference path="webpack.d.ts"/>
 // webpack
 import "../res/style/index.css";
 import fragmentShader from "../res/shaders/fragmentShader.glsl";
@@ -8,7 +9,7 @@ import * as THREE from "three";
 import * as Gui from "./gui";
 import { RenderController } from "./render";
 import { Input, RenderContainer, ThreeEnv } from "./interfaces";
-import Stats = require("stats.js");
+import Stats from "stats.js";
 
 function getInitialInput(): Input {
     const standard: Input = {

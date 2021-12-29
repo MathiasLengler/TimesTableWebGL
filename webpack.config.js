@@ -1,0 +1,85 @@
+/* eslint-disable */
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const WorkboxPlugin = require("workbox-webpack-plugin");
+
+const dist = path.resolve(__dirname, "build");
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+module.exports = (env, argv) => {
+    const { mode } = argv;
+
+    const isDevelopment = mode === "development";
+    const isProduction = mode === "production";
+    if (!isDevelopment && !isProduction) {
+        throw new Error(`Unexpected mode: ${mode}`);
+    }
+
+    return {
+        name: "app",
+        entry: "./src/index.ts",
+        output: {
+            path: dist,
+            filename: "app.js",
+            publicPath: "",
+            clean: true,
+        },
+        devServer: {
+            static: {
+                directory: dist,
+            },
+            client: {
+                overlay: {
+                    errors: true,
+                    warnings: false,
+                },
+            },
+            host: "127.0.0.1",
+            hot: true,
+        },
+        devtool: isProduction ? "source-map" : "eval-source-map",
+        resolve: {
+            extensions: [".ts", ".tsx", ".js", ".wasm"],
+        },
+        experiments: {
+            topLevelAwait: true,
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                template: path.resolve(__dirname, "res", "index.html"),
+                favicon: "",
+            }),
+            // PWA
+            ...(isProduction
+                ? [
+                      new WorkboxPlugin.GenerateSW({
+                          clientsClaim: true,
+                          skipWaiting: true,
+                          maximumFileSizeToCacheInBytes: Math.pow(10, 8),
+                      }),
+                  ]
+                : []),
+        ],
+        module: {
+            rules: [
+                {
+                    test: /\.tsx?$/,
+                    use: [
+                        {
+                            loader: "ts-loader",
+                            options: { compilerOptions: { noEmit: false } },
+                        },
+                    ],
+                },
+                {
+                    test: /\.css$/,
+                    use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+                },
+                {
+                    test: /\.(glsl|frag|vert)/,
+                    type: "asset/source",
+                },
+            ],
+        },
+    };
+};

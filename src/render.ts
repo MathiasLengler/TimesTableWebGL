@@ -1,5 +1,3 @@
-import THREE = require("three");
-
 import { ThreeEnv, Input, UpdateSource, RenderContainer } from "./interfaces";
 import {
     updateTotalLines,
