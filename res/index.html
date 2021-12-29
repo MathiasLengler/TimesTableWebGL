@@ -8,5 +8,15 @@
         />
         <title>TimesTableWebGL</title>
     </head>
-    <body></body>
+    <body>
+        <% if (webpackConfig.mode === "production") { %>
+        <!-- Cloudflare Web Analytics -->
+        <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon='{"token": "61e54b66ec0f4892a4509c769b5127a9"}'
+        ></script>
+        <!-- End Cloudflare Web Analytics -->
+        <% } %>
+    </body>
 </html>
