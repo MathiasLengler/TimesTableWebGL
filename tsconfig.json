@@ -1,16 +1,15 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "outDir": "./build/",
-    "sourceMap": true,
-    "allowJs": false,
-    "lib": [
-      "dom",
-      "es6"
-    ]
-  },
-  "include": [
-    "src/**/*",
-    "lib/**.*"
-  ]
+    "compilerOptions": {
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "esnext",
+        "lib": ["dom", "esnext"],
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "jsx": "react",
+        "target": "es2017",
+        "noEmit": true
+    },
+    "include": ["src/**/*"]
 }

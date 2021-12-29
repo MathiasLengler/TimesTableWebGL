@@ -1,3 +1,4 @@
+/// <reference path="webpack.d.ts"/>
 // webpack
 import "../res/style/index.css";
 import fragmentShader from "../res/shaders/fragmentShader.glsl";
@@ -6,180 +7,187 @@ import vertexShader from "../res/shaders/vertexShader.glsl";
 import * as THREE from "three";
 // own
 import * as Gui from "./gui";
-import {RenderController} from "./render"
-import {Input, RenderContainer, ThreeEnv} from "./interfaces";
-import Stats = require("stats.js");
-
+import { RenderController } from "./render";
+import { Input, RenderContainer, ThreeEnv } from "./interfaces";
+import Stats from "stats.js";
 
 function getInitialInput(): Input {
-  const standard: Input = {
-    totalLines: 200,
-    multiplier: 2,
-    animate: false,
-    multiplierIncrement: 0.2,
-    opacity: 1,
-    colorMethod: 'lengthHue',
-    noiseStrength: 0.5,
-    antialias: false,
-    camPosX: 0,
-    camPosY: 0,
-    camZoom: 1,
-    resetCamera: () => {
-    }
-  };
+    const standard: Input = {
+        totalLines: 200,
+        multiplier: 2,
+        animate: false,
+        multiplierIncrement: 0.2,
+        opacity: 1,
+        colorMethod: "lengthHue",
+        noiseStrength: 0.5,
+        antialias: false,
+        camPosX: 0,
+        camPosY: 0,
+        camZoom: 1,
+        resetCamera: () => {},
+    };
 
-  const benchmark: Input = {
-    ...standard,
-    totalLines: 250000,
-    multiplier: 100000,
-    multiplierIncrement: 1,
-    opacity: 0.005,
-    colorMethod: 'faded',
-  };
+    const benchmark: Input = {
+        ...standard,
+        totalLines: 250000,
+        multiplier: 100000,
+        multiplierIncrement: 1,
+        opacity: 0.005,
+        colorMethod: "faded",
+    };
 
-  const debug: Input = {
-    ...standard,
-    totalLines: 10,
-    multiplier: 2,
-    multiplierIncrement: 0.005,
-    colorMethod: 'faded',
-  };
+    const debug: Input = {
+        ...standard,
+        totalLines: 10,
+        multiplier: 2,
+        multiplierIncrement: 0.005,
+        colorMethod: "faded",
+    };
 
-  const debugBlending: Input = {
-    ...standard,
-    totalLines: 10000,
-    opacity: 0.05,
-  };
+    const debugBlending: Input = {
+        ...standard,
+        totalLines: 10000,
+        opacity: 0.05,
+    };
 
-  const initialInputs = {
-    standard,
-    benchmark,
-    debug,
-    debugBlending
-  };
+    const initialInputs = {
+        standard,
+        benchmark,
+        debug,
+        debugBlending,
+    };
 
-  return initialInputs.standard;
+    return initialInputs.standard;
 }
 
-
 function init() {
-  const stats = new Stats();
-  stats.showPanel(1);
-  document.body.appendChild(stats.dom);
+    const stats = new Stats();
+    stats.showPanel(1);
+    document.body.appendChild(stats.dom);
 
-  const input = getInitialInput();
+    const input = getInitialInput();
 
-  const threeEnv = getThreeEnv();
+    const threeEnv = getThreeEnv();
 
-  const renderContainer = getRenderContainer(threeEnv.renderer);
+    const renderContainer = getRenderContainer(threeEnv.renderer);
 
-  const renderController = new RenderController(stats, threeEnv, input, renderContainer);
+    const renderController = new RenderController(stats, threeEnv, input, renderContainer);
 
-  window.addEventListener('resize', () => renderController.requestRender("resize"));
+    window.addEventListener("resize", () => renderController.requestRender("resize"));
 
-  Gui.initGUI(input, renderController, renderContainer);
+    Gui.initGUI(input, renderController, renderContainer);
 
-  renderController.requestRender("init");
+    renderController.requestRender("init");
 }
 
 function getRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
-  const renderContainer = document.createElement("div");
-  renderContainer.id = "render-container";
-  document.body.appendChild(renderContainer);
+    const renderContainer = document.createElement("div");
+    renderContainer.id = "render-container";
+    document.body.appendChild(renderContainer);
 
-  renderContainer.appendChild(renderer.domElement);
+    renderContainer.appendChild(renderer.domElement);
 
-  return renderContainer;
+    return renderContainer;
 }
 
 // TODO: try other kinds of noises
 function getRandomNoiseTexture() {
-  const width = 1024;
-  const data = new Uint8Array(4 * width);
-  for (let i = 0; i < width * 4; i++) {
-    data[i] = Math.random() * 255 | 0;
-  }
+    const width = 1024;
+    const data = new Uint8Array(4 * width);
+    for (let i = 0; i < width * 4; i++) {
+        data[i] = (Math.random() * 255) | 0;
+    }
 
-  const dataTexture = new THREE.DataTexture(data, width, 1, THREE.RGBAFormat, THREE.UnsignedByteType, THREE.UVMapping,
-    THREE.RepeatWrapping, THREE.RepeatWrapping, THREE.LinearFilter, THREE.LinearFilter);
-  dataTexture.needsUpdate = true;
-  return dataTexture;
+    const dataTexture = new THREE.DataTexture(
+        data,
+        width,
+        1,
+        THREE.RGBAFormat,
+        THREE.UnsignedByteType,
+        THREE.UVMapping,
+        THREE.RepeatWrapping,
+        THREE.RepeatWrapping,
+        THREE.LinearFilter,
+        THREE.LinearFilter
+    );
+    dataTexture.needsUpdate = true;
+    return dataTexture;
 }
 
 /**
  * Static initialization of render environment
  */
 function getThreeEnv(): ThreeEnv {
-  const renderer = new THREE.WebGLRenderer({antialias: true});
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-  const scene = new THREE.Scene();
+    const scene = new THREE.Scene();
 
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1);
-  camera.position.setZ(1);
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1);
+    camera.position.setZ(1);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-  const material = new THREE.ShaderMaterial({
-    uniforms: {
-      multiplier: {value: 0},
-      total: {value: 0},
-      opacity: {value: 0},
-      colorMethod: {value: 0},
-      noise: {value: getRandomNoiseTexture()},
-      noiseStrength: {value: 0}
-    },
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader,
-    depthTest: false,
-    transparent: true,
-    blending: THREE.CustomBlending,
-    blendEquation: THREE.AddEquation,
-    blendSrc: THREE.SrcAlphaFactor,
-    blendDst: THREE.OneFactor
-  });
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            multiplier: { value: 0 },
+            total: { value: 0 },
+            opacity: { value: 0 },
+            colorMethod: { value: 0 },
+            noise: { value: getRandomNoiseTexture() },
+            noiseStrength: { value: 0 },
+        },
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+        depthTest: false,
+        transparent: true,
+        blending: THREE.CustomBlending,
+        blendEquation: THREE.AddEquation,
+        blendSrc: THREE.SrcAlphaFactor,
+        blendDst: THREE.OneFactor,
+    });
 
-  const lines = getLines(getGeometry(0), material);
+    const lines = getLines(getGeometry(0), material);
 
-  scene.add(lines);
+    scene.add(lines);
 
-  return {
-    renderer,
-    scene,
-    camera,
-    material,
-    lines
-  };
+    return {
+        renderer,
+        scene,
+        camera,
+        material,
+        lines,
+    };
 }
 
 export function getGeometry(totalLines: number): THREE.BufferGeometry {
-  const geometry = new THREE.BufferGeometry();
+    const geometry = new THREE.BufferGeometry();
 
-  // We use position attributes as parameters for the vertex shader
-  // because THREE.js seems to expect a position attribute in every BufferAttribute.
-  // Position attribute format:
-  //  x - index
-  //  y - isStart (of line) ? 0.0 : 1.0
-  //  z - unused
-  const vertices = totalLines * 2;
-  const positionsLength = vertices * 3;
-  const positions = new Float32Array(positionsLength);
-  for (let i = 0; i < totalLines; i++) {
-    positions[i * 6] = i; // x start
-    positions[i * 6 + 1] = 0.0; // y start
-    positions[i * 6 + 3] = i; // x end
-    positions[i * 6 + 4] = 1.0; // y end
-  }
+    // We use position attributes as parameters for the vertex shader
+    // because THREE.js seems to expect a position attribute in every BufferAttribute.
+    // Position attribute format:
+    //  x - index
+    //  y - isStart (of line) ? 0.0 : 1.0
+    //  z - unused
+    const vertices = totalLines * 2;
+    const positionsLength = vertices * 3;
+    const positions = new Float32Array(positionsLength);
+    for (let i = 0; i < totalLines; i++) {
+        positions[i * 6] = i; // x start
+        positions[i * 6 + 1] = 0.0; // y start
+        positions[i * 6 + 3] = i; // x end
+        positions[i * 6 + 4] = 1.0; // y end
+    }
 
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
-  return geometry;
+    return geometry;
 }
 
 export function getLines(geometry: THREE.BufferGeometry, material: THREE.ShaderMaterial): THREE.LineSegments {
-  const lines = new THREE.LineSegments(geometry, material);
-  lines.frustumCulled = false;
-  return lines;
+    const lines = new THREE.LineSegments(geometry, material);
+    lines.frustumCulled = false;
+    return lines;
 }
 
-window.onload = init;
+init();

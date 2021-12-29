@@ -3,9 +3,10 @@ canvas {
 }
 body {
     margin: 0;
+    overflow: hidden;
 }
 
 #render-container {
-  user-select: none;
-  cursor: default;
+    user-select: none;
+    cursor: default;
 }
