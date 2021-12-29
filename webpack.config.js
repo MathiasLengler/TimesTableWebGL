@@ -47,7 +47,7 @@ module.exports = (env, argv) => {
         plugins: [
             new HtmlWebpackPlugin({
                 template: path.resolve(__dirname, "res", "index.html"),
-                favicon: "",
+                favicon: "res/img/favicon.ico",
             }),
             // PWA
             ...(isProduction
