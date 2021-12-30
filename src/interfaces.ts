@@ -24,7 +24,7 @@ export interface Input {
     opacity: number;
     colorMethod: ColorMethod;
     noiseStrength: number;
-    antialias: boolean;
+    samples: number;
     camPosX: number;
     camPosY: number;
     camZoom: number;

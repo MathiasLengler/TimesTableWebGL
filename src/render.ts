@@ -1,14 +1,14 @@
-import { ThreeEnv, Input, UpdateSource, RenderContainer } from "./interfaces";
+import { Input, RenderContainer, ThreeEnv, UpdateSource } from "./interfaces";
 import {
-    updateTotalLines,
     updateCameraPosition,
-    updateOpacity,
     updateCameraZoom,
-    updateMultiplier,
-    updateRendererSize,
     updateColorMethod,
+    updateMultiplier,
     updateNoiseStrength,
-    updateRenderer,
+    updateOpacity,
+    updateRendererSize,
+    updateSamples,
+    updateTotalLines,
 } from "./updateActions";
 
 export class RenderController {
@@ -59,8 +59,6 @@ export class RenderController {
 
     private update() {
         if (this.updateSources.has("init")) {
-            // FIXME: test for regressions
-            // updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
             updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
             updateTotalLines(this.threeEnv, this.input.totalLines);
             updateMultiplier(this.threeEnv.material, this.input.multiplier);
@@ -70,9 +68,8 @@ export class RenderController {
             updateCameraZoom(this.threeEnv.camera, this.input.camZoom);
         }
 
-        if (this.updateSources.has("antialias")) {
-            // TODO: migrate to renderTarget.samples
-            // updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
+        if (this.updateSources.has("samples")) {
+            updateSamples(this.threeEnv, this.input.samples);
         }
 
         if (this.updateSources.has("totalLines")) {

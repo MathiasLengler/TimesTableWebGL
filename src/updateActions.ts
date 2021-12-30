@@ -1,4 +1,4 @@
-import { ColorMethod, RenderContainer, ThreeEnv } from "./interfaces";
+import { ColorMethod, ThreeEnv } from "./interfaces";
 import * as THREE from "three";
 import { getGeometry, getLines } from "./index";
 import assertNever from "assert-never";
@@ -75,7 +75,9 @@ export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: nu
     threeEnv.camera.updateProjectionMatrix();
 
     threeEnv.renderer.setSize(width, height);
-    threeEnv.composer.setSize(width, height);
+
+    const renderTargetSize = getRenderTargetSize(threeEnv.renderer);
+    threeEnv.composer.setSize(renderTargetSize.width, renderTargetSize.height);
 }
 
 export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
@@ -88,16 +90,19 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
     threeEnv.scene.add(threeEnv.lines);
 }
 
-export function updateRenderer(threeEnv: ThreeEnv, renderContainer: RenderContainer, antialias: boolean) {
-    const newRenderer = new THREE.WebGLRenderer({ antialias });
-    newRenderer.setPixelRatio(window.devicePixelRatio);
-    newRenderer.setSize(window.innerWidth, window.innerHeight);
+export function updateSamples(threeEnv: ThreeEnv, samples: number) {
+    threeEnv.composer.reset(getRenderTarget(threeEnv.renderer, samples));
+}
 
-    if (renderContainer.firstChild) {
-        renderContainer.replaceChild(newRenderer.domElement, renderContainer.firstChild);
-    } else {
-        throw new Error("No Render Container");
-    }
+function getRenderTargetSize(renderer: THREE.WebGLRenderer) {
+    return renderer.getDrawingBufferSize(new THREE.Vector2());
+}
 
-    threeEnv.renderer = newRenderer;
+export function getRenderTarget(renderer: THREE.WebGLRenderer, samples: number) {
+    const renderTargetSize = getRenderTargetSize(renderer);
+    const renderTarget = new THREE.WebGLMultisampleRenderTarget(renderTargetSize.width, renderTargetSize.height, {
+        format: THREE.RGBFormat,
+    });
+    renderTarget.samples = samples;
+    return renderTarget;
 }
