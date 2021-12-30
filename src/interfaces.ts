@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 
 export type ColorMethod = "solid" | "faded" | "lengthOpacity" | "lengthHue" | "indexHue" | "fadedIndexHue";
 
@@ -12,6 +13,7 @@ export interface ThreeEnv {
     readonly camera: THREE.OrthographicCamera;
     readonly material: THREE.ShaderMaterial;
     lines: THREE.LineSegments;
+    composer: EffectComposer;
 }
 
 export interface Input {
@@ -22,7 +24,7 @@ export interface Input {
     opacity: number;
     colorMethod: ColorMethod;
     noiseStrength: number;
-    antialias: boolean;
+    samples: number;
     camPosX: number;
     camPosY: number;
     camZoom: number;

@@ -10,6 +10,11 @@ import * as Gui from "./gui";
 import { RenderController } from "./render";
 import { Input, RenderContainer, ThreeEnv } from "./interfaces";
 import Stats from "stats.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+import { CopyShader } from "three/examples/jsm/shaders/CopyShader";
+import { getRenderTarget } from "./updateActions";
 
 function getInitialInput(): Input {
     const standard: Input = {
@@ -20,7 +25,7 @@ function getInitialInput(): Input {
         opacity: 1,
         colorMethod: "lengthHue",
         noiseStrength: 0.5,
-        antialias: false,
+        samples: 4,
         camPosX: 0,
         camPosY: 0,
         camZoom: 1,
@@ -69,18 +74,25 @@ function init() {
 
     const threeEnv = getThreeEnv();
 
-    const renderContainer = getRenderContainer(threeEnv.renderer);
+    const renderContainer = initRenderContainer(threeEnv.renderer);
 
     const renderController = new RenderController(stats, threeEnv, input, renderContainer);
 
     window.addEventListener("resize", () => renderController.requestRender("resize"));
 
-    Gui.initGUI(input, renderController, renderContainer);
+    Gui.initGUI(
+        input,
+        renderController,
+        renderContainer,
+        // Undocumented in three.js documentation and type definition
+        // @ts-expect-error
+        threeEnv.renderer.capabilities.maxSamples || 4
+    );
 
     renderController.requestRender("init");
 }
 
-function getRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
+function initRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
     const renderContainer = document.createElement("div");
     renderContainer.id = "render-container";
     document.body.appendChild(renderContainer);
@@ -118,7 +130,7 @@ function getRandomNoiseTexture() {
  * Static initialization of render environment
  */
 function getThreeEnv(): ThreeEnv {
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: false });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -150,6 +162,15 @@ function getThreeEnv(): ThreeEnv {
     const lines = getLines(getGeometry(0), material);
 
     scene.add(lines);
+    const renderTarget = getRenderTarget(renderer, 4);
+
+    const composer = new EffectComposer(renderer, renderTarget);
+
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const copyPass = new ShaderPass(CopyShader);
+    composer.addPass(copyPass);
 
     return {
         renderer,
@@ -157,6 +178,7 @@ function getThreeEnv(): ThreeEnv {
         camera,
         material,
         lines,
+        composer,
     };
 }
 
