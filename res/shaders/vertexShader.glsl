@@ -7,7 +7,7 @@ varying float vLinePosition;
 
 #define PI 3.1415926535897932384626433832795
 
-float distance(float index, float total, float multiplier);
+float myDistance(float index, float total, float multiplier);
 vec2 getCircleCord(float number, float total);
 vec3 hsv2rgb(vec3 c);
 
@@ -41,10 +41,10 @@ void main() {
     }
   } else if (colorMethod == 2) {
     // lengthOpacity
-    vColor = vec3(1.0 - distance(index, total, multiplier));
+    vColor = vec3(1.0 - myDistance(index, total, multiplier));
   } else if (colorMethod == 3) {
     // lengthHue
-    vColor = vec3(hsv2rgb(vec3(distance(index, total, multiplier), 1.0, 1.0)));
+    vColor = vec3(hsv2rgb(vec3(myDistance(index, total, multiplier), 1.0, 1.0)));
   } else if (colorMethod == 4) {
     // indexHue
     vColor = vec3(hsv2rgb(vec3(index / total, 1.0, 1.0)));
@@ -61,7 +61,7 @@ void main() {
   }
 }
 
-float distance(float index, float total, float multiplier) {
+float myDistance(float index, float total, float multiplier) {
   float theta = 2.0 * PI * index * (multiplier - 1.0) / total;
   return abs(sin(theta / 2.0));
 }
