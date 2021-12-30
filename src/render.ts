@@ -50,7 +50,7 @@ export class RenderController {
 
         this.update();
 
-        this.threeEnv.renderer.render(this.threeEnv.scene, this.threeEnv.camera);
+        this.threeEnv.composer.render();
 
         this.prepareNextRender();
 
@@ -59,7 +59,8 @@ export class RenderController {
 
     private update() {
         if (this.updateSources.has("init")) {
-            updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
+            // FIXME: test for regressions
+            // updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
             updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
             updateTotalLines(this.threeEnv, this.input.totalLines);
             updateMultiplier(this.threeEnv.material, this.input.multiplier);
@@ -70,7 +71,8 @@ export class RenderController {
         }
 
         if (this.updateSources.has("antialias")) {
-            updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
+            // TODO: migrate to renderTarget.samples
+            // updateRenderer(this.threeEnv, this.renderContainer, this.input.antialias);
         }
 
         if (this.updateSources.has("totalLines")) {

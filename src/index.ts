@@ -10,6 +10,10 @@ import * as Gui from "./gui";
 import { RenderController } from "./render";
 import { Input, RenderContainer, ThreeEnv } from "./interfaces";
 import Stats from "stats.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+import { CopyShader } from "three/examples/jsm/shaders/CopyShader";
 
 function getInitialInput(): Input {
     const standard: Input = {
@@ -118,7 +122,7 @@ function getRandomNoiseTexture() {
  * Static initialization of render environment
  */
 function getThreeEnv(): ThreeEnv {
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: false });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -151,12 +155,28 @@ function getThreeEnv(): ThreeEnv {
 
     scene.add(lines);
 
+    const renderTargetSize = renderer.getDrawingBufferSize(new THREE.Vector2());
+    const renderTarget = new THREE.WebGLMultisampleRenderTarget(renderTargetSize.width, renderTargetSize.height, {
+        format: THREE.RGBFormat,
+    });
+    // TODO: add option
+    renderTarget.samples = 16;
+
+    const composer = new EffectComposer(renderer, renderTarget);
+
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const copyPass = new ShaderPass(CopyShader);
+    composer.addPass(copyPass);
+
     return {
         renderer,
         scene,
         camera,
         material,
         lines,
+        composer,
     };
 }
 

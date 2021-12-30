@@ -75,6 +75,7 @@ export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: nu
     threeEnv.camera.updateProjectionMatrix();
 
     threeEnv.renderer.setSize(width, height);
+    threeEnv.composer.setSize(width, height);
 }
 
 export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
