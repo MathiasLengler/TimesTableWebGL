@@ -2,7 +2,12 @@ import { RenderController } from "./render";
 import { GUI } from "dat.gui";
 import { ColorMethod, Input, RenderContainer, UpdateSource } from "./interfaces";
 
-export function initGUI(input: Input, renderController: RenderController, renderContainer: RenderContainer) {
+export function initGUI(
+    input: Input,
+    renderController: RenderController,
+    renderContainer: RenderContainer,
+    maxSamples: number
+) {
     let gui = new GUI();
 
     const totalLines: UpdateSource = "totalLines";
@@ -12,7 +17,7 @@ export function initGUI(input: Input, renderController: RenderController, render
     const opacity: UpdateSource = "opacity";
     const colorMethod: UpdateSource = "colorMethod";
     const noiseStrength: UpdateSource = "noiseStrength";
-    const antialias: UpdateSource = "antialias";
+    const samples: UpdateSource = "samples";
     const camPosX: UpdateSource = "camPosX";
     const camPosY: UpdateSource = "camPosY";
     const camZoom: UpdateSource = "camZoom";
@@ -67,7 +72,10 @@ export function initGUI(input: Input, renderController: RenderController, render
         .add(input, noiseStrength, 0, 255)
         .step(0.5)
         .onChange(() => renderController.requestRender(noiseStrength));
-    renderFolder.add(input, antialias).onChange(() => renderController.requestRender(antialias));
+    renderFolder
+        .add(input, samples, 1, maxSamples)
+        .step(1)
+        .onChange(() => renderController.requestRender(samples));
     renderFolder.open();
 
     const cameraFolder = gui.addFolder("Camera");
