@@ -22,7 +22,7 @@
     "dat.gui": "^0.7.7",
     "prettier": "^2.5.1",
     "stats.js": "^0.17.0",
-    "three": "0.135.0",
+    "three": "0.137.0",
     "workbox-webpack-plugin": "^6.4.2"
   },
   "devDependencies": {
