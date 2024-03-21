@@ -85,7 +85,6 @@ function init() {
         renderController,
         renderContainer,
         // Undocumented in three.js documentation and type definition
-        // @ts-expect-error
         threeEnv.renderer.capabilities.maxSamples || 4
     );
 

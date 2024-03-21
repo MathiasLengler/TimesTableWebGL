@@ -100,8 +100,8 @@ function getRenderTargetSize(renderer: THREE.WebGLRenderer) {
 
 export function getRenderTarget(renderer: THREE.WebGLRenderer, samples: number) {
     const renderTargetSize = getRenderTargetSize(renderer);
-    const renderTarget = new THREE.WebGLMultisampleRenderTarget(renderTargetSize.width, renderTargetSize.height, {
-        format: THREE.RGBFormat,
+    const renderTarget = new THREE.WebGLRenderTarget(renderTargetSize.width, renderTargetSize.height, {
+        format: THREE.RGBAFormat,
     });
     renderTarget.samples = samples;
     return renderTarget;
