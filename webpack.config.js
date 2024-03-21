@@ -1,10 +1,8 @@
 /* eslint-disable */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const WorkboxPlugin = require("workbox-webpack-plugin");
 
 const dist = path.resolve(__dirname, "build");
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, argv) => {
     const { mode } = argv;
@@ -49,16 +47,6 @@ module.exports = (env, argv) => {
                 template: path.resolve(__dirname, "res", "index.html"),
                 favicon: "res/img/favicon.ico",
             }),
-            // PWA
-            ...(isProduction
-                ? [
-                      new WorkboxPlugin.GenerateSW({
-                          clientsClaim: true,
-                          skipWaiting: true,
-                          maximumFileSizeToCacheInBytes: Math.pow(10, 8),
-                      }),
-                  ]
-                : []),
         ],
         module: {
             rules: [
