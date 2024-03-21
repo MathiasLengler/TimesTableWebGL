@@ -9,7 +9,6 @@ import * as THREE from "three";
 import * as Gui from "./gui";
 import { RenderController } from "./render";
 import { Input, RenderContainer, ThreeEnv } from "./interfaces";
-import Stats from "stats.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
@@ -66,17 +65,13 @@ function getInitialInput(): Input {
 }
 
 function init() {
-    const stats = new Stats();
-    stats.showPanel(1);
-    document.body.appendChild(stats.dom);
-
     const input = getInitialInput();
 
     const threeEnv = getThreeEnv();
 
     const renderContainer = initRenderContainer(threeEnv.renderer);
 
-    const renderController = new RenderController(stats, threeEnv, input, renderContainer);
+    const renderController = new RenderController(threeEnv, input, renderContainer);
 
     window.addEventListener("resize", () => renderController.requestRender("resize"));
 

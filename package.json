@@ -21,12 +21,10 @@
     "assert-never": "^1.2.1",
     "dat.gui": "^0.7.9",
     "prettier": "^3.2.5",
-    "stats.js": "^0.17.0",
     "three": "0.162.0"
   },
   "devDependencies": {
     "@types/dat.gui": "^0.7.12",
-    "@types/stats": "^0.16.30",
     "@types/three": "0.162.0",
     "css-loader": "6.10.0",
     "gh-pages": "6.1.1",

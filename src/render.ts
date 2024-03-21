@@ -16,13 +16,11 @@ export class RenderController {
     private postRenderCallbacks: Set<() => void>;
 
     private readonly updateSources: Set<UpdateSource>;
-    private readonly stats: Stats;
     private readonly threeEnv: ThreeEnv;
     private readonly input: Input;
     private readonly renderContainer: RenderContainer;
 
-    constructor(stats: Stats, threeEnv: ThreeEnv, input: Input, renderContainer: RenderContainer) {
-        this.stats = stats;
+    constructor(threeEnv: ThreeEnv, input: Input, renderContainer: RenderContainer) {
         this.threeEnv = threeEnv;
         this.input = input;
         this.renderContainer = renderContainer;
@@ -44,8 +42,6 @@ export class RenderController {
     }
 
     private render() {
-        this.stats.begin();
-
         this.frameRequested = false;
 
         this.update();
@@ -53,8 +49,6 @@ export class RenderController {
         this.threeEnv.composer.render();
 
         this.prepareNextRender();
-
-        this.stats.end();
     }
 
     private update() {
