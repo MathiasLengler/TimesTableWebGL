@@ -1,0 +1,22 @@
+http:// {
+	root * /srv
+	encode gzip
+	try_files {path} /index.html
+
+	header {
+		# cross-origin isolation for SharedArrayBuffer (wasm threads)
+		# https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements
+		Cross-Origin-Opener-Policy same-origin
+		Cross-Origin-Embedder-Policy require-corp
+		# restrict all content to own origin
+		# https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#example_1
+		Content-Security-Policy: default-src 'self'
+		# disable MIME type sniffing
+		# https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+		X-Content-Type-Options nosniff
+		# https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#permissions-policy-formerly-feature-policy
+		Permissions-Policy: geolocation=(), camera=(), microphone=()
+	}
+
+	file_server
+}
