@@ -1,4 +1,3 @@
-/// <reference path="webpack.d.ts"/>
 // webpack
 import "../res/style/index.css";
 import fragmentShader from "../res/shaders/fragmentShader.glsl";
@@ -28,7 +27,10 @@ function getInitialInput(): Input {
         camPosX: 0,
         camPosY: 0,
         camZoom: 1,
-        resetCamera: () => {},
+        resetCamera: () => {
+            // a function indicates a button in dat.gui
+            // the actual logic is defined via `onChange`
+        },
     };
 
     const benchmark: Input = {

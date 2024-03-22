@@ -8,7 +8,7 @@ export function initGUI(
     renderContainer: RenderContainer,
     maxSamples: number,
 ) {
-    let gui = new GUI();
+    const gui = new GUI();
 
     const totalLines: UpdateSource = "totalLines";
     const multiplier: UpdateSource = "multiplier";
@@ -56,14 +56,7 @@ export function initGUI(
         .add(input, opacity, 0, 1)
         .step(0.001)
         .onChange(() => renderController.requestRender(opacity));
-    const colorMethods: Array<ColorMethod> = [
-        "solid",
-        "faded",
-        "lengthOpacity",
-        "lengthHue",
-        "indexHue",
-        "fadedIndexHue",
-    ];
+    const colorMethods: ColorMethod[] = ["solid", "faded", "lengthOpacity", "lengthHue", "indexHue", "fadedIndexHue"];
     colorFolder.add(input, colorMethod, colorMethods).onChange(() => renderController.requestRender(colorMethod));
     colorFolder.open();
 
