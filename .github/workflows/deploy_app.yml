@@ -12,33 +12,41 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       # Node
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version-file: ".nvmrc"
 
-      # https://github.com/actions/cache/blob/master/examples.md#macos-and-ubuntu
-      - uses: actions/cache@v2
+      # https://github.com/actions/cache/blob/v4/examples.md#node---npm
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      - uses: actions/cache@v4
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
         with:
-          path: ~/.npm
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
       - run: npm ci
 
+      - run: npm run lint
+
       - run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          registry: docker-registry.lengler.dev
+          username: ${{ secrets.DOCKER_REGISTRY_USERNAME }}
+          password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
-#      - name: Deploy to Cloudflare Pages
-#        uses: distributhor/workflow-webhook@v2
-#        env:
-#          webhook_url: ${{ secrets.CLOUDFLARE_WEBHOOK_URL }}
-#          webhook_secret: ${{ secrets.CLOUDFLARE_WEBHOOK_SECRET }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: docker-registry.lengler.dev/times-table:latest

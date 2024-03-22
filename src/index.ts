@@ -80,7 +80,7 @@ function init() {
         renderController,
         renderContainer,
         // Undocumented in three.js documentation and type definition
-        threeEnv.renderer.capabilities.maxSamples || 4
+        threeEnv.renderer.capabilities.maxSamples || 4,
     );
 
     renderController.requestRender("init");
@@ -114,7 +114,7 @@ function getRandomNoiseTexture() {
         THREE.RepeatWrapping,
         THREE.RepeatWrapping,
         THREE.LinearFilter,
-        THREE.LinearFilter
+        THREE.LinearFilter,
     );
     dataTexture.needsUpdate = true;
     return dataTexture;

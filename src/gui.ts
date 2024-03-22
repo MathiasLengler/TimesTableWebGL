@@ -6,7 +6,7 @@ export function initGUI(
     input: Input,
     renderController: RenderController,
     renderContainer: RenderContainer,
-    maxSamples: number
+    maxSamples: number,
 ) {
     let gui = new GUI();
 

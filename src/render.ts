@@ -108,6 +108,6 @@ export class RenderController {
 
         this.postRenderCallbacks = new Set();
 
-        oldPostRenderCallbacks.forEach(callback => callback());
+        oldPostRenderCallbacks.forEach((callback) => callback());
     }
 }

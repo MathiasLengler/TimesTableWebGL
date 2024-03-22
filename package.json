@@ -1,41 +1,46 @@
 {
-  "name": "times-table-js",
-  "version": "0.3.0",
-  "description": "Interactive rendering of times tables",
-  "main": "main.js",
-  "scripts": {
-    "start": "webpack serve --mode development",
-    "start:prod": "webpack serve --mode production",
-    "build": "webpack --mode production",
-    "build:stats": "webpack --mode production --profile --json=compilation-stats.json",
-    "serve": "npx serve -l 8080 build",
-    "lint:tsc": "tsc"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:MathiasLengler/TimesTableJS.git"
-  },
-  "author": "Mathias Lengler",
-  "license": "MIT",
-  "dependencies": {
-    "assert-never": "^1.2.1",
-    "dat.gui": "^0.7.9",
-    "prettier": "^3.2.5",
-    "three": "0.162.0"
-  },
-  "devDependencies": {
-    "@types/dat.gui": "^0.7.12",
-    "@types/three": "0.162.0",
-    "css-loader": "6.10.0",
-    "gh-pages": "6.1.1",
-    "html-webpack-plugin": "5.6.0",
-    "rimraf": "^5.0.5",
-    "style-loader": "3.3.4",
-    "ts-loader": "^9.5.1",
-    "typescript": "5.4.3",
-    "webpack": "5.91.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4",
-    "webpack-merge": "^5.10.0"
-  }
+    "name": "times-table-js",
+    "version": "0.3.0",
+    "description": "Interactive rendering of times tables",
+    "main": "main.js",
+    "scripts": {
+        "start": "webpack serve --mode development",
+        "start:prod": "webpack serve --mode production",
+        "build": "webpack --mode production",
+        "build:stats": "webpack --mode production --profile --json=compilation-stats.json",
+        "serve": "npx serve -l 8080 build",
+        "lint": "npm run lint:tsc && npm run lint:eslint && npm run lint:prettier",
+        "lint:tsc": "tsc",
+        "lint:eslint": "eslint src/** webpack.config.ts",
+        "lint:prettier": "npm run lint:prettier:files -- --check",
+        "lint:prettier:fix": "npm run lint:prettier:files -- --write",
+        "lint:prettier:files": "prettier src/** res/**/*.{css,html} .github/**/*.yml webpack.config.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:MathiasLengler/TimesTableJS.git"
+    },
+    "author": "Mathias Lengler",
+    "license": "MIT",
+    "dependencies": {
+        "assert-never": "^1.2.1",
+        "dat.gui": "^0.7.9",
+        "three": "0.162.0"
+    },
+    "devDependencies": {
+        "@types/dat.gui": "^0.7.12",
+        "@types/three": "0.162.0",
+        "css-loader": "6.10.0",
+        "gh-pages": "6.1.1",
+        "html-webpack-plugin": "5.6.0",
+        "prettier": "^3.2.5",
+        "rimraf": "^5.0.5",
+        "style-loader": "3.3.4",
+        "ts-loader": "^9.5.1",
+        "typescript": "5.4.3",
+        "webpack": "5.91.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.4",
+        "webpack-merge": "^5.10.0"
+    }
 }
