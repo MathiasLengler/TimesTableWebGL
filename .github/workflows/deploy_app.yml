@@ -49,5 +49,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: docker-registry.lengler.dev/times-table:latest
+          tags: docker-registry.lengler.dev/times-tables:latest
       # TODO: add coolify deploy action
