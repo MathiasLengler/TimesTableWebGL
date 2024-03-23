@@ -50,4 +50,6 @@ jobs:
         with:
           push: true
           tags: docker-registry.lengler.dev/times-tables:latest
-      # TODO: add coolify deploy action
+      - name: Deploy to Coolify
+        run: |
+          curl --fail-with-body --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
