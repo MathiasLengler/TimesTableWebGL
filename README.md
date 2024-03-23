@@ -1,15 +1,33 @@
 # TimesTableWebGL
 
-![Teaser](https://lengler.dev/res/img/timestable-teaser.png)
+[![Teaser](res/img/logo.jpg)](https://times-tables.lengler.dev)
 
-Interactive diagram of times tables as seen in [this video](https://www.youtube.com/watch?v=qhbuKbxJsk8) from Mathologer.
+A interactive visualization of times tables.
 
-Written in Typescript, rendering with Three.js.
+Inspired by [this video from Mathologer](https://www.youtube.com/watch?v=qhbuKbxJsk8).
 
-## [Live Demo](https://lengler.dev/TimesTableWebGL/)
+## Features
 
-requires browser that supports WebGL
+-   fluent animation powered by the GPU
+-   GUI for visualization parameters
+    -   continues animation of the multiplier
+    -   line coloring
+    -   line opacity
+    -   Multisample anti-aliasing
+    -   viewport/camera
+-   viewport mouse controls
+    -   Zoom: `shift + scroll wheel`
+    -   Pan: `shift + click + drag`
 
-## Development
-- `npm install`
-- `npm start`
+## Technical notes
+
+### Languages
+
+-   TypeScript
+-   WebGL Shaders in [GLSL](<https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)>)
+
+### Libraries
+
+-   [three.js](https://threejs.org/)
+-   [dat.gui](https://github.com/dataarts/dat.gui)
+-   [webpack](https://webpack.js.org/)
