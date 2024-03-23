@@ -1,7 +1,6 @@
 http:// {
 	root * /srv
 	encode gzip
-	try_files {path} /index.html
 
 	header {
 		# cross-origin isolation for SharedArrayBuffer (wasm threads)
