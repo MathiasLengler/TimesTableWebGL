@@ -1,4 +1,3 @@
-/// <reference path="webpack.d.ts"/>
 // webpack
 import "../res/style/index.css";
 import fragmentShader from "../res/shaders/fragmentShader.glsl";
@@ -9,7 +8,6 @@ import * as THREE from "three";
 import * as Gui from "./gui";
 import { RenderController } from "./render";
 import { Input, RenderContainer, ThreeEnv } from "./interfaces";
-import Stats from "stats.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
@@ -29,7 +27,10 @@ function getInitialInput(): Input {
         camPosX: 0,
         camPosY: 0,
         camZoom: 1,
-        resetCamera: () => {},
+        resetCamera: () => {
+            // a function indicates a button in dat.gui
+            // the actual logic is defined via `onChange`
+        },
     };
 
     const benchmark: Input = {
@@ -66,17 +67,13 @@ function getInitialInput(): Input {
 }
 
 function init() {
-    const stats = new Stats();
-    stats.showPanel(1);
-    document.body.appendChild(stats.dom);
-
     const input = getInitialInput();
 
     const threeEnv = getThreeEnv();
 
     const renderContainer = initRenderContainer(threeEnv.renderer);
 
-    const renderController = new RenderController(stats, threeEnv, input, renderContainer);
+    const renderController = new RenderController(threeEnv, input, renderContainer);
 
     window.addEventListener("resize", () => renderController.requestRender("resize"));
 
@@ -85,8 +82,7 @@ function init() {
         renderController,
         renderContainer,
         // Undocumented in three.js documentation and type definition
-        // @ts-expect-error
-        threeEnv.renderer.capabilities.maxSamples || 4
+        threeEnv.renderer.capabilities.maxSamples || 4,
     );
 
     renderController.requestRender("init");
@@ -120,7 +116,7 @@ function getRandomNoiseTexture() {
         THREE.RepeatWrapping,
         THREE.RepeatWrapping,
         THREE.LinearFilter,
-        THREE.LinearFilter
+        THREE.LinearFilter,
     );
     dataTexture.needsUpdate = true;
     return dataTexture;
