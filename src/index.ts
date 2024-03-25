@@ -8,10 +8,7 @@ import * as THREE from "three";
 import * as Gui from "./gui";
 import { RenderController } from "./render";
 import type { Input, LineMaterial, LineMaterialUniforms, RenderContainer, ThreeEnv } from "./interfaces";
-import { EffectComposer } from "three/addons/postprocessing/EffectComposer.ts";
-import { RenderPass } from "three/addons/postprocessing/RenderPass.ts";
-import { ShaderPass } from "three/addons/postprocessing/ShaderPass.ts";
-import { CopyShader } from "three/addons/shaders/CopyShader.ts";
+import { EffectComposer, RenderPass, ShaderPass, CopyShader } from "three/addons";
 import { getRenderTarget } from "./updateActions";
 
 function getInitialInput(): Input {

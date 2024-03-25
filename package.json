@@ -8,7 +8,7 @@
         "start:prod": "webpack serve --mode production",
         "build": "webpack --mode production",
         "build:stats": "webpack --mode production --profile --json=compilation-stats.json",
-        "serve": "npx serve -l 8080 build",
+        "serve": "npx serve -l 8080 dist",
         "lint": "npm run lint:tsc && npm run lint:eslint && npm run lint:prettier",
         "lint:tsc": "tsc",
         "lint:eslint": "eslint src/**",
