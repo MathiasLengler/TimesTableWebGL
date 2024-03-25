@@ -7,11 +7,11 @@ import * as THREE from "three";
 // own
 import * as Gui from "./gui";
 import { RenderController } from "./render";
-import { Input, RenderContainer, ThreeEnv } from "./interfaces";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
-import { CopyShader } from "three/examples/jsm/shaders/CopyShader";
+import type { Input, LineMaterial, LineMaterialUniforms, RenderContainer, ThreeEnv } from "./interfaces";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.ts";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.ts";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.ts";
+import { CopyShader } from "three/addons/shaders/CopyShader.ts";
 import { getRenderTarget } from "./updateActions";
 
 function getInitialInput(): Input {
@@ -144,7 +144,7 @@ function getThreeEnv(): ThreeEnv {
             colorMethod: { value: 0 },
             noise: { value: getRandomNoiseTexture() },
             noiseStrength: { value: 0 },
-        },
+        } satisfies LineMaterialUniforms,
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
         depthTest: false,
@@ -153,7 +153,7 @@ function getThreeEnv(): ThreeEnv {
         blendEquation: THREE.AddEquation,
         blendSrc: THREE.SrcAlphaFactor,
         blendDst: THREE.OneFactor,
-    });
+    }) as LineMaterial;
 
     const lines = getLines(getGeometry(0), material);
 
