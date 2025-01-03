@@ -31,7 +31,7 @@ module.exports = (env, argv) => {
                     warnings: false,
                 },
             },
-            host: "127.0.0.1",
+            host: "0.0.0.0",
             hot: true,
         },
         devtool: isProduction ? "source-map" : "eval-source-map",
