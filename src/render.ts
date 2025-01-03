@@ -7,13 +7,16 @@ import {
     updateNoiseStrength,
     updateOpacity,
     updateRendererSize,
-    updateSamples,
+    updateRenderTarget,
+    updateToneMapping,
+    updateToneMappingExposure,
     updateTotalLines,
 } from "./updateActions";
 
 export class RenderController {
     private frameRequested = false;
     private postRenderCallbacks: Set<() => void>;
+    private isInitialRender = true;
 
     private readonly updateSources: Set<UpdateSource>;
     private readonly threeEnv: ThreeEnv;
@@ -28,8 +31,10 @@ export class RenderController {
         this.postRenderCallbacks = new Set();
     }
 
-    public requestRender(source: UpdateSource, postRenderCallback?: () => void) {
-        this.updateSources.add(source);
+    public requestRender(source: UpdateSource | "init", postRenderCallback?: () => void) {
+        if (source !== "init") {
+            this.updateSources.add(source);
+        }
 
         if (!this.frameRequested) {
             this.frameRequested = true;
@@ -48,54 +53,57 @@ export class RenderController {
 
         this.threeEnv.composer.render();
 
+        this.isInitialRender = false;
+
         this.prepareNextRender();
     }
 
+    private needsUpdate(source: UpdateSource): boolean {
+        return this.updateSources.has(source) || this.isInitialRender;
+    }
+
     private update() {
-        if (this.updateSources.has("init")) {
-            updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
-            updateSamples(this.threeEnv, this.input.samples);
-            updateTotalLines(this.threeEnv, this.input.totalLines);
-            updateMultiplier(this.threeEnv.material, this.input.multiplier);
-            updateColorMethod(this.threeEnv.material, this.input.colorMethod);
-            updateOpacity(this.threeEnv.material, this.input.opacity);
-            updateCameraPosition(this.threeEnv.camera, this.input.camPosX, this.input.camPosY);
-            updateCameraZoom(this.threeEnv.camera, this.input.camZoom);
+        if (this.needsUpdate("samples") || this.needsUpdate("renderTargetType")) {
+            updateRenderTarget(this.threeEnv, this.input.samples, this.input.renderTargetType);
         }
 
-        if (this.updateSources.has("samples")) {
-            updateSamples(this.threeEnv, this.input.samples);
-        }
-
-        if (this.updateSources.has("totalLines")) {
+        if (this.needsUpdate("totalLines")) {
             updateTotalLines(this.threeEnv, this.input.totalLines);
         }
 
-        if (this.updateSources.has("multiplier")) {
+        if (this.needsUpdate("multiplier")) {
             updateMultiplier(this.threeEnv.material, this.input.multiplier);
         }
 
-        if (this.updateSources.has("colorMethod")) {
+        if (this.needsUpdate("colorMethod")) {
             updateColorMethod(this.threeEnv.material, this.input.colorMethod);
         }
 
-        if (this.updateSources.has("noiseStrength")) {
+        if (this.needsUpdate("noiseStrength")) {
             updateNoiseStrength(this.threeEnv.material, this.input.noiseStrength);
         }
 
-        if (this.updateSources.has("camPosX") || this.updateSources.has("camPosY")) {
+        if (this.needsUpdate("camPosX") || this.needsUpdate("camPosY")) {
             updateCameraPosition(this.threeEnv.camera, this.input.camPosX, this.input.camPosY);
         }
 
-        if (this.updateSources.has("camZoom")) {
+        if (this.needsUpdate("camZoom")) {
             updateCameraZoom(this.threeEnv.camera, this.input.camZoom);
         }
 
-        if (this.updateSources.has("opacity")) {
+        if (this.needsUpdate("opacity")) {
             updateOpacity(this.threeEnv.material, this.input.opacity);
         }
 
-        if (this.updateSources.has("resize")) {
+        if (this.needsUpdate("toneMapping")) {
+            updateToneMapping(this.threeEnv, this.input.toneMapping);
+        }
+
+        if (this.needsUpdate("toneMappingExposure")) {
+            updateToneMappingExposure(this.threeEnv, this.input.toneMappingExposure);
+        }
+
+        if (this.needsUpdate("resize")) {
             updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
         }
     }

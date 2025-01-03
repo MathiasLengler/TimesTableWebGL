@@ -1,14 +1,11 @@
-// webpack
-import "../res/style/index.css";
 import fragmentShader from "../res/shaders/fragmentShader.glsl";
 import vertexShader from "../res/shaders/vertexShader.glsl";
-// npm
+import "../res/style/index.css";
 import * as THREE from "three";
-// own
+import { EffectComposer, OutputPass, RenderPass } from "three/addons";
 import * as Gui from "./gui";
-import { RenderController } from "./render";
 import type { Input, LineMaterial, LineMaterialUniforms, RenderContainer, ThreeEnv } from "./interfaces";
-import { EffectComposer, RenderPass, ShaderPass, CopyShader } from "three/addons";
+import { RenderController } from "./render";
 import { getRenderTarget } from "./updateActions";
 
 function getInitialInput(): Input {
@@ -19,8 +16,11 @@ function getInitialInput(): Input {
         multiplierIncrement: 0.2,
         opacity: 1,
         colorMethod: "lengthHue",
-        noiseStrength: 0.5,
+        noiseStrength: 0.0,
         samples: 4,
+        toneMapping: "Neutral",
+        toneMappingExposure: 1.0,
+        renderTargetType: "HalfFloat",
         camPosX: 0,
         camPosY: 0,
         camZoom: 1,
@@ -35,7 +35,7 @@ function getInitialInput(): Input {
         totalLines: 250000,
         multiplier: 100000,
         multiplierIncrement: 1,
-        opacity: 0.005,
+        opacity: 0.1,
         colorMethod: "faded",
     };
 
@@ -50,7 +50,7 @@ function getInitialInput(): Input {
     const debugBlending: Input = {
         ...standard,
         totalLines: 10000,
-        opacity: 0.05,
+        opacity: 0.2,
     };
 
     const initialInputs = {
@@ -60,7 +60,7 @@ function getInitialInput(): Input {
         debugBlending,
     };
 
-    return initialInputs.standard;
+    return initialInputs.debugBlending;
 }
 
 function init() {
@@ -74,13 +74,7 @@ function init() {
 
     window.addEventListener("resize", () => renderController.requestRender("resize"));
 
-    Gui.initGUI(
-        input,
-        renderController,
-        renderContainer,
-        // Undocumented in three.js documentation and type definition
-        threeEnv.renderer.capabilities.maxSamples || 4,
-    );
+    Gui.initGUI(input, renderController, renderContainer, threeEnv.renderer.capabilities.maxSamples);
 
     renderController.requestRender("init");
 }
@@ -128,17 +122,17 @@ function getThreeEnv(): ThreeEnv {
     }) as LineMaterial;
 
     const lines = getLines(getGeometry(0), material);
-
     scene.add(lines);
-    const renderTarget = getRenderTarget(renderer, 1);
+
+    const renderTarget = getRenderTarget(renderer, 1, "UnsignedByte");
 
     const composer = new EffectComposer(renderer, renderTarget);
 
     const renderPass = new RenderPass(scene, camera);
     composer.addPass(renderPass);
 
-    const copyPass = new ShaderPass(CopyShader);
-    composer.addPass(copyPass);
+    const outputPass = new OutputPass();
+    composer.addPass(outputPass);
 
     return {
         renderer,

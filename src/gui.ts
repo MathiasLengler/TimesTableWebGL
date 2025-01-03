@@ -1,6 +1,13 @@
 import { RenderController } from "./render";
 import GUI from "lil-gui";
-import type { ColorMethod, Input, RenderContainer, UpdateSource } from "./interfaces";
+import type {
+    ColorMethod,
+    Input,
+    RenderContainer,
+    RenderTargetTypeLabel,
+    ToneMappingLabel,
+    UpdateSource,
+} from "./interfaces";
 
 export function initGUI(
     input: Input,
@@ -10,18 +17,21 @@ export function initGUI(
 ) {
     const gui = new GUI();
 
-    const totalLines: UpdateSource = "totalLines";
-    const multiplier: UpdateSource = "multiplier";
-    const animate: UpdateSource = "animate";
-    const multiplierIncrement: UpdateSource = "multiplierIncrement";
-    const opacity: UpdateSource = "opacity";
-    const colorMethod: UpdateSource = "colorMethod";
-    const noiseStrength: UpdateSource = "noiseStrength";
-    const samples: UpdateSource = "samples";
-    const camPosX: UpdateSource = "camPosX";
-    const camPosY: UpdateSource = "camPosY";
-    const camZoom: UpdateSource = "camZoom";
-    const resetCamera: UpdateSource = "resetCamera";
+    const totalLines = "totalLines" satisfies UpdateSource;
+    const multiplier = "multiplier" satisfies UpdateSource;
+    const animate = "animate" satisfies UpdateSource;
+    const multiplierIncrement = "multiplierIncrement" satisfies UpdateSource;
+    const opacity = "opacity" satisfies UpdateSource;
+    const colorMethod = "colorMethod" satisfies UpdateSource;
+    const toneMapping = "toneMapping" satisfies UpdateSource;
+    const toneMappingExposure = "toneMappingExposure" satisfies UpdateSource;
+    const renderTargetType = "renderTargetType" satisfies UpdateSource;
+    const noiseStrength = "noiseStrength" satisfies UpdateSource;
+    const samples = "samples" satisfies UpdateSource;
+    const camPosX = "camPosX" satisfies UpdateSource;
+    const camPosY = "camPosY" satisfies UpdateSource;
+    const camZoom = "camZoom" satisfies UpdateSource;
+    const resetCamera = "resetCamera" satisfies UpdateSource;
 
     const mathsFolder = gui.addFolder("Maths");
     mathsFolder
@@ -66,6 +76,23 @@ export function initGUI(
         .add(input, samples, 1, maxSamples)
         .step(1)
         .onChange(() => renderController.requestRender(samples));
+    renderFolder
+        .add(input, toneMapping, [
+            "No",
+            "Linear",
+            "Reinhard",
+            "Cineon",
+            "ACESFilmic",
+            "AgX",
+            "Neutral",
+        ] satisfies ToneMappingLabel[])
+        .onChange(() => renderController.requestRender(toneMapping));
+    renderFolder
+        .add(input, toneMappingExposure, 0, 2)
+        .onChange(() => renderController.requestRender(toneMappingExposure));
+    renderFolder
+        .add(input, renderTargetType, ["UnsignedByte", "HalfFloat", "Float"] satisfies RenderTargetTypeLabel[])
+        .onChange(() => renderController.requestRender(renderTargetType));
 
     const cameraFolder = gui.addFolder("Camera");
     const camPosXController = cameraFolder.add(input, camPosX, -1, 1).step(1e-6);

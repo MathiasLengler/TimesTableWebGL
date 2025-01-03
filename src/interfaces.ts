@@ -3,7 +3,11 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 
 export type ColorMethod = "solid" | "faded" | "lengthOpacity" | "lengthHue" | "indexHue" | "fadedIndexHue";
 
-export type UpdateSource = keyof Input | "init" | "resize";
+export type ToneMappingLabel = "No" | "Linear" | "Reinhard" | "Cineon" | "ACESFilmic" | "AgX" | "Neutral";
+
+export type RenderTargetTypeLabel = "UnsignedByte" | "HalfFloat" | "Float";
+
+export type UpdateSource = keyof Input | "resize";
 
 export type RenderContainer = HTMLElement;
 
@@ -37,8 +41,12 @@ export interface Input {
     colorMethod: ColorMethod;
     noiseStrength: number;
     samples: number;
+    toneMapping: ToneMappingLabel;
+    toneMappingExposure: number;
+    renderTargetType: RenderTargetTypeLabel;
     camPosX: number;
     camPosY: number;
     camZoom: number;
+
     resetCamera: () => void;
 }

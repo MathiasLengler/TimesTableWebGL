@@ -1,4 +1,4 @@
-import type { ColorMethod, LineMaterial, ThreeEnv } from "./interfaces";
+import type { ColorMethod, LineMaterial, RenderTargetTypeLabel, ThreeEnv, ToneMappingLabel } from "./interfaces";
 import * as THREE from "three";
 import { getGeometry, getLines } from "./index";
 import assertNever from "assert-never";
@@ -38,6 +38,38 @@ export function updateMultiplier(material: LineMaterial, multiplier: number) {
 export function updateOpacity(material: LineMaterial, opacity: number) {
     material.uniforms.opacity.value = Math.pow(opacity, 3);
     material.needsUpdate = true;
+}
+
+export function updateToneMapping(threeEnv: ThreeEnv, toneMapping: ToneMappingLabel) {
+    switch (toneMapping) {
+        case "No":
+            threeEnv.renderer.toneMapping = THREE.NoToneMapping;
+            break;
+        case "Linear":
+            threeEnv.renderer.toneMapping = THREE.LinearToneMapping;
+            break;
+        case "Reinhard":
+            threeEnv.renderer.toneMapping = THREE.ReinhardToneMapping;
+            break;
+        case "Cineon":
+            threeEnv.renderer.toneMapping = THREE.CineonToneMapping;
+            break;
+        case "ACESFilmic":
+            threeEnv.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            break;
+        case "AgX":
+            threeEnv.renderer.toneMapping = THREE.AgXToneMapping;
+            break;
+        case "Neutral":
+            threeEnv.renderer.toneMapping = THREE.NeutralToneMapping;
+            break;
+        default:
+            assertNever(toneMapping);
+    }
+}
+
+export function updateToneMappingExposure(threeEnv: ThreeEnv, toneMappingExposure: number) {
+    threeEnv.renderer.toneMappingExposure = toneMappingExposure;
 }
 
 export function updateNoiseStrength(material: LineMaterial, noiseStrength: number) {
@@ -90,18 +122,37 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
     threeEnv.scene.add(threeEnv.lines);
 }
 
-export function updateSamples(threeEnv: ThreeEnv, samples: number) {
-    threeEnv.composer.reset(getRenderTarget(threeEnv.renderer, samples));
+export function updateRenderTarget(threeEnv: ThreeEnv, samples: number, renderTargetType: RenderTargetTypeLabel) {
+    threeEnv.composer.reset(getRenderTarget(threeEnv.renderer, samples, renderTargetType));
 }
 
 function getRenderTargetSize(renderer: THREE.WebGLRenderer) {
     return renderer.getDrawingBufferSize(new THREE.Vector2());
 }
 
-export function getRenderTarget(renderer: THREE.WebGLRenderer, samples: number) {
+export function getRenderTarget(
+    renderer: THREE.WebGLRenderer,
+    samples: number,
+    renderTargetType: RenderTargetTypeLabel,
+) {
     const renderTargetSize = getRenderTargetSize(renderer);
+    let type: THREE.TextureDataType;
+    switch (renderTargetType) {
+        case "UnsignedByte":
+            type = THREE.UnsignedByteType;
+            break;
+        case "HalfFloat":
+            type = THREE.HalfFloatType;
+            break;
+        case "Float":
+            type = THREE.FloatType;
+            break;
+        default:
+            assertNever(renderTargetType);
+    }
     const renderTarget = new THREE.WebGLRenderTarget(renderTargetSize.width, renderTargetSize.height, {
         format: THREE.RGBAFormat,
+        type,
     });
     renderTarget.samples = samples;
     return renderTarget;
