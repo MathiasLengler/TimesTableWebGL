@@ -1,4 +1,4 @@
-import { Input, RenderContainer, ThreeEnv, UpdateSource } from "./interfaces";
+import type { Input, RenderContainer, ThreeEnv, UpdateSource } from "./interfaces";
 import {
     updateCameraPosition,
     updateCameraZoom,

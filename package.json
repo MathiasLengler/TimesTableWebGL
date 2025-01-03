@@ -8,7 +8,7 @@
         "start:prod": "webpack serve --mode production",
         "build": "webpack --mode production",
         "build:stats": "webpack --mode production --profile --json=compilation-stats.json",
-        "serve": "npx serve -l 8080 build",
+        "serve": "npx serve -l 8080 dist",
         "lint": "npm run lint:tsc && npm run lint:eslint && npm run lint:prettier",
         "lint:tsc": "tsc",
         "lint:eslint": "eslint src/**",
@@ -28,7 +28,9 @@
         "three": "0.162.0"
     },
     "devDependencies": {
+        "@tsconfig/strictest": "^2.0.4",
         "@types/dat.gui": "^0.7.12",
+        "@types/eslint__js": "^8.42.3",
         "@types/three": "0.162.0",
         "css-loader": "6.10.0",
         "eslint": "^8.57.0",

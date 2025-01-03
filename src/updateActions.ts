@@ -1,9 +1,9 @@
-import { ColorMethod, ThreeEnv } from "./interfaces";
+import type { ColorMethod, LineMaterial, ThreeEnv } from "./interfaces";
 import * as THREE from "three";
 import { getGeometry, getLines } from "./index";
 import assertNever from "assert-never";
 
-export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: ColorMethod) {
+export function updateColorMethod(material: LineMaterial, colorMethod: ColorMethod) {
     switch (colorMethod) {
         case "solid":
             material.uniforms.colorMethod.value = 0;
@@ -30,17 +30,17 @@ export function updateColorMethod(material: THREE.ShaderMaterial, colorMethod: C
     material.needsUpdate = true;
 }
 
-export function updateMultiplier(material: THREE.ShaderMaterial, multiplier: number) {
+export function updateMultiplier(material: LineMaterial, multiplier: number) {
     material.uniforms.multiplier.value = multiplier;
     material.needsUpdate = true;
 }
 
-export function updateOpacity(material: THREE.ShaderMaterial, opacity: number) {
+export function updateOpacity(material: LineMaterial, opacity: number) {
     material.uniforms.opacity.value = Math.pow(opacity, 3);
     material.needsUpdate = true;
 }
 
-export function updateNoiseStrength(material: THREE.ShaderMaterial, noiseStrength: number) {
+export function updateNoiseStrength(material: LineMaterial, noiseStrength: number) {
     material.uniforms.noiseStrength.value = noiseStrength;
     material.needsUpdate = true;
 }

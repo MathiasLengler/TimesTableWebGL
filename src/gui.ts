@@ -1,6 +1,6 @@
 import { RenderController } from "./render";
 import { GUI } from "dat.gui";
-import { ColorMethod, Input, RenderContainer, UpdateSource } from "./interfaces";
+import type { ColorMethod, Input, RenderContainer, UpdateSource } from "./interfaces";
 
 export function initGUI(
     input: Input,

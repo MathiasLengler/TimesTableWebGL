@@ -7,11 +7,8 @@ import * as THREE from "three";
 // own
 import * as Gui from "./gui";
 import { RenderController } from "./render";
-import { Input, RenderContainer, ThreeEnv } from "./interfaces";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
-import { CopyShader } from "three/examples/jsm/shaders/CopyShader";
+import type { Input, LineMaterial, LineMaterialUniforms, RenderContainer, ThreeEnv } from "./interfaces";
+import { EffectComposer, RenderPass, ShaderPass, CopyShader } from "three/addons";
 import { getRenderTarget } from "./updateActions";
 
 function getInitialInput(): Input {
@@ -98,30 +95,6 @@ function initRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
     return renderContainer;
 }
 
-// TODO: try other kinds of noises
-function getRandomNoiseTexture() {
-    const width = 1024;
-    const data = new Uint8Array(4 * width);
-    for (let i = 0; i < width * 4; i++) {
-        data[i] = (Math.random() * 255) | 0;
-    }
-
-    const dataTexture = new THREE.DataTexture(
-        data,
-        width,
-        1,
-        THREE.RGBAFormat,
-        THREE.UnsignedByteType,
-        THREE.UVMapping,
-        THREE.RepeatWrapping,
-        THREE.RepeatWrapping,
-        THREE.LinearFilter,
-        THREE.LinearFilter,
-    );
-    dataTexture.needsUpdate = true;
-    return dataTexture;
-}
-
 /**
  * Static initialization of render environment
  */
@@ -142,9 +115,8 @@ function getThreeEnv(): ThreeEnv {
             total: { value: 0 },
             opacity: { value: 0 },
             colorMethod: { value: 0 },
-            noise: { value: getRandomNoiseTexture() },
             noiseStrength: { value: 0 },
-        },
+        } satisfies LineMaterialUniforms,
         vertexShader: vertexShader,
         fragmentShader: fragmentShader,
         depthTest: false,
@@ -153,7 +125,7 @@ function getThreeEnv(): ThreeEnv {
         blendEquation: THREE.AddEquation,
         blendSrc: THREE.SrcAlphaFactor,
         blendDst: THREE.OneFactor,
-    });
+    }) as LineMaterial;
 
     const lines = getLines(getGeometry(0), material);
 

@@ -1,4 +1,3 @@
-/* eslint-disable */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -55,7 +54,9 @@ module.exports = (env, argv) => {
                     use: [
                         {
                             loader: "ts-loader",
-                            options: { compilerOptions: { noEmit: false } },
+                            options: {
+                                transpileOnly: true,
+                            },
                         },
                     ],
                 },
