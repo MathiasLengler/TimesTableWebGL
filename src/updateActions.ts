@@ -1,6 +1,6 @@
 import type { ColorMethod, LineMaterial, RenderTargetTypeLabel, ThreeEnv, ToneMappingLabel } from "./interfaces";
 import * as THREE from "three";
-import { getGeometry, getLines } from "./index";
+import { getGeometry, getLines, getRenderTarget, getRenderTargetSize } from "./index";
 import assertNever from "assert-never";
 
 export function updateColorMethod(material: LineMaterial, colorMethod: ColorMethod) {
@@ -124,36 +124,4 @@ export function updateTotalLines(threeEnv: ThreeEnv, totalLines: number) {
 
 export function updateRenderTarget(threeEnv: ThreeEnv, samples: number, renderTargetType: RenderTargetTypeLabel) {
     threeEnv.composer.reset(getRenderTarget(threeEnv.renderer, samples, renderTargetType));
-}
-
-function getRenderTargetSize(renderer: THREE.WebGLRenderer) {
-    return renderer.getDrawingBufferSize(new THREE.Vector2());
-}
-
-export function getRenderTarget(
-    renderer: THREE.WebGLRenderer,
-    samples: number,
-    renderTargetType: RenderTargetTypeLabel,
-) {
-    const renderTargetSize = getRenderTargetSize(renderer);
-    let type: THREE.TextureDataType;
-    switch (renderTargetType) {
-        case "UnsignedByte":
-            type = THREE.UnsignedByteType;
-            break;
-        case "HalfFloat":
-            type = THREE.HalfFloatType;
-            break;
-        case "Float":
-            type = THREE.FloatType;
-            break;
-        default:
-            assertNever(renderTargetType);
-    }
-    const renderTarget = new THREE.WebGLRenderTarget(renderTargetSize.width, renderTargetSize.height, {
-        format: THREE.RGBAFormat,
-        type,
-    });
-    renderTarget.samples = samples;
-    return renderTarget;
 }

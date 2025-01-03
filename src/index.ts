@@ -4,9 +4,16 @@ import "../res/style/index.css";
 import * as THREE from "three";
 import { EffectComposer, OutputPass, RenderPass } from "three/addons";
 import * as Gui from "./gui";
-import type { Input, LineMaterial, LineMaterialUniforms, RenderContainer, ThreeEnv } from "./interfaces";
+import type {
+    Input,
+    LineMaterial,
+    LineMaterialUniforms,
+    RenderContainer,
+    RenderTargetTypeLabel,
+    ThreeEnv,
+} from "./interfaces";
 import { RenderController } from "./render";
-import { getRenderTarget } from "./updateActions";
+import assertNever from "assert-never";
 
 function getInitialInput(): Input {
     const standard: Input = {
@@ -172,6 +179,38 @@ export function getLines(geometry: THREE.BufferGeometry, material: THREE.ShaderM
     const lines = new THREE.LineSegments(geometry, material);
     lines.frustumCulled = false;
     return lines;
+}
+
+export function getRenderTargetSize(renderer: THREE.WebGLRenderer) {
+    return renderer.getDrawingBufferSize(new THREE.Vector2());
+}
+
+export function getRenderTarget(
+    renderer: THREE.WebGLRenderer,
+    samples: number,
+    renderTargetType: RenderTargetTypeLabel,
+) {
+    const renderTargetSize = getRenderTargetSize(renderer);
+    let type: THREE.TextureDataType;
+    switch (renderTargetType) {
+        case "UnsignedByte":
+            type = THREE.UnsignedByteType;
+            break;
+        case "HalfFloat":
+            type = THREE.HalfFloatType;
+            break;
+        case "Float":
+            type = THREE.FloatType;
+            break;
+        default:
+            assertNever(renderTargetType);
+    }
+    const renderTarget = new THREE.WebGLRenderTarget(renderTargetSize.width, renderTargetSize.height, {
+        format: THREE.RGBAFormat,
+        type,
+    });
+    renderTarget.samples = samples;
+    return renderTarget;
 }
 
 init();
