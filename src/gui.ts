@@ -1,5 +1,5 @@
 import { RenderController } from "./render";
-import { GUI } from "dat.gui";
+import GUI from "lil-gui";
 import type { ColorMethod, Input, RenderContainer, UpdateSource } from "./interfaces";
 
 export function initGUI(
@@ -39,7 +39,6 @@ export function initGUI(
     }
 
     multiplierController.onChange(() => renderController.requestRender(multiplier, postRenderCallback));
-    mathsFolder.open();
 
     const animationFolder = gui.addFolder("Animation");
     animationFolder.add(input, animate).onChange(() => renderController.requestRender(animate, postRenderCallback));
@@ -49,7 +48,6 @@ export function initGUI(
         .max(1)
         .step(0.001)
         .onChange(() => renderController.requestRender(multiplierIncrement));
-    animationFolder.open();
 
     const colorFolder = gui.addFolder("Color");
     colorFolder
@@ -58,7 +56,6 @@ export function initGUI(
         .onChange(() => renderController.requestRender(opacity));
     const colorMethods: ColorMethod[] = ["solid", "faded", "lengthOpacity", "lengthHue", "indexHue", "fadedIndexHue"];
     colorFolder.add(input, colorMethod, colorMethods).onChange(() => renderController.requestRender(colorMethod));
-    colorFolder.open();
 
     const renderFolder = gui.addFolder("Render");
     renderFolder
@@ -69,7 +66,6 @@ export function initGUI(
         .add(input, samples, 1, maxSamples)
         .step(1)
         .onChange(() => renderController.requestRender(samples));
-    renderFolder.open();
 
     const cameraFolder = gui.addFolder("Camera");
     const camPosXController = cameraFolder.add(input, camPosX, -1, 1).step(1e-6);
@@ -83,7 +79,6 @@ export function initGUI(
         camPosYController.setValue(0);
         camZoomController.setValue(1);
     });
-    cameraFolder.open();
 
     renderContainer.addEventListener("wheel", (e: WheelEvent) => {
         if (e.shiftKey) {
