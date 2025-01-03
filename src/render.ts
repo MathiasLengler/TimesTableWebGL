@@ -54,6 +54,7 @@ export class RenderController {
     private update() {
         if (this.updateSources.has("init")) {
             updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
+            updateSamples(this.threeEnv, this.input.samples);
             updateTotalLines(this.threeEnv, this.input.totalLines);
             updateMultiplier(this.threeEnv.material, this.input.multiplier);
             updateColorMethod(this.threeEnv.material, this.input.colorMethod);
