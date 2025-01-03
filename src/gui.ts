@@ -57,7 +57,7 @@ export function initGUI(
         .min(-1)
         .max(1)
         .step(0.001)
-        .onChange(() => renderController.requestRender(multiplierIncrement));
+        .onChange(() => renderController.requestRender(multiplierIncrement, postRenderCallback));
 
     const colorFolder = gui.addFolder("Color");
     colorFolder
