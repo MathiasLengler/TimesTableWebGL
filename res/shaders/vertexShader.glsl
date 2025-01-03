@@ -4,6 +4,7 @@ uniform int colorMethod;
 
 varying vec3 vColor;
 varying float vLinePosition;
+varying float vIndex;
 
 #define PI 3.1415926535897932384626433832795
 
@@ -15,6 +16,7 @@ void main() {
   vec2 circleCord;
 
   float index = position.x;
+  vIndex = index;
   float isStartIndicator = position.y;
   bool isStart = isStartIndicator == 0.0;
   vLinePosition = isStartIndicator;

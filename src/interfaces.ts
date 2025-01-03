@@ -12,7 +12,6 @@ export interface LineMaterialUniforms {
     total: { value: number };
     opacity: { value: number };
     colorMethod: { value: number };
-    noise: { value: THREE.DataTexture };
     noiseStrength: { value: number };
 }
 

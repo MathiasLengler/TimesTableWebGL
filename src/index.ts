@@ -95,30 +95,6 @@ function initRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
     return renderContainer;
 }
 
-// TODO: try other kinds of noises
-function getRandomNoiseTexture() {
-    const width = 1024;
-    const data = new Uint8Array(4 * width);
-    for (let i = 0; i < width * 4; i++) {
-        data[i] = (Math.random() * 255) | 0;
-    }
-
-    const dataTexture = new THREE.DataTexture(
-        data,
-        width,
-        1,
-        THREE.RGBAFormat,
-        THREE.UnsignedByteType,
-        THREE.UVMapping,
-        THREE.RepeatWrapping,
-        THREE.RepeatWrapping,
-        THREE.LinearFilter,
-        THREE.LinearFilter,
-    );
-    dataTexture.needsUpdate = true;
-    return dataTexture;
-}
-
 /**
  * Static initialization of render environment
  */
@@ -139,7 +115,6 @@ function getThreeEnv(): ThreeEnv {
             total: { value: 0 },
             opacity: { value: 0 },
             colorMethod: { value: 0 },
-            noise: { value: getRandomNoiseTexture() },
             noiseStrength: { value: 0 },
         } satisfies LineMaterialUniforms,
         vertexShader: vertexShader,
