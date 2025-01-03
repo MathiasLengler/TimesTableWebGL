@@ -24,14 +24,13 @@
     "license": "MIT",
     "dependencies": {
         "assert-never": "^1.2.1",
-        "dat.gui": "^0.7.9",
-        "three": "0.162.0"
+        "lil-gui": "^0.20.0",
+        "three": "0.171.0"
     },
     "devDependencies": {
         "@tsconfig/strictest": "^2.0.4",
-        "@types/dat.gui": "^0.7.12",
         "@types/eslint__js": "^8.42.3",
-        "@types/three": "0.162.0",
+        "@types/three": "0.171.0",
         "css-loader": "6.10.0",
         "eslint": "^8.57.0",
         "gh-pages": "6.1.1",
