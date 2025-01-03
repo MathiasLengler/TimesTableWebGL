@@ -130,7 +130,7 @@ function getThreeEnv(): ThreeEnv {
     const lines = getLines(getGeometry(0), material);
 
     scene.add(lines);
-    const renderTarget = getRenderTarget(renderer, 4);
+    const renderTarget = getRenderTarget(renderer, 1);
 
     const composer = new EffectComposer(renderer, renderTarget);
 
