@@ -28,9 +28,8 @@ function getInitialInput(): Input {
         toneMapping: "Neutral",
         toneMappingExposure: 1.0,
         renderTargetType: "HalfFloat",
-        camPosX: 0,
-        camPosY: 0,
-        camZoom: 1,
+        cameraType: "Orthographic",
+        cameraView: "top",
         resetCamera: () => {
             // a function indicates a button in dat.gui
             // the actual logic is defined via `onChange`
@@ -79,13 +78,7 @@ function init() {
 
     const renderController = new RenderController(threeEnv, input, renderContainer);
 
-    window.addEventListener("resize", () => renderController.requestRender("resize"));
-
-    threeEnv.controls.addEventListener("change", () => {
-        renderController.requestRender("controls");
-    });
-
-    Gui.initGUI(input, renderController, renderContainer, threeEnv.renderer.capabilities.maxSamples);
+    Gui.initGUI(input, renderController, threeEnv);
 
     renderController.requestRender("init");
 }

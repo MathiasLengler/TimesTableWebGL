@@ -97,14 +97,6 @@ export class RenderController {
             updateColorMethod(this.threeEnv.material, this.input.colorMethod);
         }
 
-        if (this.needsUpdate("camPosX") || this.needsUpdate("camPosY")) {
-            updateCameraPosition(this.threeEnv.camera, this.input.camPosX, this.input.camPosY);
-        }
-
-        if (this.needsUpdate("camZoom")) {
-            updateCameraZoom(this.threeEnv.camera, this.input.camZoom);
-        }
-
         if (this.needsUpdate("opacity")) {
             updateOpacity(this.threeEnv.material, this.input.opacity);
         }
@@ -116,5 +108,7 @@ export class RenderController {
         if (this.needsUpdate("toneMappingExposure")) {
             updateToneMappingExposure(this.threeEnv, this.input.toneMappingExposure);
         }
+
+        // TODO: cameraType, cameraView, resetCamera
     }
 }

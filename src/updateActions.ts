@@ -72,16 +72,6 @@ export function updateToneMappingExposure(threeEnv: ThreeEnv, toneMappingExposur
     threeEnv.renderer.toneMappingExposure = toneMappingExposure;
 }
 
-export function updateCameraPosition(camera: THREE.OrthographicCamera, camPosX: number, camPosY: number) {
-    camera.position.setX(camPosX);
-    camera.position.setZ(camPosY);
-}
-
-export function updateCameraZoom(camera: THREE.OrthographicCamera, zoom: number) {
-    camera.zoom = Math.pow(Math.E, zoom - 1);
-    camera.updateProjectionMatrix();
-}
-
 export function updateRendererSize(threeEnv: ThreeEnv, height: number, width: number) {
     const aspectRatio = width / height;
 

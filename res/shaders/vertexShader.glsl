@@ -26,8 +26,8 @@ void main() {
   }
 
   // TODO: Expose Y (height) controls
-  float height = 0.0;
-  // float height = isStart ? -1.0 : 1.0;
+  // float height = 0.0;
+  float height = isStart ? -1.0 : 1.0;
   // float height = -1.0 + myDistance(index, total, multiplier) * 2.0;
   // float height = isStart ? -1.0 : myDistance(index, total, multiplier);
   // float height = float(gl_VertexID);

@@ -1,12 +1,6 @@
 import * as THREE from "three";
 import type { EffectComposer, MapControls } from "three/addons";
 
-export type ColorMethod = "solid" | "faded" | "lengthOpacity" | "lengthHue" | "indexHue" | "fadedIndexHue";
-
-export type ToneMappingLabel = "No" | "Linear" | "Reinhard" | "Cineon" | "ACESFilmic" | "AgX" | "Neutral";
-
-export type RenderTargetTypeLabel = "UnsignedByte" | "HalfFloat" | "Float";
-
 export type UpdateSource = keyof Input | "resize" | "controls";
 
 export type RenderContainer = HTMLElement;
@@ -32,6 +26,13 @@ export interface ThreeEnv {
     composer: EffectComposer;
 }
 
+export type ColorMethod = "solid" | "faded" | "lengthOpacity" | "lengthHue" | "indexHue" | "fadedIndexHue";
+export type ToneMappingLabel = "No" | "Linear" | "Reinhard" | "Cineon" | "ACESFilmic" | "AgX" | "Neutral";
+export type RenderTargetTypeLabel = "UnsignedByte" | "HalfFloat" | "Float";
+
+export type CameraType = "Orthographic" | "Perspective";
+export type CameraView = "top" | "front" | "bottom";
+
 export interface Input {
     totalLines: number;
     multiplier: number;
@@ -43,9 +44,7 @@ export interface Input {
     toneMapping: ToneMappingLabel;
     toneMappingExposure: number;
     renderTargetType: RenderTargetTypeLabel;
-    camPosX: number;
-    camPosY: number;
-    camZoom: number;
-
+    cameraType: CameraType;
+    cameraView: CameraView;
     resetCamera: () => void;
 }

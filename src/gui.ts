@@ -1,20 +1,17 @@
-import { RenderController } from "./render";
 import GUI from "lil-gui";
 import type {
+    CameraType,
+    CameraView,
     ColorMethod,
     Input,
-    RenderContainer,
     RenderTargetTypeLabel,
+    ThreeEnv,
     ToneMappingLabel,
     UpdateSource,
 } from "./interfaces";
+import { RenderController } from "./render";
 
-export function initGUI(
-    input: Input,
-    renderController: RenderController,
-    renderContainer: RenderContainer,
-    maxSamples: number,
-) {
+export function initGUI(input: Input, renderController: RenderController, threeEnv: ThreeEnv) {
     const gui = new GUI();
 
     const totalLines = "totalLines" satisfies UpdateSource;
@@ -27,9 +24,8 @@ export function initGUI(
     const toneMappingExposure = "toneMappingExposure" satisfies UpdateSource;
     const renderTargetType = "renderTargetType" satisfies UpdateSource;
     const samples = "samples" satisfies UpdateSource;
-    const camPosX = "camPosX" satisfies UpdateSource;
-    const camPosY = "camPosY" satisfies UpdateSource;
-    const camZoom = "camZoom" satisfies UpdateSource;
+    const cameraType = "cameraType" satisfies UpdateSource;
+    const cameraView = "cameraView" satisfies UpdateSource;
     const resetCamera = "resetCamera" satisfies UpdateSource;
 
     // TODO: rename "Geometry"
@@ -69,7 +65,7 @@ export function initGUI(
 
     const renderFolder = gui.addFolder("Render");
     renderFolder
-        .add(input, samples, 0, maxSamples)
+        .add(input, samples, 0, threeEnv.renderer.capabilities.maxSamples)
         .step(1)
         .onChange(() => renderController.requestRender(samples));
     renderFolder
@@ -91,15 +87,26 @@ export function initGUI(
         .onChange(() => renderController.requestRender(renderTargetType));
 
     const cameraFolder = gui.addFolder("Camera");
-    const camPosXController = cameraFolder.add(input, camPosX, -1, 1).step(1e-6);
-    camPosXController.onChange(() => renderController.requestRender(camPosX));
-    const camPosYController = cameraFolder.add(input, camPosY, -1, 1).step(1e-6);
-    camPosYController.onChange(() => renderController.requestRender(camPosY));
-    const camZoomController = cameraFolder.add(input, camZoom, 1).step(0.01);
-    camZoomController.onChange(() => renderController.requestRender(camZoom));
+    cameraFolder
+        .add(input, cameraType, ["Orthographic", "Perspective"] satisfies CameraType[])
+        .onChange(() => renderController.requestRender(cameraType));
+    cameraFolder
+        .add(input, cameraView, ["top", "front", "bottom"] satisfies CameraView[])
+        .onChange(() => renderController.requestRender(cameraView));
+
     cameraFolder.add(input, resetCamera).onChange(() => {
-        camPosXController.setValue(0);
-        camPosYController.setValue(0);
-        camZoomController.setValue(1);
+        renderController.requestRender(resetCamera);
+    });
+
+    window.addEventListener("resize", () => renderController.requestRender("resize"));
+
+    threeEnv.controls.addEventListener("change", (e) => {
+        renderController.requestRender("controls");
+
+        // camPosXController.setValue(threeEnv.camera.position.x);
+        // camPosYController.setValue(threeEnv.camera.position.z);
+        // camZoomController.setValue(threeEnv.camera.zoom);
+
+        console.log(e, threeEnv.camera.position, threeEnv.camera.zoom);
     });
 }
