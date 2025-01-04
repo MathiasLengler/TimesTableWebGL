@@ -49,13 +49,28 @@ export class RenderController {
     private render() {
         this.frameRequested = false;
 
+        // TODO: check return
+        //  dampening requires multiple updates
+        // TODO: sync with ui camera controls
+        this.threeEnv.controls.update();
+
         this.update();
 
         this.threeEnv.composer.render();
 
+        // prepare for next frame
+
         this.isInitialRender = false;
 
-        this.prepareNextRender();
+        this.updateSources.clear();
+
+        // clear postRenderCallbacks before executing the previous callbacks
+        // this allows renderCallbacks to requestRender with callbacks
+        const oldPostRenderCallbacks = this.postRenderCallbacks;
+
+        this.postRenderCallbacks = new Set();
+
+        oldPostRenderCallbacks.forEach((callback) => callback());
     }
 
     private needsUpdate(source: UpdateSource): boolean {
@@ -63,6 +78,10 @@ export class RenderController {
     }
 
     private update() {
+        if (this.needsUpdate("resize")) {
+            updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
+        }
+
         if (this.needsUpdate("samples") || this.needsUpdate("renderTargetType")) {
             updateRenderTarget(this.threeEnv, this.input.samples, this.input.renderTargetType);
         }
@@ -102,21 +121,5 @@ export class RenderController {
         if (this.needsUpdate("toneMappingExposure")) {
             updateToneMappingExposure(this.threeEnv, this.input.toneMappingExposure);
         }
-
-        if (this.needsUpdate("resize")) {
-            updateRendererSize(this.threeEnv, window.innerHeight, window.innerWidth);
-        }
-    }
-
-    private prepareNextRender() {
-        this.updateSources.clear();
-
-        // clear postRenderCallbacks before executing the previous callbacks
-        // this allows renderCallbacks to requestRender with callbacks
-        const oldPostRenderCallbacks = this.postRenderCallbacks;
-
-        this.postRenderCallbacks = new Set();
-
-        oldPostRenderCallbacks.forEach((callback) => callback());
     }
 }

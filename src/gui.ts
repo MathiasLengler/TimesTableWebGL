@@ -33,6 +33,7 @@ export function initGUI(
     const camZoom = "camZoom" satisfies UpdateSource;
     const resetCamera = "resetCamera" satisfies UpdateSource;
 
+    // TODO: rename "Geometry"
     const mathsFolder = gui.addFolder("Maths");
     mathsFolder
         .add(input, totalLines)
@@ -73,7 +74,7 @@ export function initGUI(
         .step(0.5)
         .onChange(() => renderController.requestRender(noiseStrength));
     renderFolder
-        .add(input, samples, 1, maxSamples)
+        .add(input, samples, 0, maxSamples)
         .step(1)
         .onChange(() => renderController.requestRender(samples));
     renderFolder
@@ -105,24 +106,5 @@ export function initGUI(
         camPosXController.setValue(0);
         camPosYController.setValue(0);
         camZoomController.setValue(1);
-    });
-
-    renderContainer.addEventListener("wheel", (e: WheelEvent) => {
-        if (e.shiftKey) {
-            camZoomController.setValue(input.camZoom - e.deltaY / 1000);
-        }
-    });
-
-    renderContainer.addEventListener("mousemove", (e: MouseEvent) => {
-        if (e.buttons === 1 && e.shiftKey) {
-            const circleDiameterPx = Math.min(renderContainer.clientHeight, renderContainer.clientWidth);
-
-            const realZoom = Math.pow(Math.E, input.camZoom - 1);
-
-            const movementFactor = (realZoom * circleDiameterPx) / 2;
-
-            camPosXController.setValue(input.camPosX - e.movementX / movementFactor);
-            camPosYController.setValue(input.camPosY + e.movementY / movementFactor);
-        }
     });
 }

@@ -2,7 +2,7 @@ import fragmentShader from "../res/shaders/fragmentShader.glsl";
 import vertexShader from "../res/shaders/vertexShader.glsl";
 import "../res/style/index.css";
 import * as THREE from "three";
-import { EffectComposer, OutputPass, RenderPass } from "three/addons";
+import { EffectComposer, MapControls, OutputPass, RenderPass } from "three/addons";
 import * as Gui from "./gui";
 import type {
     Input,
@@ -73,13 +73,17 @@ function getInitialInput(): Input {
 function init() {
     const input = getInitialInput();
 
-    const threeEnv = getThreeEnv();
+    const threeEnv = getThreeEnv(input);
 
     const renderContainer = initRenderContainer(threeEnv.renderer);
 
     const renderController = new RenderController(threeEnv, input, renderContainer);
 
     window.addEventListener("resize", () => renderController.requestRender("resize"));
+
+    threeEnv.controls.addEventListener("change", () => {
+        renderController.requestRender("controls");
+    });
 
     Gui.initGUI(input, renderController, renderContainer, threeEnv.renderer.capabilities.maxSamples);
 
@@ -99,7 +103,7 @@ function initRenderContainer(renderer: THREE.WebGLRenderer): RenderContainer {
 /**
  * Static initialization of render environment
  */
-function getThreeEnv(): ThreeEnv {
+function getThreeEnv(_input: Input): ThreeEnv {
     const renderer = new THREE.WebGLRenderer({ antialias: false });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -107,8 +111,12 @@ function getThreeEnv(): ThreeEnv {
     const scene = new THREE.Scene();
 
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1);
-    camera.position.setZ(1);
+    camera.position.setY(10);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    const controls = new MapControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.maxTargetRadius = 1;
 
     const material = new THREE.ShaderMaterial({
         uniforms: {
@@ -131,7 +139,13 @@ function getThreeEnv(): ThreeEnv {
     const lines = getLines(getGeometry(0), material);
     scene.add(lines);
 
-    const renderTarget = getRenderTarget(renderer, 1, "UnsignedByte");
+    // TODO: add toggle
+    const size = 10;
+    const divisions = 10;
+    const gridHelper = new THREE.GridHelper(size, divisions);
+    scene.add(gridHelper);
+
+    const renderTarget = getRenderTarget(renderer, 0, "UnsignedByte");
 
     const composer = new EffectComposer(renderer, renderTarget);
 
@@ -145,6 +159,7 @@ function getThreeEnv(): ThreeEnv {
         renderer,
         scene,
         camera,
+        controls,
         material,
         lines,
         composer,

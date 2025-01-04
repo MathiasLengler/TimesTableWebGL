@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.ts";
+import type { EffectComposer, MapControls } from "three/addons";
 
 export type ColorMethod = "solid" | "faded" | "lengthOpacity" | "lengthHue" | "indexHue" | "fadedIndexHue";
 
@@ -7,7 +7,7 @@ export type ToneMappingLabel = "No" | "Linear" | "Reinhard" | "Cineon" | "ACESFi
 
 export type RenderTargetTypeLabel = "UnsignedByte" | "HalfFloat" | "Float";
 
-export type UpdateSource = keyof Input | "resize";
+export type UpdateSource = keyof Input | "resize" | "controls";
 
 export type RenderContainer = HTMLElement;
 
@@ -27,6 +27,7 @@ export interface ThreeEnv {
     renderer: THREE.WebGLRenderer;
     readonly scene: THREE.Scene;
     readonly camera: THREE.OrthographicCamera;
+    readonly controls: MapControls;
     readonly material: LineMaterial;
     lines: THREE.LineSegments;
     composer: EffectComposer;

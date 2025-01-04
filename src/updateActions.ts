@@ -79,7 +79,7 @@ export function updateNoiseStrength(material: LineMaterial, noiseStrength: numbe
 
 export function updateCameraPosition(camera: THREE.OrthographicCamera, camPosX: number, camPosY: number) {
     camera.position.setX(camPosX);
-    camera.position.setY(camPosY);
+    camera.position.setZ(camPosY);
 }
 
 export function updateCameraZoom(camera: THREE.OrthographicCamera, zoom: number) {

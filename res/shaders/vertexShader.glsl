@@ -26,9 +26,16 @@ void main() {
     circleCord = getCircleCord(index * multiplier, total);
   }
 
-  gl_Position = projectionMatrix *
-                modelViewMatrix *
-  vec4(circleCord, 0.0, 1.0);
+  gl_Position = 
+    projectionMatrix *
+    modelViewMatrix *
+    vec4(
+      circleCord.x,
+      // TODO: Expose Y (height) controls
+      isStart ? -1.0 : 1.0, 
+      circleCord.y,
+      1.0
+    );
 
   // colorMethod switch
   if (colorMethod == 0) {
