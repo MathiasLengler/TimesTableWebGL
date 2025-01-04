@@ -26,7 +26,6 @@ export function initGUI(
     const toneMapping = "toneMapping" satisfies UpdateSource;
     const toneMappingExposure = "toneMappingExposure" satisfies UpdateSource;
     const renderTargetType = "renderTargetType" satisfies UpdateSource;
-    const noiseStrength = "noiseStrength" satisfies UpdateSource;
     const samples = "samples" satisfies UpdateSource;
     const camPosX = "camPosX" satisfies UpdateSource;
     const camPosY = "camPosY" satisfies UpdateSource;
