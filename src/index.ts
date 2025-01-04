@@ -15,6 +15,7 @@ import type {
 import { RenderController } from "./render";
 import assertNever from "assert-never";
 
+// TODO: refactor as user selectable presets
 function getInitialInput(): Input {
     const standard: Input = {
         totalLines: 200,
