@@ -133,7 +133,6 @@ function getThreeEnv(_input: Input): ThreeEnv {
         blendEquation: THREE.AddEquation,
         blendSrc: THREE.SrcAlphaFactor,
         blendDst: THREE.OneFactor,
-        linewidth: 0,
     }) as LineMaterial;
 
     const lines = getLines(getGeometry(0), material);
