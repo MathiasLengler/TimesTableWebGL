@@ -72,11 +72,6 @@ export function updateToneMappingExposure(threeEnv: ThreeEnv, toneMappingExposur
     threeEnv.renderer.toneMappingExposure = toneMappingExposure;
 }
 
-export function updateNoiseStrength(material: LineMaterial, noiseStrength: number) {
-    material.uniforms.noiseStrength.value = noiseStrength;
-    material.needsUpdate = true;
-}
-
 export function updateCameraPosition(camera: THREE.OrthographicCamera, camPosX: number, camPosY: number) {
     camera.position.setX(camPosX);
     camera.position.setZ(camPosY);

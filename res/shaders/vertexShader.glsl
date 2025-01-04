@@ -17,10 +17,8 @@ void main() {
 
   int intIndex = gl_VertexID / 2;
   float index = float(intIndex);
-  vIndex = index;
 
   bool isStart = gl_VertexID % 2 == 0;
-  vLinePosition = isStart ? 0.0 : 1.0;
   if (isStart) {
     circleCord = getCircleCord(index, total);
   } else {

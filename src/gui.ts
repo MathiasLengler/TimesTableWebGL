@@ -70,10 +70,6 @@ export function initGUI(
 
     const renderFolder = gui.addFolder("Render");
     renderFolder
-        .add(input, noiseStrength, 0, 255)
-        .step(0.5)
-        .onChange(() => renderController.requestRender(noiseStrength));
-    renderFolder
         .add(input, samples, 0, maxSamples)
         .step(1)
         .onChange(() => renderController.requestRender(samples));

@@ -4,7 +4,6 @@ import {
     updateCameraZoom,
     updateColorMethod,
     updateMultiplier,
-    updateNoiseStrength,
     updateOpacity,
     updateRendererSize,
     updateRenderTarget,
@@ -96,10 +95,6 @@ export class RenderController {
 
         if (this.needsUpdate("colorMethod")) {
             updateColorMethod(this.threeEnv.material, this.input.colorMethod);
-        }
-
-        if (this.needsUpdate("noiseStrength")) {
-            updateNoiseStrength(this.threeEnv.material, this.input.noiseStrength);
         }
 
         if (this.needsUpdate("camPosX") || this.needsUpdate("camPosY")) {

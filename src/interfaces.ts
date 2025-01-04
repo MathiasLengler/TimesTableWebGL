@@ -16,7 +16,6 @@ export interface LineMaterialUniforms {
     total: { value: number };
     opacity: { value: number };
     colorMethod: { value: number };
-    noiseStrength: { value: number };
 }
 
 export type LineMaterial = THREE.ShaderMaterial & {
@@ -40,7 +39,6 @@ export interface Input {
     multiplierIncrement: number;
     opacity: number;
     colorMethod: ColorMethod;
-    noiseStrength: number;
     samples: number;
     toneMapping: ToneMappingLabel;
     toneMappingExposure: number;
