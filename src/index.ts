@@ -67,7 +67,7 @@ function getInitialInput(): Input {
         debugBlending,
     };
 
-    return initialInputs.debugBlending;
+    return initialInputs.standard;
 }
 
 function init() {
@@ -134,6 +134,7 @@ function getThreeEnv(_input: Input): ThreeEnv {
         blendEquation: THREE.AddEquation,
         blendSrc: THREE.SrcAlphaFactor,
         blendDst: THREE.OneFactor,
+        linewidth: 0,
     }) as LineMaterial;
 
     const lines = getLines(getGeometry(0), material);
@@ -169,23 +170,18 @@ function getThreeEnv(_input: Input): ThreeEnv {
 export function getGeometry(totalLines: number): THREE.BufferGeometry {
     const geometry = new THREE.BufferGeometry();
 
-    // We use position attributes as parameters for the vertex shader
-    // because THREE.js seems to expect a position attribute in every BufferAttribute.
-    // Position attribute format:
-    //  x - index
-    //  y - isStart (of line) ? 0.0 : 1.0
-    //  z - unused
     const vertices = totalLines * 2;
-    const positionsLength = vertices * 3;
-    const positions = new Float32Array(positionsLength);
-    for (let i = 0; i < totalLines; i++) {
-        positions[i * 6] = i; // x start
-        positions[i * 6 + 1] = 0.0; // y start
-        positions[i * 6 + 3] = i; // x end
-        positions[i * 6 + 4] = 1.0; // y end
-    }
 
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    // Performance optimization: we don't need to set the position attribute,
+    // since the vertex shader makes use of `gl_VertexID` to determine the line position.
+    // Previously, we needed to allocate a buffer whenever the total number of lines changed.
+    // Setting the draw range is enough to trigger the required `gl.drawArrays` call.
+    // References:
+    //  https://webgl2fundamentals.org/webgl/lessons/webgl-drawing-without-data.html
+    //  https://github.com/mrdoob/three.js/blob/f30af844f4fe3300e1ddc75dcbad25988705c1c2/src/renderers/webgl/WebGLBufferRenderer.js#L13
+    //  https://github.com/mrdoob/three.js/blob/f30af844f4fe3300e1ddc75dcbad25988705c1c2/src/renderers/WebGLRenderer.js#L912
+    //  https://github.com/mrdoob/three.js/blob/f30af844f4fe3300e1ddc75dcbad25988705c1c2/src/renderers/WebGLRenderer.js#L777
+    geometry.setDrawRange(0, vertices);
 
     return geometry;
 }
